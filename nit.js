@@ -329,8 +329,8 @@ function Nit() {
     this.updateDevThenMerge = function(currentBranch){
         var self = this;
         var alreadyUpStrFound = false;
-        self.gotoDevelop(currentBranch, function(error) {
-            if(error){
+        self.gotoDevelop(currentBranch, function(success) {
+            if(success === false){
                self.printer.E("Failed to derge!");
                return;
             }
@@ -375,21 +375,24 @@ function Nit() {
 
     this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
         var self = this;
+        console.log('X');
         if(currentBranch.trim() != branchName.trim()){
            self.git(["checkout", branchName], function(data){
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
-                    cb && cb(true);
+                    console.log(1);
+                    cb && cb(false);
                 } else {
                     self.git(["checkout", "-b", branchName], function(){
                         self.printer.print("Created branch "+branchName+" out of "+currentBranch);
-                        cb && cb();
+                        console.log(2);
+                        cb && cb(true);
                     });
                 }
             });
         } else {
             self.printer.print("Already on " + branchName);
-            cb && cb();
+            cb && cb(false);
         }
     };
 
