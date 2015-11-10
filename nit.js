@@ -286,7 +286,7 @@ function Nit() {
                         var isAlreadyStr = data.indexOf("Already up-to-date") != -1;
 
                         if(!isAlreadyStr || !alreadyUpStrFound){
-                            self.printer.print("}"+data);
+                            self.printer.print(data);
                         }
                         if(isAlreadyStr) {
                             alreadyUpStrFound = true;
