@@ -223,7 +223,7 @@ function Nit() {
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "stage", name: "stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
-               {arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
+               //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
                             nit.stage(function(){
