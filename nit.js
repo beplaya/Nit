@@ -217,7 +217,7 @@ function Nit() {
                {arg: "dev", name: "gotoDevelop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
                {arg: "push", name: "pushFull", requiresClean: true, action: function(nit, arg, currentBranch){ nit.pushFull(currentBranch); }},
                {arg: "fci", name: "featureCommit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
-               {arg: "ferge", name: "featureMerge", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureMerge(arg, currentBranch); }},
+               {arg: "derge", name: "devMerge", requiresClean: false, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
                {arg: "ci", name: "commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
                {arg: "help", name: "help", requiresClean: false, action: function(nit, arg, currentBranch){ nit.help(); }},
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
@@ -276,16 +276,10 @@ function Nit() {
         this.gitInherit(["status", "-s"]);
     };
 
-    this.featureMerge = function(featureNumber, currentBranch){
+    this.devMerge = function(currentBranch){
         var self = this;
-        if(!featureNumber){
-            self.printer.E("NERROR: Missing a feature number for merge!");
-            return;
-        }
-
-        var fb = self.nettings.featurePrefix + featureNumber;
-        self.printer.I("Merging " + fb + " into " + currentBranch);
-        var gitArgs = ["merge", fb];
+        self.printer.I("Merging develop into " + currentBranch);
+        var gitArgs = ["merge", "develop"];
         self.git(gitArgs, function(data){
             console.log(data);
         });
