@@ -65,7 +65,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
 ```json
 {
    "jira" : {
-       "host" : "github.com/beplaya/Nit",
+       "host" : "my.jira.location.net",
        "projectKey" : "NIT"
    },
    "featureBranchPrefix" : "feature/"
