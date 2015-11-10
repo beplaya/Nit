@@ -51,7 +51,7 @@ function NitSettings() {
         try {
             var json = JSON.parse(content);
         } catch(e){
-            console.log("NError! Invalid nit config.  Parse error. See (" + filePath + ")");
+            console.log("NError! Invalid .nitconfig!  Parse error. See (nitconfig_template.txt)");
             console.log(e);
         }
         return json;
