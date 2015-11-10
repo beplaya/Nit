@@ -50,5 +50,9 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
           sts  --->  status -s
           qci  --->  stage and commit
 
+## Repo Setup
+ - npm install
+ - add the repo folder to your path
+
 ## Dependencies
     Node JS
