@@ -338,7 +338,6 @@ function Nit() {
 
     this.isOnAFeatureBranch = function(currentBranch){
         var self = this;
-        console.log("isOnAFeatureBranch", self.nettings.featurePrefix);
         return currentBranch.indexOf(self.nettings.featurePrefix)!=-1;
     };
 
