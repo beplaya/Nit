@@ -211,7 +211,7 @@ function Nit() {
 
     this.cmds = [
                {arg: "b", name: "discoverBranch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.onBranch(); }},
-               {arg: "cob", name: "createAndCheckoutBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutBranch(arg, currentBranch); }},
+               {arg: "cob", name: "createAndCheckoutBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutBranch(arg); }},
                {arg: "st", name: "status", requiresClean: false, action: function(nit, arg, currentBranch){ nit.statusPrint(currentBranch); }},
                {arg: "fb", name: "createAndCheckoutFeatureBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutFeatureBranch(arg, currentBranch); }},
                {arg: "dev", name: "checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
@@ -279,7 +279,11 @@ function Nit() {
     this.updateDevThenMerge = function(currentBranch){
         var self = this;
         var alreadyUpStrFound = false;
-        self.gotoDevelop(currentBranch, function() {
+        self.gotoDevelop(currentBranch, function(success) {
+            if(!success){
+                self.printer.I("Failed to derge");
+                return;
+            }
             self.git(["pull", "origin", "develop"], function(){
                 self.git(["checkout", currentBranch], function(data){
                     self.git(["merge", "develop"], function(data){
@@ -357,7 +361,7 @@ function Nit() {
     };
 
     this.gotoDevelop = function(currentBranch, cb){
-         this.createAndCheckoutBranch("develop", currentBranch, cb);
+         this.createAndCheckoutBranch("develop", cb);
     };
 
     this.createAndCheckoutFeatureBranch = function(branchName, currentBranch, cb) {
@@ -366,26 +370,26 @@ function Nit() {
             cb && cb();
             return;
         }
-        this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch, cb);
+        this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, cb);
     };
 
-    this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
+    this.createAndCheckoutBranch = function(branchName, cb){
         var self = this;
         if(currentBranch.trim() != branchName.trim()){
            self.git(["checkout", branchName], function(data){
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
-                    cb && cb();
+                    cb && cb(false);
                 } else {
                     self.git(["checkout", "-b", branchName], function(){
                         self.printer.print("Created branch "+branchName+" out of "+currentBranch);
-                        cb && cb();
+                        cb && cb(true);
                     });
                 }
             });
         } else {
             self.printer.print("Already on " + branchName);
-            cb && cb();
+            cb && cb(true);
         }
     };
 
