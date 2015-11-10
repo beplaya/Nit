@@ -375,17 +375,14 @@ function Nit() {
 
     this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
         var self = this;
-        console.log('X');
         if(currentBranch.trim() != branchName.trim()){
            self.git(["checkout", branchName], function(data){
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
-                    console.log(1);
                     cb && cb(false);
                 } else {
                     self.git(["checkout", "-b", branchName], function(){
                         self.printer.print("Created branch "+branchName+" out of "+currentBranch);
-                        console.log(2);
                         cb && cb(true);
                     });
                 }
@@ -487,7 +484,7 @@ function Nit() {
     this.run = function(cmd, cmdArgs, cb) {
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-         console.log("RUNNING ", cmd, cmdArgs);
+        // console.log("RUNNING ", cmd, cmdArgs);
         var ran = false;
         ls.stdout.on('data', function (data) {
             ran = true;
