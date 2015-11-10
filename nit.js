@@ -217,7 +217,7 @@ function Nit() {
                {arg: "dev", name: "checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
                {arg: "push", name: "push", requiresClean: true, action: function(nit, arg, currentBranch){ nit.pushFull(currentBranch); }},
                {arg: "fci", name: "make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
-               {arg: "derge", name: "merge develop into current branch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
+               {arg: "derge", name: "update develop and merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.updateDevThenMerge(currentBranch); }},
                {arg: "ci", name: "commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
                {arg: "help", name: "help", requiresClean: false, action: function(nit, arg, currentBranch){ nit.help(); }},
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
@@ -274,6 +274,27 @@ function Nit() {
 
     this.sts = function() {
         this.gitInherit(["status", "-s"]);
+    };
+
+    this.updateDevThenMerge = function(currentBranch){
+        var self = this;
+        var alreadyUpStrFound = false;
+        self.gotoDevelop(currentBranch, function() {
+            self.git(["pull", "origin", "develop"], function(){
+                self.git(["checkout", currentBranch], function(data){
+                    self.git(["merge", "develop"], function(data){
+                        var isAlreadyStr = data.indexOf("Already up-to-date") != -1;
+
+                        if(!isAlreadyStr || !alreadyUpStrFound){
+                            self.printer.print("}"+data);
+                        }
+                        if(isAlreadyStr) {
+                            alreadyUpStrFound = true;
+                        }
+                    });
+                });
+            });
+        });
     };
 
     this.devMerge = function(currentBranch){
@@ -335,38 +356,36 @@ function Nit() {
         return currentBranch.indexOf(self.nettings.featurePrefix)!=-1;
     };
 
-    this.gotoDevelop = function(currentBranch){
-         this.createAndCheckoutBranch("develop", currentBranch);
+    this.gotoDevelop = function(currentBranch, cb){
+         this.createAndCheckoutBranch("develop", currentBranch, cb);
     };
 
-    this.createAndCheckoutFeatureBranch = function(branchName, currentBranch) {
+    this.createAndCheckoutFeatureBranch = function(branchName, currentBranch, cb) {
         if(!branchName || branchName.length == 0){
             this.printer.E("NError! Cannot create feature branch ''");
+            cb && cb();
             return;
         }
-        this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch);
+        this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch, cb);
     };
 
-    this.createAndCheckoutBranch = function(branchName, currentBranch){
+    this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
         var self = this;
-
-//        self.printer.print("@from-"+currentBranch+"-");
-//        self.printer.print("@to-"+branchName+"-");
         if(currentBranch.trim() != branchName.trim()){
-
            self.git(["checkout", branchName], function(data){
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
-                    self.onBranch();
+                    cb && cb();
                 } else {
                     self.git(["checkout", "-b", branchName], function(){
                         self.printer.print("Created branch "+branchName+" out of "+currentBranch);
-                        self.onBranch();
+                        cb && cb();
                     });
                 }
             });
         } else {
             self.printer.print("Already on " + branchName);
+            cb && cb();
         }
     };
 
@@ -445,7 +464,7 @@ function Nit() {
         this.runInherit("git", cmdArgs, cb);
     };
 
-    this.runInherit = function(cmd, cmdArgs) {
+    this.runInherit = function(cmd, cmdArgs, cb) {
         var msg = cmd;
         if(cmdArgs){
             for(var i=0; i<cmdArgs.length; i++) {
@@ -454,6 +473,8 @@ function Nit() {
         }
         var spawn = require('child_process').spawn;
         spawn(cmd, cmdArgs, {stdio : 'inherit'});
+
+        cb && cb();
     };
 
     this.run = function(cmd, cmdArgs, cb) {
