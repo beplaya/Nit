@@ -217,7 +217,8 @@ function Nit() {
                {arg: "dev", name: "checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
                {arg: "push", name: "push", requiresClean: true, action: function(nit, arg, currentBranch){ nit.pushFull(currentBranch); }},
                {arg: "fci", name: "make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
-               {arg: "derge", name: "update develop and merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.updateDevThenMerge(currentBranch); }},
+               {arg: "derge", name: "merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
+               {arg: "upderge", name: "update develop and merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.updateDevThenMerge(currentBranch); }},
                {arg: "ci", name: "commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
                {arg: "help", name: "help", requiresClean: false, action: function(nit, arg, currentBranch){ nit.help(); }},
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
@@ -328,15 +329,16 @@ function Nit() {
 
     this.updateDevThenMerge = function(currentBranch){
         var self = this;
-        var alreadyUpStrFound = false;
+        if(currentBranch==="develop"){
+            self.printer.E("Already on develop.  Did no work.");
+            return;
+        }
+
         self.gotoDevelop(currentBranch, function(success) {
-            if(success === false){
-               self.printer.E("Failed to derge!");
-               return;
-            }
             self.git(["pull", "origin", "develop"], function(){
                 self.git(["checkout", currentBranch], function(data){
                     self.git(["merge", "develop"], function(data){
+                        var alreadyUpStrFound = false;
                         var isAlreadyStr = data.indexOf("Already up-to-date") != -1;
 
                         if(!isAlreadyStr || !alreadyUpStrFound){
@@ -353,6 +355,11 @@ function Nit() {
 
     this.devMerge = function(currentBranch){
         var self = this;
+         if(currentBranch==="develop"){
+            self.printer.E("Already on develop.  Did no work.");
+            return;
+        }
+
         self.printer.I("Merging develop into " + currentBranch);
         var gitArgs = ["merge", "develop"];
         self.git(gitArgs, function(data){
@@ -379,17 +386,17 @@ function Nit() {
            self.git(["checkout", branchName], function(data){
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
-                    cb && cb(false);
+                    cb && cb();
                 } else {
                     self.git(["checkout", "-b", branchName], function(){
                         self.printer.print("Created branch "+branchName+" out of "+currentBranch);
-                        cb && cb(true);
+                        cb && cb();
                     });
                 }
             });
         } else {
             self.printer.print("Already on " + branchName);
-            cb && cb(false);
+            cb && cb();
         }
     };
 
@@ -447,7 +454,7 @@ function Nit() {
     };
 
     this.discoverBranch = function(statusData){
-        var search = "On branch";
+        var search = "On branch ";
         var branch = undefined;
         if(statusData.indexOf(search) != -1){
             var branchStartIndex = search.length;
@@ -484,22 +491,19 @@ function Nit() {
     this.run = function(cmd, cmdArgs, cb) {
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-        // console.log("RUNNING ", cmd, cmdArgs);
-        var ran = false;
+        //console.log("RUNNING ", cmd, cmdArgs);
+        var out = "";
+        var error = false;
         ls.stdout.on('data', function (data) {
-            ran = true;
-            cb && cb(data ? data.toString() : "");
+            out += "\n" + (data ? data.toString() : "");
         });
         ls.stderr.on('data', function (data) {
-            ran = true;
-            cb && cb(data ? data.toString() : "", true);
+            error = true;
+            out += "\n" + (data ? data.toString() : "");
         });
 
         ls.on('close', function (code) {
-            if(!ran){
-                ran = true;
-                cb && cb(code ? code.toString() : "");
-            }
+            cb && cb(out, error);
         });
     };
 }
