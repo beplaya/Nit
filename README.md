@@ -35,20 +35,20 @@ If Nit does not recognize a command it will simply pass the command and args to 
 Therefore, you do not need to switch from "nit" to "git" for any command.  You can always use "nit"!
 
 ## Commands
-    b  --->  discoverBranch
-    cob  --->  createAndCheckoutBranch
-    st  --->  statusPrint
-    fb  --->  createAndCheckoutFeatureBranch
-    dev  --->  gotoDevelop
-    push  --->  pushFull
-    fci  --->  featureCommit
-    ferge  --->  featureMerge
-    ci  --->  commit
-    help  --->  help
-    browse  --->  browse jira
-    stage  --->  stage
-    sts  --->  status -s
-    qci  --->  stage and commit
+          b  --->  discoverBranch
+          cob  --->  createAndCheckoutBranch
+          st  --->  statusPrint
+          fb  --->  createAndCheckoutFeatureBranch
+          dev  --->  gotoDevelop
+          push  --->  pushFull
+          fci  --->  featureCommit
+          derge  --->  devMerge
+          ci  --->  commit
+          help  --->  help
+          browse  --->  browse jira
+          stage  --->  stage
+          sts  --->  status -s
+          qci  --->  stage and commit
 
 ## Dependencies
     Node JS
