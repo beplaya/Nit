@@ -211,7 +211,7 @@ function Nit() {
 
     this.cmds = [
                {arg: "b", name: "discoverBranch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.onBranch(); }},
-               {arg: "cob", name: "createAndCheckoutBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutBranch(arg); }},
+               {arg: "cob", name: "createAndCheckoutBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutBranch(arg, currentBranch); }},
                {arg: "st", name: "status", requiresClean: false, action: function(nit, arg, currentBranch){ nit.statusPrint(currentBranch); }},
                {arg: "fb", name: "createAndCheckoutFeatureBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutFeatureBranch(arg, currentBranch); }},
                {arg: "dev", name: "checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
@@ -361,7 +361,7 @@ function Nit() {
     };
 
     this.gotoDevelop = function(currentBranch, cb){
-         this.createAndCheckoutBranch("develop", cb);
+         this.createAndCheckoutBranch("develop", currentBranch, cb);
     };
 
     this.createAndCheckoutFeatureBranch = function(branchName, currentBranch, cb) {
@@ -370,10 +370,10 @@ function Nit() {
             cb && cb();
             return;
         }
-        this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, cb);
+        this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch, cb);
     };
 
-    this.createAndCheckoutBranch = function(branchName, cb){
+    this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
         var self = this;
         if(currentBranch.trim() != branchName.trim()){
            self.git(["checkout", branchName], function(data){
