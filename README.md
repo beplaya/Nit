@@ -27,7 +27,7 @@ nit push
 nit dev
 nit pull
 nit fb 101
-nit merge develop
+nit derge
 ```
 
 ## Nit passes through to git
