@@ -18,6 +18,11 @@ function NitSettings() {
        featureBranchPrefix : "feature/"
     };
 
+    this.init = function() {
+        var fs = require('fs');
+        fs.writeFileSync("./.nitconfig", this.defaultSettings.toString());
+    };
+
     this.load = function(){
         var settings = this.loadSettingsFromFile() || this.defaultSettings;
         // Default settings if null
@@ -29,7 +34,7 @@ function NitSettings() {
         settings.jiraPrefix = settings.jira.projectKey + "-";
         settings.featurePrefix = settings.featureBranchPrefix + settings.jiraPrefix;
         return settings;
-    }
+    };
 
     this.loadSettingsFromFile = function(){
         var fs = require('fs');
@@ -50,7 +55,7 @@ function NitSettings() {
             console.log(e);
         }
         return json;
-    }
+    };
 }
 
 function Printer(){
@@ -218,6 +223,7 @@ function Nit() {
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "stage", name: "stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
+               {arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
                             nit.stage(function(){
@@ -226,7 +232,6 @@ function Nit() {
                         }
                }
          ];
-
 
     this.browse = function(currentBranch) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
