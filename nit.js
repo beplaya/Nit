@@ -284,11 +284,12 @@ function Nit() {
                 self.git(["checkout", currentBranch], function(data){
                     self.git(["merge", "develop"], function(data){
                         var isAlreadyStr = data.indexOf("Already up-to-date") != -1;
-                        if(isAlreadyStr) {
-                            alreadyUpStrFound = true;
-                        }
+
                         if(!isAlreadyStr || !alreadyUpStrFound){
                             self.printer.print("}"+data);
+                        }
+                        if(isAlreadyStr) {
+                            alreadyUpStrFound = true;
                         }
                     });
                 });
