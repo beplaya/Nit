@@ -212,12 +212,12 @@ function Nit() {
     this.cmds = [
                {arg: "b", name: "discoverBranch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.onBranch(); }},
                {arg: "cob", name: "createAndCheckoutBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutBranch(arg, currentBranch); }},
-               {arg: "st", name: "statusPrint", requiresClean: false, action: function(nit, arg, currentBranch){ nit.statusPrint(currentBranch); }},
+               {arg: "st", name: "status", requiresClean: false, action: function(nit, arg, currentBranch){ nit.statusPrint(currentBranch); }},
                {arg: "fb", name: "createAndCheckoutFeatureBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutFeatureBranch(arg, currentBranch); }},
-               {arg: "dev", name: "gotoDevelop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
-               {arg: "push", name: "pushFull", requiresClean: true, action: function(nit, arg, currentBranch){ nit.pushFull(currentBranch); }},
-               {arg: "fci", name: "featureCommit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
-               {arg: "ferge", name: "featureMerge", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureMerge(arg, currentBranch); }},
+               {arg: "dev", name: "checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
+               {arg: "push", name: "push", requiresClean: true, action: function(nit, arg, currentBranch){ nit.pushFull(currentBranch); }},
+               {arg: "fci", name: "make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
+               {arg: "derge", name: "merge develop into current branch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
                {arg: "ci", name: "commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
                {arg: "help", name: "help", requiresClean: false, action: function(nit, arg, currentBranch){ nit.help(); }},
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
@@ -276,16 +276,10 @@ function Nit() {
         this.gitInherit(["status", "-s"]);
     };
 
-    this.featureMerge = function(featureNumber, currentBranch){
+    this.devMerge = function(currentBranch){
         var self = this;
-        if(!featureNumber){
-            self.printer.E("NERROR: Missing a feature number for merge!");
-            return;
-        }
-
-        var fb = self.nettings.featurePrefix + featureNumber;
-        self.printer.I("Merging " + fb + " into " + currentBranch);
-        var gitArgs = ["merge", fb];
+        self.printer.I("Merging develop into " + currentBranch);
+        var gitArgs = ["merge", "develop"];
         self.git(gitArgs, function(data){
             console.log(data);
         });
@@ -346,6 +340,10 @@ function Nit() {
     };
 
     this.createAndCheckoutFeatureBranch = function(branchName, currentBranch) {
+        if(!branchName || branchName.length == 0){
+            this.printer.E("NError! Cannot create feature branch ''");
+            return;
+        }
         this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch);
     };
 
@@ -461,7 +459,7 @@ function Nit() {
     this.run = function(cmd, cmdArgs, cb) {
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-        ///console.log("RUNNING ", cmd, cmdArgs);
+        // console.log("RUNNING ", cmd, cmdArgs);
         var ran = false;
         ls.stdout.on('data', function (data) {
             ran = true;
