@@ -340,6 +340,10 @@ function Nit() {
     };
 
     this.createAndCheckoutFeatureBranch = function(branchName, currentBranch) {
+        if(!branchName || branchName.length == 0){
+            this.printer.E("NError! Cannot create feature branch ''");
+            return;
+        }
         this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch);
     };
 
