@@ -30,6 +30,10 @@ nit fb 101
 nit merge develop
 ```
 
+## Nit passes through to git
+If Nit does not recognize a command it will simply pass the command and args to Git, and give the same output as traditional Git.
+Therefore, you do not need to switch from "nit" to "git" for any command.  You can always use "nit"!
+
 ## Commands
     b  --->  discoverBranch
     cob  --->  createAndCheckoutBranch
