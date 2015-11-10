@@ -282,7 +282,7 @@ function Nit() {
             self.git(["pull", "origin", "develop"], function(){
                 self.git(["checkout", currentBranch], function(data){
                     self.git(["merge", "develop"], function(data){
-                        console.log(data);
+                        self.printer.printer(data);
                     });
                 });
             });
