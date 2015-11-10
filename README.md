@@ -59,6 +59,19 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
         sts  --->  status -s
         qci  --->  stage and commit
 
+## Configuration
+ - Create a .nitconfig file in repo root
+ - Example .nitconfig:
+```json
+{
+   "jira" : {
+       "host" : "my.jira.location.net",
+       "projectKey" : "NIT"
+   },
+   "featureBranchPrefix" : "feature/"
+}
+```
+
 ## Repo Setup
  - npm install
  - add the repo folder to your path
