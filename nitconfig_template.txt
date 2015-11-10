@@ -1,6 +1,6 @@
 {
    "jira" : {
-       "host" : "github.com/beplaya/Nit",
+       "host" : "my.jira.location.net",
        "projectKey" : "NIT"
    },
    "featureBranchPrefix" : "feature/"
