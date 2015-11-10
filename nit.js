@@ -278,12 +278,15 @@ function Nit() {
 
     this.updateDevThenMerge = function(currentBranch){
         var self = this;
+        var alreadyUp = false;
         self.gotoDevelop(currentBranch, function() {
             self.git(["pull", "origin", "develop"], function(){
                 self.git(["checkout", currentBranch], function(data){
                     self.git(["merge", "develop"], function(data){
-
-                        self.printer.print("}"+data);
+                        if(!alreadyUp && data.indexOf("Alread up to")!=-1){
+                            alreadyUp = true;
+                            self.printer.print("}"+data);
+                        }
                     });
                 });
             });
