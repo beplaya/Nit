@@ -484,7 +484,7 @@ function Nit() {
     this.run = function(cmd, cmdArgs, cb) {
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-        // console.log("RUNNING ", cmd, cmdArgs);
+         console.log("RUNNING ", cmd, cmdArgs);
         var ran = false;
         ls.stdout.on('data', function (data) {
             ran = true;
