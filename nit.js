@@ -397,7 +397,7 @@ function Nit() {
 
     this.nerrorUnclean = function() {
         var self = this;
-        self.printer.print("NERROR! Unclean status!");
+        self.printer.E("NERROR! Unclean status!");
     };
 
     this.statusPrint = function() {
