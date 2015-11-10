@@ -223,7 +223,7 @@ function Nit() {
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "stage", name: "stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
-               {arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
+               //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
                             nit.stage(function(){
@@ -338,7 +338,6 @@ function Nit() {
 
     this.isOnAFeatureBranch = function(currentBranch){
         var self = this;
-        console.log("isOnAFeatureBranch", self.nettings.featurePrefix);
         return currentBranch.indexOf(self.nettings.featurePrefix)!=-1;
     };
 
@@ -398,7 +397,7 @@ function Nit() {
 
     this.nerrorUnclean = function() {
         var self = this;
-        self.printer.print("NERROR! Unclean status!");
+        self.printer.E("NERROR! Unclean status!");
     };
 
     this.statusPrint = function() {
