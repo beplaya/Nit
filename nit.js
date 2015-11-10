@@ -278,7 +278,7 @@ function Nit() {
 
     this.updateDevThenMerge = function(currentBranch){
         var self = this;
-        self.gotoDevelop(function() {
+        self.gotoDevelop(currentBranch, function() {
             self.git(["pull", "origin", "develop"], function(){
                 self.git(["checkout", currentBranch], function(data){
                     self.gitInherit(["merge", "develop"], cb);
