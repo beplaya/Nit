@@ -276,40 +276,6 @@ function Nit() {
         this.gitInherit(["status", "-s"]);
     };
 
-    this.updateDevThenMerge = function(currentBranch){
-        var self = this;
-        var alreadyUpStrFound = false;
-        self.gotoDevelop(currentBranch, function(success) {
-            if(!success){
-                self.printer.I("Failed to derge");
-                return;
-            }
-            self.git(["pull", "origin", "develop"], function(){
-                self.git(["checkout", currentBranch], function(data){
-                    self.git(["merge", "develop"], function(data){
-                        var isAlreadyStr = data.indexOf("Already up-to-date") != -1;
-
-                        if(!isAlreadyStr || !alreadyUpStrFound){
-                            self.printer.print(data);
-                        }
-                        if(isAlreadyStr) {
-                            alreadyUpStrFound = true;
-                        }
-                    });
-                });
-            });
-        });
-    };
-
-    this.devMerge = function(currentBranch){
-        var self = this;
-        self.printer.I("Merging develop into " + currentBranch);
-        var gitArgs = ["merge", "develop"];
-        self.git(gitArgs, function(data){
-            console.log(data);
-        });
-    };
-
     this.featureCommit = function(message, currentBranch){
         var self = this;
         if(!message){
@@ -360,6 +326,40 @@ function Nit() {
         return currentBranch.indexOf(self.nettings.featurePrefix)!=-1;
     };
 
+    this.updateDevThenMerge = function(currentBranch){
+        var self = this;
+        var alreadyUpStrFound = false;
+        self.gotoDevelop(currentBranch, function(error) {
+            if(error){
+               self.printer.E("Failed to derge!");
+               return;
+            }
+            self.git(["pull", "origin", "develop"], function(){
+                self.git(["checkout", currentBranch], function(data){
+                    self.git(["merge", "develop"], function(data){
+                        var isAlreadyStr = data.indexOf("Already up-to-date") != -1;
+
+                        if(!isAlreadyStr || !alreadyUpStrFound){
+                            self.printer.print(data);
+                        }
+                        if(isAlreadyStr) {
+                            alreadyUpStrFound = true;
+                        }
+                    });
+                });
+            });
+        });
+    };
+
+    this.devMerge = function(currentBranch){
+        var self = this;
+        self.printer.I("Merging develop into " + currentBranch);
+        var gitArgs = ["merge", "develop"];
+        self.git(gitArgs, function(data){
+            console.log(data);
+        });
+    };
+
     this.gotoDevelop = function(currentBranch, cb){
          this.createAndCheckoutBranch("develop", currentBranch, cb);
     };
@@ -379,17 +379,17 @@ function Nit() {
            self.git(["checkout", branchName], function(data){
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
-                    cb && cb(false);
+                    cb && cb(true);
                 } else {
                     self.git(["checkout", "-b", branchName], function(){
                         self.printer.print("Created branch "+branchName+" out of "+currentBranch);
-                        cb && cb(true);
+                        cb && cb();
                     });
                 }
             });
         } else {
             self.printer.print("Already on " + branchName);
-            cb && cb(true);
+            cb && cb();
         }
     };
 
