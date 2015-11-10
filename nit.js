@@ -281,7 +281,9 @@ function Nit() {
         self.gotoDevelop(currentBranch, function() {
             self.git(["pull", "origin", "develop"], function(){
                 self.git(["checkout", currentBranch], function(data){
-                    self.git(["merge", "develop"]);
+                    self.git(["merge", "develop"], function(data){
+                        console.log(data);
+                    });
                 });
             });
         });
