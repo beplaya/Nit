@@ -349,9 +349,6 @@ function Nit() {
 
     this.createAndCheckoutBranch = function(branchName, currentBranch){
         var self = this;
-
-//        self.printer.print("@from-"+currentBranch+"-");
-//        self.printer.print("@to-"+branchName+"-");
         if(currentBranch.trim() != branchName.trim()){
 
            self.git(["checkout", branchName], function(data){
@@ -360,7 +357,6 @@ function Nit() {
                     self.onBranch();
                 } else {
                     self.git(["checkout", "-b", branchName], function(){
-                        self.printer.print("Created branch "+branchName+" out of "+currentBranch);
                         self.onBranch();
                     });
                 }
