@@ -557,13 +557,15 @@ function Nira(nettings) {
 function Nerver() {
 
     this.cmdDir = __dirname+"/cmds";
+    this.responseDir = __dirname+"/cmdresponse";
     this.fs = require('fs');
 
     this.start = function() {
         var self = this;
         setInterval(function() {
-            console.log('>>>');
-            self.mkdir();
+            console.log('\n>>>');
+            self.mkdir(self.cmdDir);
+            self.mkdir(self.responseDir)
             var files = self.fs.readdirSync(self.cmdDir);
             for(var i=0; i<files.length; i++) {
                 var f = files[i];
@@ -579,13 +581,23 @@ function Nerver() {
         this.fs.unlinkSync(this.cmdDir + "/" + file);
     };
 
-    this.run = function(cmd) {
-        if(cmd == "go"){
+    this.run = function(f) {
+        var self = this;
+        var split = f.split(".");
+        if(!f || split.length !== 2){
+            return;
+        }
+        var cmd = split[0];
+        var guid = split[1];
+        var responseFile = self.responseDir + "/" + guid;
+        if(cmd === "go"){
             console.log("GO!");
+            console.log(guid);
+            self.fs.writeFile(responseFile, "the response");
         }
     };
 
-    this.mkdir = function(){
-        try { this.fs.mkdirSync(this.cmdDir); }catch(e){}
+    this.mkdir = function(dir){
+        try { this.fs.mkdirSync(dir); }catch(e){}
     };
 }
