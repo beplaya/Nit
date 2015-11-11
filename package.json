@@ -4,7 +4,7 @@
   "description": "",
   "main": "nit.js",
   "dependencies": {
-    "colors": "^1.1.2",
+    "colors": "^1.1.2"
   },
   "devDependencies": {},
   "scripts": {
