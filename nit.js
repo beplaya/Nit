@@ -224,7 +224,7 @@ function Nit() {
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "stage", name: "stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
-               {arg: "nerver", name: "start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ new Nerver().start(); }},
+               {arg: "nerver", name: "start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
                //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
@@ -234,6 +234,10 @@ function Nit() {
                         }
                }
          ];
+
+    this.startNerver = function() {
+        new Nerver(this.nira).start();
+    };
 
     this.browse = function(currentBranch) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
@@ -515,53 +519,91 @@ function Nira(nettings) {
     this.baseURL = "https://" + this.nettings.jira.host + "/browse/";
 
 
+    this.login = function(username, password) {
+        var self = this;
+        self.basicAuth = new Buffer(username + ":" + password).toString('base64');
+    };
 
-//    this.getIssue = function(issueID, cb) {
-//       var self = this;
-//       var http = require('http');
-//       http.get({
-//            host: self.nettings.host,
-//            path: '/browse/' + issueID
-//        }, function(response) {
-//            // Continuously update stream with data
-//            var body = '';
-//            response.on('data', function(d) {
-//                body += d;
-//            });
-//            response.on('end', function() {
-//
-//                // Data reception is done, do whatever with it!
-//                var parsed = JSON.parse(body);
-//                cb && cb(body);
-//            });
-//            response.on('error', function() {
-//                console.log('https error');
-//            })
-//        });
-//
-//    };
-//
-//
-//
-//    this.describe = function(issueID) {
-//        this.getIssue(issueID, function(data){
-//            console.log(data);
-//        });
-//    };
+    this.getOptions = function(path){
+         return {
+                    host: this.nettings.jira.host,
+                    port: 443,
+                    method: 'GET',
+                    path : "/rest/api/2/"+path,
+                    headers: { "Content-Type": "application/json", "Authorization": "Basic "+this.basicAuth }
+                };
+    };
+
+    this.getIssue = function(issueID, cb) {
+        var self = this;
+        var https = require('https');
+
+        var options = self.getOptions('issue/' + issueID);
+        console.log(options);
+        var data = "";
+        var req = https.request(options, function(res) {
+            res.on('data', function(d) {
+                data +=d;
+            });
+            res.on('end', function(){
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    data = {error:e};
+                }
+                cb && cb(data);
+            });
+        });
+
+        req.end();
+
+        req.on('error', function(e) {
+          console.error(e);
+        });
+    };
 
     this.ticketIDFromBranch = function(b){
         return b.replace(this.nettings.featurePrefix, this.nettings.jiraPrefix);
     };
 }
 
-function Nerver() {
+function Nerver(nira) {
 
+    this.nira = nira;
     this.cmdDir = __dirname+"/cmds";
     this.responseDir = __dirname+"/cmdresponse";
     this.fs = require('fs');
 
+    this.prompt = function() {
+        var self = this;
+        var prompt = require('prompt');
+
+        var properties = [
+        {
+            name: 'username'
+        },
+        {
+            name: 'password',
+            hidden: true
+        }
+        ];
+
+        prompt.start();
+
+        prompt.get(properties, function (err, result) {
+            if (err) { return onErr(err); }
+            self.nira.login(result.username, result.password);
+        });
+
+        function onErr(err) {
+            console.log(err);
+            return 1;
+        }
+    };
+
     this.start = function() {
         var self = this;
+        self.prompt();
         setInterval(function() {
             console.log('\n>>>');
             self.mkdir(self.cmdDir);
