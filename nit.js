@@ -556,19 +556,36 @@ function Nira(nettings) {
 
 function Nerver() {
 
+    this.cmdDir = __dirname+"/cmds";
+    this.fs = require('fs');
+
     this.start = function() {
-        this.express = require('express');
-        this.app = express();
+        var self = this;
+        setInterval(function() {
+            console.log('>>>');
+            self.mkdir();
+            var files = self.fs.readdirSync(self.cmdDir);
+            for(var i=0; i<files.length; i++) {
+                var f = files[i];
+                console.log(f);
+                self.run(f);
+                self.deleteFile(f);
+            }
+            console.log("<<<");
+        }, 3000);
+    };
 
-        this.app.get('/', function (req, res) {
-          res.send('Hello World!');
-        });
+    this.deleteFile = function(file) {
+        this.fs.unlinkSync(this.cmdDir + "/" + file);
+    };
 
-        this.server = app.listen(3000, function () {
-          var host = server.address().address;
-          var port = server.address().port;
+    this.run = function(cmd) {
+        if(cmd == "go"){
+            console.log("GO!");
+        }
+    };
 
-          console.log('Example app listening at http://%s:%s', host, port);
-        });
-    }
+    this.mkdir = function(){
+        try { this.fs.mkdirSync(this.cmdDir); }catch(e){}
+    };
 }
