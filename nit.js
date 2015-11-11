@@ -224,6 +224,7 @@ function Nit() {
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "stage", name: "stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
+               {arg: "nerver", name: "start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ new Nerver().start(); }},
                //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
@@ -513,6 +514,8 @@ function Nira(nettings) {
     this.nettings = nettings;
     this.baseURL = "https://" + this.nettings.jira.host + "/browse/";
 
+
+
 //    this.getIssue = function(issueID, cb) {
 //       var self = this;
 //       var http = require('http');
@@ -549,4 +552,23 @@ function Nira(nettings) {
     this.ticketIDFromBranch = function(b){
         return b.replace(this.nettings.featurePrefix, this.nettings.jiraPrefix);
     };
+}
+
+function Nerver() {
+
+    this.start = function() {
+        this.express = require('express');
+        this.app = express();
+
+        this.app.get('/', function (req, res) {
+          res.send('Hello World!');
+        });
+
+        this.server = app.listen(3000, function () {
+          var host = server.address().address;
+          var port = server.address().port;
+
+          console.log('Example app listening at http://%s:%s', host, port);
+        });
+    }
 }
