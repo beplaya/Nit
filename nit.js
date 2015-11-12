@@ -598,9 +598,26 @@ function NitClient(nerver) {
         var guid = self.generateUUID();
         self.fs.writeFileSync(self.nerver.cmdDir + "/" + cmd +"." + option + "." + guid, "");
         setTimeout(function(){
-            var content = self.fs.readFileSync(self.nerver.responseDir + "/" + guid).toString();
+            var responseFile = self.nerver.responseDir + "/" + guid;
+            var content = "";
+            var attempts = 0;
+            var maxAttempts = 5000;
+            while(content.indexOf(self.nerver.NendOfFile) == -1 && attempts < maxAttempts) {
+                attempts++;
+                content = self.readSync(responseFile) || "";
+            }
             cb && cb(content);
-        }, 5000)
+        }, 500)
+    };
+
+    this.readSync = function(f) {
+        var c = "";
+        try {
+           c = self.fs.readFileSync(responseFile).toString();
+        } catch(e){
+            c = "";
+        }
+        return c.toString();
     };
 
     this.generateUUID = function(){
@@ -610,10 +627,11 @@ function NitClient(nerver) {
 
 function Nerver(nira) {
 
+    this.fs = require('fs');
     this.nira = nira;
+    this.NendOfFile = "\n@NOF@!!_!!*@@";
     this.cmdDir = __dirname+"/cmds";
     this.responseDir = __dirname+"/cmdresponse";
-    this.fs = require('fs');
 
     this.prompt = function(cb) {
         var self = this;
@@ -680,7 +698,7 @@ function Nerver(nira) {
         var responseFile = self.responseDir + "/" + guid;
         if(cmd === "describe"){
             self.nira.describe(option, function(data){
-                self.fs.writeFile(responseFile, data.toString());
+                self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
             });
         }
     };
