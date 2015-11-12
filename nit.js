@@ -81,6 +81,7 @@ function Printer(){
       important: 'blue',
       change: 'red',
       error: 'red',
+      name: 'red',
       title: 'green',
       arg: 'white'
     });
@@ -100,6 +101,23 @@ function Printer(){
     this.description = function(description) {
         console.log("-------- DESCRIPTION --------".title);
         console.log(description.verbose);
+    };
+
+    this.comments = function(data) {
+        var self = this;
+        console.log("~~~~~ COMMENTS ~~~~~".title);
+
+        data = JSON.parse(data);
+        if(data.comments){
+            var comments = data.comments;
+            for(var i=0; i<comments.length; i++) {
+                var c = comments[i];
+                console.log(self.smallMargin + c.author.displayName.name);
+                console.log(self.margin + c.body.verbose);
+            }
+        }else {
+            console.log("No comments");
+        }
     };
 
     this.print = function(str) {
@@ -460,7 +478,7 @@ function Nit() {
     this.comments = function(currentBranch) {
         var self = this;
         self.nitClient.sendCmd(self.nerver.CMDS.COMMENTS, self.nira.ticketIDFromBranch(currentBranch), function(data){
-            self.printer.I(data);
+            self.printer.comments(data);
         });
     };
 
@@ -604,7 +622,7 @@ function Nira(nettings) {
     this.comments = function(issueID, cb) {
         this.getIssue(issueID, function(data){
             try {
-                cb && cb(data.fields.comment.comments);
+                cb && cb(data.fields.comment);
             } catch (e) {
                 cb && cb("ERROR!" + e.toString());
             }
@@ -632,7 +650,8 @@ function NitClient(nerver) {
             self.readInterval.maxAttempts = 5000;
             content = self.readSync(responseFile) || "";
             if(content.indexOf(self.nerver.NendOfFile) != -1 || self.readInterval.attempts >= self.readInterval.maxAttempts) {
-                cb && cb(content.replace(self.nerver.NendOfFile, ""));
+                var finalData = content.replace(self.nerver.NendOfFile, "");
+                cb && cb(finalData);
                 clearInterval(self.readInterval);
             }
         }, 500);
@@ -716,7 +735,6 @@ function Nerver(nira) {
                 var files = self.fs.readdirSync(self.cmdDir);
                 for(var i=0; i<files.length; i++) {
                     var f = files[i];
-                    console.log(f);
                     self.run(f);
                     self.deleteFile(f);
                 }
@@ -749,7 +767,7 @@ function Nerver(nira) {
             } else if(cmd === self.CMDS.COMMENTS){
                 self.nira.comments(option, function(data){
                     data = data || "";
-                    self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
+                    self.fs.writeFile(responseFile, JSON.stringify(data)+self.NendOfFile);
                 });
             }
         } catch (e) {
