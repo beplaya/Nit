@@ -600,7 +600,7 @@ function NitClient(nerver) {
         setTimeout(function(){
             var content = self.fs.readFileSync(self.nerver.responseDir + "/" + guid).toString();
             cb && cb(content);
-        },10000)
+        }, 5000)
     };
 
     this.generateUUID = function(){
@@ -659,7 +659,7 @@ function Nerver(nira) {
                     self.deleteFile(f);
                 }
                 console.log("<<<");
-            }, 3000);
+            }, 300);
         });
 
     };
