@@ -80,6 +80,7 @@ function Printer(){
       debug: 'blue',
       important: 'blue',
       change: 'red',
+      RED: 'red',
       error: 'red',
       name: 'red',
       title: 'green',
@@ -98,15 +99,26 @@ function Printer(){
         console.log(str.important);
     };
 
-    this.description = function(description) {
-        console.log("\t| -------- DESCRIPTION --------".title);
-        this.printLinesMargined("\t| ", description);
+    this.description = function(issueID, fields) {
+        var issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
+        var status = fields.status ? fields.status.name || "" : "without any status";
+        var assignee = fields.assignee ? fields.assignee.displayName || "" : "no one";
+        this._description(issueID, fields.description || "",
+            status, issuetype, assignee);
+    };
+
+    this._description = function(key, description, status, issuetype, assignee) {
+        console.log(("\t|  " + key).title);
+        // console.log("\t| ".title, "Status:".title, status, "\tType:".title, issuetype, "\tAssignee:".title,  assignee);
+        this.hr("\t|");
+        console.log("\t| ", "A", ("'"+issuetype+"'").verbose, "issue that is", ("'"+status+"'").verbose, "assigned to", ("'"+assignee+"'").verbose + ".");
+        this.hr("\t|");
+        this.printLinesWithPrefix("\t| ", description);
     };
 
     this.comments = function(data) {
         var self = this;
         console.log("\t### COMMENTS ###".title);
-
         data = JSON.parse(data);
         if(data.comments){
             var comments = data.comments;
@@ -115,14 +127,14 @@ function Printer(){
                 var author =c.author.displayName;
                 console.log("\t#".verbose);
                 console.log("\t#".verbose, "author: ", author.name, "\t created: ", c.created.verbose, "\tupdated: "+c.updated.verbose);
-                self.printLinesMargined("\t# \t", c.body);
+                self.printLinesWithPrefix("\t# \t", c.body);
             }
         }else {
             console.log("No comments");
         }
     };
 
-    this.printLinesMargined = function(margin, str) {
+    this.printLinesWithPrefix = function(margin, str) {
         var strings = str.split("\n");
         for(var i =0; i<strings.length; i++) {
             console.log((margin + strings[i]).verbose);
@@ -231,6 +243,11 @@ function Printer(){
 
     this.hide = function(str, lineNumber) {
         return str.indexOf("(use \"git ") != -1;
+    };
+
+    this.hr = function(prefix) {
+        prefix = prefix || "";
+        console.log(prefix + "----------------------------------------------------------------------------------");
     };
 }
 
@@ -479,8 +496,9 @@ function Nit() {
 
     this.describe = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd(self.nerver.CMDS.DESCRIPTION, self.nira.ticketIDFromBranch(currentBranch), function(data){
-            self.printer.description(data);
+        self.nitClient.sendCmd(self.nerver.CMDS.DESCRIPTION, self.nira.ticketIDFromBranch(currentBranch), function(fields){
+            fields = JSON.parse(fields);
+            self.printer.description(self.nira.ticketIDFromBranch(currentBranch), fields);
         });
     };
 
@@ -621,7 +639,8 @@ function Nira(nettings) {
     this.describe = function(issueID, cb) {
         this.getIssue(issueID, function(data){
             try {
-                cb && cb(data.fields.description);
+                var F = data.fields;
+                cb && cb(F);
             } catch (e) {
                 cb && cb("ERROR!" + e.toString());
             }
@@ -771,7 +790,7 @@ function Nerver(nira) {
             if(cmd === self.CMDS.DESCRIPTION){
                 self.nira.describe(option, function(data){
                     data = data || "";
-                    self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
+                    self.fs.writeFile(responseFile, JSON.stringify(data)+self.NendOfFile);
                 });
             } else if(cmd === self.CMDS.COMMENTS){
                 self.nira.comments(option, function(data){
