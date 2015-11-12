@@ -715,9 +715,14 @@ function Nerver(nira) {
         var guid = split[2];
         var responseFile = self.responseDir + "/" + guid;
         if(cmd === "describe"){
-            self.nira.describe(option, function(data){
-                self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
-            });
+            try {
+                self.nira.describe(option, function(data){
+                    data = data || "";
+                    self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
+                });
+            } catch (e) {
+                 self.fs.writeFile(responseFile, e.toString() + self.NendOfFile)
+            }
         }
     };
 
