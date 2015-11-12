@@ -81,6 +81,7 @@ function Printer(){
       important: 'blue',
       change: 'red',
       error: 'red',
+      title: 'green',
       arg: 'white'
     });
 
@@ -94,6 +95,11 @@ function Printer(){
 
     this.I = function(str) {
         console.log(str.important);
+    };
+
+    this.description = function(description) {
+        console.log("-------- DESCRIPTION --------".title);
+        console.log(description.verbose);
     };
 
     this.print = function(str) {
@@ -446,7 +452,7 @@ function Nit() {
     this.describe = function(currentBranch) {
         var self = this;
         self.nitClient.sendCmd("describe", self.nira.ticketIDFromBranch(currentBranch), function(data){
-            console.log(data);
+            self.printer.description(data);
         });
     };
 
@@ -597,25 +603,26 @@ function NitClient(nerver) {
         var self = this;
         var guid = self.generateUUID();
         self.fs.writeFileSync(self.nerver.cmdDir + "/" + cmd +"." + option + "." + guid, "");
-        setTimeout(function(){
+
+        self.readInterval = setInterval(function(){
             var responseFile = self.nerver.responseDir + "/" + guid;
             var content = "";
-            var attempts = 0;
-            var maxAttempts = 5000;
-            while(content.indexOf(self.nerver.NendOfFile) == -1 && attempts < maxAttempts) {
-                attempts++;
-                content = self.readSync(responseFile) || "";
+            self.readInterval.attempts++
+            self.readInterval.maxAttempts = 5000;
+            content = self.readSync(responseFile) || "";
+            if(content.indexOf(self.nerver.NendOfFile) != -1 || self.readInterval.attempts >= self.readInterval.maxAttempts) {
+                cb && cb(content.replace(self.nerver.NendOfFile, ""));
+                clearInterval(self.readInterval);
             }
-            cb && cb(content);
-        }, 500)
+        }, 500);
     };
 
     this.readSync = function(f) {
         var c = "";
         try {
-           c = self.fs.readFileSync(responseFile).toString();
+           c = this.fs.readFileSync(f).toString();
         } catch(e){
-            c = "";
+            c = e;
         }
         return c.toString();
     };
