@@ -4,12 +4,13 @@
   "description": "",
   "main": "nit.js",
   "dependencies": {
-    "colors": "^1.1.2"
+    "colors": "^1.1.2",
+    "prompt": "^0.2.14"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
