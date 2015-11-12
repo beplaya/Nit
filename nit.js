@@ -208,6 +208,8 @@ function Nit() {
     this.nettings = new NitSettings().load();
 
     this.nira = new Nira(this.nettings);
+    this.nerver = new Nerver();
+    this.nitClient = new NitClient(this.nerver);
 
     this.cmds = [
                {arg: "b", name: "discoverBranch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.onBranch(); }},
@@ -225,6 +227,7 @@ function Nit() {
                {arg: "stage", name: "stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
                {arg: "nerver", name: "start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
+               {arg: "describe", name: "describe", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
                //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
@@ -236,7 +239,7 @@ function Nit() {
          ];
 
     this.startNerver = function() {
-        new Nerver(this.nira).start();
+        this.nerver = new Nerver(this.nira).start();
     };
 
     this.browse = function(currentBranch) {
@@ -435,9 +438,16 @@ function Nit() {
 
     this.statusPrint = function() {
         var self = this;
-         this.git(["status"], function(str){
+        this.git(["status"], function(str){
             self.printer.print(str);
-         });
+        });
+    };
+
+    this.describe = function(currentBranch) {
+        var self = this;
+        self.nitClient.sendCmd("describe", self.nira.ticketIDFromBranch(currentBranch), function(data){
+            console.log(data);
+        });
     };
 
     this.status = function(cb) {
@@ -577,6 +587,26 @@ function Nira(nettings) {
         return b.replace(this.nettings.featurePrefix, this.nettings.jiraPrefix);
     };
 }
+
+function NitClient(nerver) {
+
+    this.nerver = nerver;
+    this.fs = require('fs');
+
+    this.sendCmd = function(cmd, option, cb) {
+        var self = this;
+        var guid = self.generateUUID();
+        self.fs.writeFileSync(self.nerver.cmdDir + "/" + cmd +"." + option + "." + guid, "");
+        setTimeout(function(){
+            var content = self.fs.readFileSync(self.nerver.responseDir + "/" + guid).toString();
+            cb && cb(content);
+        },10000)
+    };
+
+    this.generateUUID = function(){
+        return Date.now();
+    };
+};
 
 function Nerver(nira) {
 
