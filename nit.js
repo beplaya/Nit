@@ -234,6 +234,7 @@ function Nit() {
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
                {arg: "nerver", name: "start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
                {arg: "describe", name: "describe", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
+               {arg: "comments", name: "comments", requiresClean: false, action: function(nit, arg, currentBranch){ nit.comments(currentBranch); }},
                //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
@@ -451,8 +452,15 @@ function Nit() {
 
     this.describe = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd("describe", self.nira.ticketIDFromBranch(currentBranch), function(data){
+        self.nitClient.sendCmd(self.nerver.CMDS.DESCRIPTION, self.nira.ticketIDFromBranch(currentBranch), function(data){
             self.printer.description(data);
+        });
+    };
+
+    this.comments = function(currentBranch) {
+        var self = this;
+        self.nitClient.sendCmd(self.nerver.CMDS.COMMENTS, self.nira.ticketIDFromBranch(currentBranch), function(data){
+            self.printer.I(data);
         });
     };
 
@@ -586,13 +594,22 @@ function Nira(nettings) {
     this.describe = function(issueID, cb) {
         this.getIssue(issueID, function(data){
             try {
-                cb && cb(data.fields.description)
+                cb && cb(data.fields.description);
             } catch (e) {
                 cb && cb("ERROR!" + e.toString());
             }
         });
     };
 
+    this.comments = function(issueID, cb) {
+        this.getIssue(issueID, function(data){
+            try {
+                cb && cb(data.fields.comment.comments);
+            } catch (e) {
+                cb && cb("ERROR!" + e.toString());
+            }
+        });
+    };
     this.ticketIDFromBranch = function(b){
         return b.replace(this.nettings.featurePrefix, this.nettings.jiraPrefix);
     };
@@ -645,6 +662,11 @@ function Nerver(nira) {
     this.responseDir = __dirname+"/cmdresponse";
     this.period = 200;
     this.timeoutCount = (8 * 60 * 60000) / this.period;
+
+    this.CMDS = {
+        DESCRIPTION : "DESCRIPTION",
+        COMMENTS : "COMMENTS"
+    };
 
     this.prompt = function(cb) {
         var self = this;
@@ -718,15 +740,20 @@ function Nerver(nira) {
         var option = split[1];
         var guid = split[2];
         var responseFile = self.responseDir + "/" + guid;
-        if(cmd === "describe"){
-            try {
+        try {
+            if(cmd === self.CMDS.DESCRIPTION){
                 self.nira.describe(option, function(data){
                     data = data || "";
                     self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
                 });
-            } catch (e) {
-                 self.fs.writeFile(responseFile, e.toString() + self.NendOfFile)
+            } else if(cmd === self.CMDS.COMMENTS){
+                self.nira.comments(option, function(data){
+                    data = data || "";
+                    self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
+                });
             }
+        } catch (e) {
+             self.fs.writeFile(responseFile, e.toString() + self.NendOfFile)
         }
     };
 
