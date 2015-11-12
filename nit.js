@@ -81,6 +81,7 @@ function Printer(){
       important: 'blue',
       change: 'red',
       error: 'red',
+      title: 'green',
       arg: 'white'
     });
 
@@ -94,6 +95,11 @@ function Printer(){
 
     this.I = function(str) {
         console.log(str.important);
+    };
+
+    this.description = function(description) {
+        console.log("-------- DESCRIPTION --------".title);
+        console.log(description.verbose);
     };
 
     this.print = function(str) {
@@ -208,6 +214,8 @@ function Nit() {
     this.nettings = new NitSettings().load();
 
     this.nira = new Nira(this.nettings);
+    this.nerver = new Nerver();
+    this.nitClient = new NitClient(this.nerver);
 
     this.cmds = [
                {arg: "b", name: "discoverBranch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.onBranch(); }},
@@ -224,6 +232,8 @@ function Nit() {
                {arg: "browse", name: "browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "stage", name: "stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
                {arg: "sts", name: "status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
+               {arg: "nerver", name: "start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
+               {arg: "describe", name: "describe", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
                //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
                {arg: "qci", name: "stage and commit", requiresClean: false, action:
                         function(nit, arg, currentBranch){
@@ -233,6 +243,10 @@ function Nit() {
                         }
                }
          ];
+
+    this.startNerver = function() {
+        this.nerver = new Nerver(this.nira).start();
+    };
 
     this.browse = function(currentBranch) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
@@ -430,9 +444,16 @@ function Nit() {
 
     this.statusPrint = function() {
         var self = this;
-         this.git(["status"], function(str){
+        this.git(["status"], function(str){
             self.printer.print(str);
-         });
+        });
+    };
+
+    this.describe = function(currentBranch) {
+        var self = this;
+        self.nitClient.sendCmd("describe", self.nira.ticketIDFromBranch(currentBranch), function(data){
+            self.printer.description(data);
+        });
     };
 
     this.status = function(cb) {
@@ -513,40 +534,194 @@ function Nira(nettings) {
     this.nettings = nettings;
     this.baseURL = "https://" + this.nettings.jira.host + "/browse/";
 
-//    this.getIssue = function(issueID, cb) {
-//       var self = this;
-//       var http = require('http');
-//       http.get({
-//            host: self.nettings.host,
-//            path: '/browse/' + issueID
-//        }, function(response) {
-//            // Continuously update stream with data
-//            var body = '';
-//            response.on('data', function(d) {
-//                body += d;
-//            });
-//            response.on('end', function() {
-//
-//                // Data reception is done, do whatever with it!
-//                var parsed = JSON.parse(body);
-//                cb && cb(body);
-//            });
-//            response.on('error', function() {
-//                console.log('https error');
-//            })
-//        });
-//
-//    };
-//
-//
-//
-//    this.describe = function(issueID) {
-//        this.getIssue(issueID, function(data){
-//            console.log(data);
-//        });
-//    };
+
+    this.login = function(username, password, cb) {
+        var self = this;
+        self.basicAuth = new Buffer(username + ":" + password).toString('base64');
+        cb && cb();
+    };
+
+    this.getOptions = function(path){
+         return {
+                    host: this.nettings.jira.host,
+                    port: 443,
+                    method: 'GET',
+                    path : "/rest/api/2/"+path,
+                    headers: { "Content-Type": "application/json", "Authorization": "Basic "+this.basicAuth }
+                };
+    };
+
+    this.getIssue = function(issueID, cb) {
+        var self = this;
+
+
+        var options = self.getOptions('issue/' + issueID);
+        self.GET(options, cb);
+    };
+
+    this.GET = function(options, cb) {
+        var data = "";
+        var https = require('https');
+        var req = https.request(options, function(res) {
+            res.on('data', function(d) {
+                data +=d;
+            });
+            res.on('end', function(){
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    data = {error:e};
+                }
+                cb && cb(data);
+            });
+        });
+
+        req.end();
+
+        req.on('error', function(e) {
+          cb && cb({error:e});
+        });
+    };
+
+    this.describe = function(issueID, cb) {
+        this.getIssue(issueID, function(data){
+            cb && cb(data.fields.description)
+        });
+    };
 
     this.ticketIDFromBranch = function(b){
         return b.replace(this.nettings.featurePrefix, this.nettings.jiraPrefix);
+    };
+}
+
+function NitClient(nerver) {
+
+    this.nerver = nerver;
+    this.fs = require('fs');
+
+    this.sendCmd = function(cmd, option, cb) {
+        var self = this;
+        var guid = self.generateUUID();
+        self.fs.writeFileSync(self.nerver.cmdDir + "/" + cmd +"." + option + "." + guid, "");
+
+        self.readInterval = setInterval(function(){
+            var responseFile = self.nerver.responseDir + "/" + guid;
+            var content = "";
+            self.readInterval.attempts++
+            self.readInterval.maxAttempts = 5000;
+            content = self.readSync(responseFile) || "";
+            if(content.indexOf(self.nerver.NendOfFile) != -1 || self.readInterval.attempts >= self.readInterval.maxAttempts) {
+                cb && cb(content.replace(self.nerver.NendOfFile, ""));
+                clearInterval(self.readInterval);
+            }
+        }, 500);
+    };
+
+    this.readSync = function(f) {
+        var c = "";
+        try {
+           c = this.fs.readFileSync(f).toString();
+        } catch(e){
+            c = e;
+        }
+        return c.toString();
+    };
+
+    this.generateUUID = function(){
+        return Date.now();
+    };
+};
+
+function Nerver(nira) {
+
+    this.fs = require('fs');
+    this.nira = nira;
+    this.NendOfFile = "\n@NOF@!!_!!*@@";
+    this.cmdDir = __dirname+"/cmds";
+    this.responseDir = __dirname+"/cmdresponse";
+    this.period = 200;
+    this.timeoutCount = (8 * 60 * 60000) / this.period;
+
+    this.prompt = function(cb) {
+        var self = this;
+        var prompt = require('prompt');
+
+        var properties = [
+        {
+            name: 'username'
+        },
+        {
+            name: 'password',
+            hidden: true
+        }
+        ];
+
+        prompt.start();
+
+        prompt.get(properties, function (err, result) {
+            if (err) { return onErr(err); }
+            self.nira.login(result.username, result.password, function(){
+                cb && cb();
+            });
+        });
+
+        function onErr(err) {
+            console.log(err);
+            return 1;
+        }
+    };
+
+
+    this.start = function() {
+        var self = this;
+        self.prompt(function() {
+            self.counter = 0;
+            self.runInterval = setInterval(function() {
+                if(self.counter > self.timeoutCount){
+                    clearInterval(self.runInterval);
+                    console.log("Nerver session ended.");
+                    process.exit();
+                    return;
+                }
+                self.counter++;
+                console.log('\n>>>');
+                self.mkdir(self.cmdDir);
+                self.mkdir(self.responseDir)
+                var files = self.fs.readdirSync(self.cmdDir);
+                for(var i=0; i<files.length; i++) {
+                    var f = files[i];
+                    console.log(f);
+                    self.run(f);
+                    self.deleteFile(f);
+                }
+                console.log("<<<");
+            }, self.period);
+        });
+
+    };
+
+    this.deleteFile = function(file) {
+        this.fs.unlinkSync(this.cmdDir + "/" + file);
+    };
+
+    this.run = function(f) {
+        var self = this;
+        var split = f.split(".");
+        if(!f || split.length !== 3){
+            return;
+        }
+        var cmd = split[0];
+        var option = split[1];
+        var guid = split[2];
+        var responseFile = self.responseDir + "/" + guid;
+        if(cmd === "describe"){
+            self.nira.describe(option, function(data){
+                self.fs.writeFile(responseFile, data.toString()+self.NendOfFile);
+            });
+        }
+    };
+
+    this.mkdir = function(dir){
+        try { this.fs.mkdirSync(dir); }catch(e){}
     };
 }
