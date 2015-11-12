@@ -541,6 +541,11 @@ function Nira(nettings) {
         var options = self.getOptions('issue/' + issueID);
         console.log(options);
         var data = "";
+        self.GET(options, cb);
+    };
+
+    this.GET = function(options, cb) {
+        var data = "";
         var req = https.request(options, function(res) {
             res.on('data', function(d) {
                 data +=d;
@@ -559,6 +564,13 @@ function Nira(nettings) {
 
         req.on('error', function(e) {
           console.error(e);
+          cb && cb({error:e});
+        });
+    };
+
+    this.describe = function(issueID) {
+        this.getIssue(issueID, function(data){
+            console.log(data.fields.description);
         });
     };
 
