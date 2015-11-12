@@ -99,24 +99,33 @@ function Printer(){
     };
 
     this.description = function(description) {
-        console.log("-------- DESCRIPTION --------".title);
-        console.log(description.verbose);
+        console.log("\t| -------- DESCRIPTION --------".title);
+        this.printLinesMargined("\t| ", description);
     };
 
     this.comments = function(data) {
         var self = this;
-        console.log("~~~~~ COMMENTS ~~~~~".title);
+        console.log("\t### COMMENTS ###".title);
 
         data = JSON.parse(data);
         if(data.comments){
             var comments = data.comments;
             for(var i=0; i<comments.length; i++) {
                 var c = comments[i];
-                console.log(self.smallMargin + c.author.displayName.name);
-                console.log(self.margin + c.body.verbose);
+                var author =c.author.displayName;
+                console.log("\t#".verbose);
+                console.log("\t#".verbose, "author: ", author.name, "\t created: ", c.created.verbose, "\tupdated: "+c.updated.verbose);
+                self.printLinesMargined("\t# \t", c.body);
             }
         }else {
             console.log("No comments");
+        }
+    };
+
+    this.printLinesMargined = function(margin, str) {
+        var strings = str.split("\n");
+        for(var i =0; i<strings.length; i++) {
+            console.log((margin + strings[i]).verbose);
         }
     };
 
