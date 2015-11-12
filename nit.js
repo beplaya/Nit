@@ -585,7 +585,11 @@ function Nira(nettings) {
 
     this.describe = function(issueID, cb) {
         this.getIssue(issueID, function(data){
-            cb && cb(data.fields.description)
+            try {
+                cb && cb(data.fields.description)
+            } catch (e) {
+                cb && cb("ERROR!" + e.toString());
+            }
         });
     };
 
