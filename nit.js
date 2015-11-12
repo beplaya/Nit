@@ -519,9 +519,10 @@ function Nira(nettings) {
     this.baseURL = "https://" + this.nettings.jira.host + "/browse/";
 
 
-    this.login = function(username, password) {
+    this.login = function(username, password, cb) {
         var self = this;
         self.basicAuth = new Buffer(username + ":" + password).toString('base64');
+        cb && cb();
     };
 
     this.getOptions = function(path){
@@ -536,16 +537,15 @@ function Nira(nettings) {
 
     this.getIssue = function(issueID, cb) {
         var self = this;
-        var https = require('https');
+
 
         var options = self.getOptions('issue/' + issueID);
-        console.log(options);
-        var data = "";
         self.GET(options, cb);
     };
 
     this.GET = function(options, cb) {
         var data = "";
+        var https = require('https');
         var req = https.request(options, function(res) {
             res.on('data', function(d) {
                 data +=d;
@@ -563,14 +563,13 @@ function Nira(nettings) {
         req.end();
 
         req.on('error', function(e) {
-          console.error(e);
           cb && cb({error:e});
         });
     };
 
-    this.describe = function(issueID) {
+    this.describe = function(issueID, cb) {
         this.getIssue(issueID, function(data){
-            console.log(data.fields.description);
+            cb && cb(data.fields.description)
         });
     };
 
@@ -586,7 +585,7 @@ function Nerver(nira) {
     this.responseDir = __dirname+"/cmdresponse";
     this.fs = require('fs');
 
-    this.prompt = function() {
+    this.prompt = function(cb) {
         var self = this;
         var prompt = require('prompt');
 
@@ -604,7 +603,9 @@ function Nerver(nira) {
 
         prompt.get(properties, function (err, result) {
             if (err) { return onErr(err); }
-            self.nira.login(result.username, result.password);
+            self.nira.login(result.username, result.password, function(){
+                cb && cb();
+            });
         });
 
         function onErr(err) {
@@ -615,20 +616,22 @@ function Nerver(nira) {
 
     this.start = function() {
         var self = this;
-        self.prompt();
-        setInterval(function() {
-            console.log('\n>>>');
-            self.mkdir(self.cmdDir);
-            self.mkdir(self.responseDir)
-            var files = self.fs.readdirSync(self.cmdDir);
-            for(var i=0; i<files.length; i++) {
-                var f = files[i];
-                console.log(f);
-                self.run(f);
-                self.deleteFile(f);
-            }
-            console.log("<<<");
-        }, 3000);
+        self.prompt(function() {
+            setInterval(function() {
+                console.log('\n>>>');
+                self.mkdir(self.cmdDir);
+                self.mkdir(self.responseDir)
+                var files = self.fs.readdirSync(self.cmdDir);
+                for(var i=0; i<files.length; i++) {
+                    var f = files[i];
+                    console.log(f);
+                    self.run(f);
+                    self.deleteFile(f);
+                }
+                console.log("<<<");
+            }, 3000);
+        });
+
     };
 
     this.deleteFile = function(file) {
@@ -638,16 +641,17 @@ function Nerver(nira) {
     this.run = function(f) {
         var self = this;
         var split = f.split(".");
-        if(!f || split.length !== 2){
+        if(!f || split.length !== 3){
             return;
         }
         var cmd = split[0];
-        var guid = split[1];
+        var option = split[1];
+        var guid = split[2];
         var responseFile = self.responseDir + "/" + guid;
-        if(cmd === "go"){
-            console.log("GO!");
-            console.log(guid);
-            self.fs.writeFile(responseFile, "the response");
+        if(cmd === "describe"){
+            self.nira.describe(option, function(data){
+                self.fs.writeFile(responseFile, data.toString());
+            });
         }
     };
 
