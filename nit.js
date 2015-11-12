@@ -639,6 +639,8 @@ function Nerver(nira) {
     this.NendOfFile = "\n@NOF@!!_!!*@@";
     this.cmdDir = __dirname+"/cmds";
     this.responseDir = __dirname+"/cmdresponse";
+    this.period = 200;
+    this.timeoutCount = (8 * 60 * 60000) / this.period;
 
     this.prompt = function(cb) {
         var self = this;
@@ -669,10 +671,19 @@ function Nerver(nira) {
         }
     };
 
+
     this.start = function() {
         var self = this;
         self.prompt(function() {
-            setInterval(function() {
+            self.counter = 0;
+            self.runInterval = setInterval(function() {
+                if(self.counter > self.timeoutCount){
+                    clearInterval(self.runInterval);
+                    console.log("Nerver session ended.");
+                    process.exit();
+                    return;
+                }
+                self.counter++;
                 console.log('\n>>>');
                 self.mkdir(self.cmdDir);
                 self.mkdir(self.responseDir)
@@ -684,7 +695,7 @@ function Nerver(nira) {
                     self.deleteFile(f);
                 }
                 console.log("<<<");
-            }, 300);
+            }, self.period);
         });
 
     };
