@@ -316,6 +316,13 @@ function Nit() {
                                 nit.commit("[" + currentBranch + "] quick commit.", currentBranch);
                             });
                         }
+               },
+               {arg: "qrci", name: "Quick stage and commit with a generated message \"['currentBranch'] README update.\"", requiresClean: false, action:
+                       function(nit, arg, currentBranch){
+                           nit.stage(function(){
+                               nit.commit("[" + currentBranch + "] README update.", currentBranch);
+                           });
+                       }
                }
          ];
 
