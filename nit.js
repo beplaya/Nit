@@ -6,13 +6,11 @@ nit.start(process.argv.slice(2));
 
 function Nit() {
 
-    this.runner = new require('./lib/runner.js')();
     this.runner = new Runner();
     this.printer = new require('./lib/printer.js')();
     this.nettings = new require('./lib/nit_settings.js')().load();
-
     this.nira = new require('./lib/nira.js')(this.nettings);
-    this.nerver = new require('./lib/nerver.js')();
+    this.nerver = new require('./lib/nerver.js')(this.nira);
     this.nitClient = new require('./lib/nit_client.js')(this.nerver);
 
     this.cmds = [
@@ -52,7 +50,7 @@ function Nit() {
          ];
 
     this.startNerver = function() {
-        this.nerver = new Nerver(this.nira).start();
+        this.nerver.start();
     };
 
     this.browse = function(currentBranch) {
