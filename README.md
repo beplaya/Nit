@@ -3,7 +3,7 @@
 ## About
 
 Nit enhances feature/KEY-### branch to develop branch type development.
-Nit access this JIRA rest api to get description and comments (see ```nit describe``` and ````nit comments```)!
+Nit access this JIRA rest api to get description and comments (see ```nit describe``` and ```nit comments```)!
 
 
 
@@ -70,7 +70,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
   qci  --->  Quick stage and commit with a generated message "['currentBranch'] quick commit."
 
 ##Nerver
-Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ````nit comments```.
+Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ```nit comments```.
 Currently, it needs it's own terminal tab.  In the future, Nit will handle this for you.
 For now, to start Nerver:
  - Open a separate terminal window
