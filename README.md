@@ -81,8 +81,8 @@ For now, to start Nerver:
  - Leave the window running
 
 ##### Note:
- - The login is not verified yet.  So, if you're having trouble, try restarting Nerver.
- - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.
+ - Credentials are not verified when Nerver is started.  So, if you're having trouble, try restarting Nerver.
+ - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.  It's recommended to use a functional user for Nerver.
  - Nerver is set to stop itself after 8 hours.
 
 ## Configuration
