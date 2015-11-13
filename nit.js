@@ -9,7 +9,7 @@ function Nit() {
     this.runner = new Runner();
     this.printer = require('./lib/printer.js')();
     this.nettings = require('./lib/nit_settings.js')().load();
-    this.nira = require('./lib/nira.js')(this.nettings);
+    this.nira = require('./lib/nira/nira.js')(this.nettings);
     this.nerver = require('./lib/nerver.js')(this.nira);
     this.nitClient = require('./lib/nit_client.js')(this.nerver);
 
