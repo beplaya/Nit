@@ -263,15 +263,14 @@ function Nit() {
 
     this.describe = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd(self.nerver.CMDS.DESCRIPTION, self.nira.ticketIDFromBranch(currentBranch), function(fields){
-            fields = JSON.parse(fields);
+        self.nitClient.sendCmd("DESCRIBE", self.nira.ticketIDFromBranch(currentBranch), function(fields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), fields);
         });
     };
 
     this.comments = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd(self.nerver.CMDS.COMMENTS, self.nira.ticketIDFromBranch(currentBranch), function(data){
+        self.nitClient.sendCmd("COMMENTS", self.nira.ticketIDFromBranch(currentBranch), function(data){
             self.printer.comments(data);
         });
     };
