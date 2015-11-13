@@ -9,7 +9,7 @@ function Nit() {
     this.runner = new Runner();
     this.printer = require('./lib/printer.js')();
     this.nettings = require('./lib/nit_settings.js')().load();
-    this.nira = require('./lib/nira.js')(this.nettings);
+    this.nira = require('./lib/nira/nira.js')(this.nettings);
     this.nerver = require('./lib/nerver.js')(this.nira);
     this.nitClient = require('./lib/nit_client.js')(this.nerver);
 
@@ -46,7 +46,8 @@ function Nit() {
                {arg: "nerver", name: "Start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
                {arg: "browse", name: "Browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "describe", name: "Get JIRA description", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
-               {arg: "comments", name: "Get JIRA comments", requiresClean: false, action: function(nit, arg, currentBranch){ nit.comments(currentBranch); }}
+               {arg: "comments", name: "Get JIRA comments", requiresClean: false, action: function(nit, arg, currentBranch){ nit.comments(currentBranch); }},
+               //{arg: "mkcomment", name: "Create JIRA comment", requiresClean: false, action: function(nit, arg, currentBranch){ nit.createComment(arg, currentBranch); }}
          ];
 
     this.startNerver = function() {
@@ -69,7 +70,7 @@ function Nit() {
 
     this.help = function() {
         var self = this;
-        self.printer.logo('./logo');
+        self.printer.logo(__dirname + '/logo');
         for(var i=0; i<this.cmds.length; i++){
             var c = this.cmds[i];
             self.printer.printCmd(c);
@@ -263,16 +264,22 @@ function Nit() {
 
     this.describe = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd(self.nerver.CMDS.DESCRIPTION, self.nira.ticketIDFromBranch(currentBranch), function(fields){
-            fields = JSON.parse(fields);
+        self.nitClient.sendCmd("DESCRIBE", self.nira.ticketIDFromBranch(currentBranch), "", function(fields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), fields);
         });
     };
 
     this.comments = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd(self.nerver.CMDS.COMMENTS, self.nira.ticketIDFromBranch(currentBranch), function(data){
+        self.nitClient.sendCmd("COMMENTS", self.nira.ticketIDFromBranch(currentBranch), "", function(data){
             self.printer.comments(data);
+        });
+    };
+
+    this.createComment = function(comment, currentBranch) {
+        var self = this;
+        self.nitClient.sendCmd("CREATE_COMMENT", self.nira.ticketIDFromBranch(currentBranch), comment, function(data){
+            console.log("done");
         });
     };
 
