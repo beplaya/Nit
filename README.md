@@ -1,11 +1,9 @@
 # Nit
 
 ## About
-
-Nit enhances feature/KEY-### branch to develop branch type development.
-Nit access this JIRA rest api to get description and comments (see ```nit describe``` and ```nit comments```)!
-
-
+ - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
+ - Nit enhances feature/KEY-### branch to develop branch type development.
+ - Nit accesses JIRA's rest api (see ```nit nerver```, ```nit describe```, and ```nit comments```)
 
 
 If you work with JIRA, you may work in the following manner:
@@ -68,7 +66,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
     describe  --->  Get JIRA description
     comments  --->  Get JIRA comments
     qci  --->  Quick stage and commit with a generated message "['currentBranch'] quick commit."
-    qrci  --->  Quick stage and commit with a generated message "['currentBranch'] README update."
+    qrci  --->  Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
 
 ##Nerver
 Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ```nit comments```.
