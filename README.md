@@ -2,7 +2,13 @@
 
 ## About
 
-Nit enhances feature/KEY-### branch to develop branch type development.  If you work with JIRA, you may work in the following manner:
+Nit enhances feature/KEY-### branch to develop branch type development.
+Nit access this JIRA rest api to get description and comments (see ```nit describe``` and ```nit comments```)!
+
+
+
+
+If you work with JIRA, you may work in the following manner:
 
 ### Traditional Git (11 lines. 282 chars.):
 ```
@@ -43,21 +49,42 @@ If Nit does not recognize a command it will simply pass the command and args to 
 Therefore, you do not need to switch from "nit" to "git" for any command.  You can always use "nit"!
 
 ## Commands
-        b  --->  discoverBranch
-        cob  --->  createAndCheckoutBranch
-        st  --->  status
-        fb  --->  createAndCheckoutFeatureBranch
-        dev  --->  checkout develop
-        push  --->  push
-        fci  --->  make a commit on feature
-        derge  --->  merge develop into current branch
-        upderge  --->  update develop and merge develop into current branch
-        ci  --->  commit
-        help  --->  help
-        browse  --->  browse jira
-        stage  --->  stage
-        sts  --->  status -s
-        qci  --->  stage and commit
+    b  --->  DiscoverBranch
+    cob  --->  CreateAndCheckoutBranch
+    st  --->  Status
+    fb  --->  CreateAndCheckoutFeatureBranch
+    dev  --->  Checkout develop
+    push  --->  Push
+    fci  --->  Make a commit on feature
+    qfci  --->  Quick stage and make a commit on feature
+    derge  --->  Merge develop into current branch
+    upderge  --->  Update develop and merge develop into current branch
+    ci  --->  Commit
+    help  --->  Help
+    browse  --->  Browse jira
+    stage  --->  Stage
+    sts  --->  Status -s
+    nerver  --->  Start nerver
+    describe  --->  Get JIRA description
+    comments  --->  Get JIRA comments
+    qci  --->  Quick stage and commit with a generated message "['currentBranch'] quick commit."
+    qrci  --->  Quick stage and commit with a generated message "['currentBranch'] README update."
+
+##Nerver
+Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ```nit comments```.
+Currently, it needs it's own terminal tab.  In the future, Nit will handle this for you.
+For now, to start Nerver:
+ - Open a separate terminal window
+ - cd to your project directory
+ - Ensure your .nitconfig jira.host is set to your JIRA host.
+ - Eun ```nit nerver```
+ - Enter your JIRA credentials
+ - Leave the window running
+
+##### Note:
+ - Credentials are not verified when Nerver is started.  So, if you're having trouble, try restarting Nerver.
+ - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.  It's recommended to use a functional user for Nerver.
+ - Nerver is set to stop itself after 8 hours.
 
 ## Configuration
  - Create a .nitconfig file in repo root
@@ -72,7 +99,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
 }
 ```
 
-## Repo Setup
+## Setup
  - npm install
  - add the repo folder to your path
 
