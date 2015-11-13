@@ -116,7 +116,7 @@ function Nit() {
     this.commit = function(message){
         var self= this;
         if(!message){
-            self.printer.print("NERROR: Missing a commit message!");
+            self.printer.E("NERROR: Missing a commit message!");
             return;
         }
 
@@ -128,7 +128,7 @@ function Nit() {
                     }
                 });
             } else {
-                self.printer.print("NERROR: Nothing staged to commit!");
+                self.printer.E("NERROR: Nothing staged to commit!");
             }
         });
     }
