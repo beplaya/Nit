@@ -319,7 +319,7 @@ function Nit() {
                },
                {arg: "qrci", name: "Quick stage and commit with a generated message \"['currentBranch'] README update.\"", requiresClean: false, action:
                        function(nit, arg, currentBranch){
-                           nit.stage(function(){
+                           nit.git(["add", "README.md"], function(){
                                nit.commit("[" + currentBranch + "] README update.", currentBranch);
                            });
                        }
