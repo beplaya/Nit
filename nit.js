@@ -66,6 +66,7 @@ function Printer(){
     this.UNTRACKED = "UNTRACKED";
     this.margin = "                 ";
     this.smallMargin = "          ";
+    this.maxLineLength = 80;
 
     this.colors.setTheme({
       silly: 'rainbow',
@@ -108,6 +109,7 @@ function Printer(){
     };
 
     this._description = function(key, description, status, issuetype, assignee) {
+        description = this.truncateLines(description);
         console.log(("\t|  " + key).title);
         // console.log("\t| ".title, "Status:".title, status, "\tType:".title, issuetype, "\tAssignee:".title,  assignee);
         this.hr("\t|");
@@ -127,11 +129,38 @@ function Printer(){
                 var author =c.author.displayName;
                 console.log("\t#".verbose);
                 console.log("\t#".verbose, "author: ", author.name, "\t created: ", c.created.verbose, "\tupdated: "+c.updated.verbose);
-                self.printLinesWithPrefix("\t# \t", c.body);
+                var body = self.truncateLines(c.body);
+                self.printLinesWithPrefix("\t#   ", body);
             }
         }else {
             console.log("No comments");
         }
+    };
+
+    this.truncateLines = function(str) {
+        var max = this.maxLineLength;
+        var truncated = "";
+        var strings = str.split("\n");
+        for(var i =0; i<strings.length; i++) {
+            var s = strings[i];
+            if(s.length > max) {
+                var words = s.split(" ");
+                var line = "\n";
+
+                for(var j = 0; j<words.length; j++) {
+                   line += " "+words[j];
+                   var next = line + (j<words.length-1 ? " " + words[j+1] : "");
+                   if(next.length >= max){
+                        truncated += line;
+                        line = "\n";
+                   }
+                }
+                truncated += line === "\n" ? "" : line;
+            } else {
+                truncated += "\n" + s;
+            }
+        }
+        return truncated;
     };
 
     this.printLinesWithPrefix = function(margin, str) {
@@ -269,6 +298,7 @@ function Nit() {
                {arg: "dev", name: "checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
                {arg: "push", name: "push", requiresClean: true, action: function(nit, arg, currentBranch){ nit.pushFull(currentBranch); }},
                {arg: "fci", name: "make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
+               {arg: "sfci", name: "stage and make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(function(){nit.featureCommit(arg, currentBranch); });}},
                {arg: "derge", name: "merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
                {arg: "upderge", name: "update develop and merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.updateDevThenMerge(currentBranch); }},
                {arg: "ci", name: "commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
