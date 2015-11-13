@@ -104,13 +104,14 @@ function Printer(){
         var issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
         var status = fields.status ? fields.status.name || "" : "without any status";
         var assignee = fields.assignee ? fields.assignee.displayName || "" : "no one";
-        this._description(issueID, fields.description || "",
+        var summary = fields.summary || "";
+        this._description(issueID, summary, fields.description || "",
             status, issuetype, assignee);
     };
 
-    this._description = function(key, description, status, issuetype, assignee) {
+    this._description = function(key, summary, description, status, issuetype, assignee) {
         description = this.truncateLines(description);
-        console.log(("\t|  " + key).title);
+        console.log(("\t|  " + key + ": " + summary).title);
         // console.log("\t| ".title, "Status:".title, status, "\tType:".title, issuetype, "\tAssignee:".title,  assignee);
         this.hr("\t|");
         console.log("\t| ", "A", ("'"+issuetype+"'").verbose, "issue that is", ("'"+status+"'").verbose, "assigned to", ("'"+assignee+"'").verbose + ".");
