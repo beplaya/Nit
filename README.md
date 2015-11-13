@@ -1,5 +1,3 @@
-# Nit
-
 ![NIT](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
 
 ## About
