@@ -47,7 +47,7 @@ function Nit() {
                {arg: "browse", name: "Browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "describe", name: "Get JIRA description", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
                {arg: "comments", name: "Get JIRA comments", requiresClean: false, action: function(nit, arg, currentBranch){ nit.comments(currentBranch); }},
-               {arg: "mkcomment", name: "Create JIRA comment", requiresClean: false, action: function(nit, arg, currentBranch){ nit.createComment(arg, currentBranch); }}
+               //{arg: "mkcomment", name: "Create JIRA comment", requiresClean: false, action: function(nit, arg, currentBranch){ nit.createComment(arg, currentBranch); }}
          ];
 
     this.startNerver = function() {
