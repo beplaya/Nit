@@ -66,7 +66,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
     describe  --->  Get JIRA description
     comments  --->  Get JIRA comments
     qci  --->  Quick stage and commit with a generated message "['currentBranch'] quick commit."
-    qrci  --->  Quick stage and commit with a generated message "['currentBranch'] README update."
+    qrci  --->  Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
 
 ##Nerver
 Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ```nit comments```.
