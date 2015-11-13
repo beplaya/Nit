@@ -317,7 +317,7 @@ function Nit() {
                             });
                         }
                },
-               {arg: "qrci", name: "Quick stage and commit with a generated message \"['currentBranch'] README update.\"", requiresClean: false, action:
+               {arg: "qrci", name: "Quick stage and commit only README.md with a generated message \"['currentBranch'] README update.\"", requiresClean: false, action:
                        function(nit, arg, currentBranch){
                            nit.git(["add", "README.md"], function(){
                                nit.commit("[" + currentBranch + "] README update.", currentBranch);
