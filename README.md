@@ -1,5 +1,7 @@
 # Nit
 
+![alt tag](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
+
 ## About
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
  - Nit enhances feature/KEY-### branch to develop branch type development.
