@@ -49,25 +49,25 @@ If Nit does not recognize a command it will simply pass the command and args to 
 Therefore, you do not need to switch from "nit" to "git" for any command.  You can always use "nit"!
 
 ## Commands
-  b  --->  discoverBranch
-  cob  --->  createAndCheckoutBranch
-  st  --->  status
-  fb  --->  createAndCheckoutFeatureBranch
-  dev  --->  checkout develop
-  push  --->  push
-  fci  --->  make a commit on feature
-  sfci  --->  stage and make a commit on feature
-  derge  --->  merge develop into current branch
-  upderge  --->  update develop and merge develop into current branch
-  ci  --->  commit
-  help  --->  help
-  browse  --->  browse jira
-  stage  --->  stage
-  sts  --->  status -s
-  nerver  --->  start nerver
-  describe  --->  describe
-  comments  --->  comments
-  qci  --->  quick stage and commit with a generated message "['currentBranch'] quick commit."
+  b  --->  DiscoverBranch
+  cob  --->  CreateAndCheckoutBranch
+  st  --->  Status
+  fb  --->  CreateAndCheckoutFeatureBranch
+  dev  --->  Checkout develop
+  push  --->  Push
+  fci  --->  Make a commit on feature
+  qfci  --->  Quick stage and make a commit on feature
+  derge  --->  Merge develop into current branch
+  upderge  --->  Update develop and merge develop into current branch
+  ci  --->  Commit
+  help  --->  Help
+  browse  --->  Browse jira
+  stage  --->  Stage
+  sts  --->  Status -s
+  nerver  --->  Start nerver
+  describe  --->  Get JIRA description
+  comments  --->  Get JIRA comments
+  qci  --->  Quick stage and commit with a generated message "['currentBranch'] quick commit."
 
 ##Nerver
 Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ````nit comments```.
