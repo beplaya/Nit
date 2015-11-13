@@ -70,7 +70,7 @@ function Nit() {
 
     this.help = function() {
         var self = this;
-        self.printer.logo('./logo');
+        self.printer.logo(__dirname + '/logo');
         for(var i=0; i<this.cmds.length; i++){
             var c = this.cmds[i];
             self.printer.printCmd(c);
