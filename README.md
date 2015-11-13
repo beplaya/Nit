@@ -79,7 +79,7 @@ For now, to start Nerver:
  - Eun ```nit nerver```
  - Enter your JIRA credentials
  - Leave the window running
-##### Note:
+#### Note:
  - The login is not verified yet.  So, if you're having trouble, try restarting Nerver.
  - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.
  - Nerver is set to stop itself after 8 hours.
