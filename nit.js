@@ -310,10 +310,10 @@ function Nit() {
                {arg: "describe", name: "describe", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
                {arg: "comments", name: "comments", requiresClean: false, action: function(nit, arg, currentBranch){ nit.comments(currentBranch); }},
                //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
-               {arg: "qci", name: "stage and commit", requiresClean: false, action:
+               {arg: "qci", name: "quick stage and commit with a generated message \"['currentBranch'] quick commit.\"", requiresClean: false, action:
                         function(nit, arg, currentBranch){
                             nit.stage(function(){
-                                nit.commit("quick commit", currentBranch);
+                                nit.commit("[" + currentBranch + "] quick commit.", currentBranch);
                             });
                         }
                }
