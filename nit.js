@@ -7,11 +7,11 @@ nit.start(process.argv.slice(2));
 function Nit() {
 
     this.runner = new Runner();
-    this.printer = new require('./lib/printer.js')();
-    this.nettings = new require('./lib/nit_settings.js')().load();
-    this.nira = new require('./lib/nira.js')(this.nettings);
-    this.nerver = new require('./lib/nerver.js')(this.nira);
-    this.nitClient = new require('./lib/nit_client.js')(this.nerver);
+    this.printer = require('./lib/printer.js')();
+    this.nettings = require('./lib/nit_settings.js')().load();
+    this.nira = require('./lib/nira.js')(this.nettings);
+    this.nerver = require('./lib/nerver.js')(this.nira);
+    this.nitClient = require('./lib/nit_client.js')(this.nerver);
 
     this.cmds = [
                {arg: "help", name: "Help", requiresClean: false, action: function(nit, arg, currentBranch){ nit.help(); }},
