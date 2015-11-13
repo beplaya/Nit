@@ -1,11 +1,9 @@
 # Nit
 
 ## About
-
-Nit enhances feature/KEY-### branch to develop branch type development.
-Nit access this JIRA rest api to get description and comments (see ```nit describe``` and ```nit comments```)!
-
-
+ - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
+ - Nit enhances feature/KEY-### branch to develop branch type development.
+ - Nit accesses JIRA's rest api (see ```nit describe``` and ```nit comments``` and Nerver)
 
 
 If you work with JIRA, you may work in the following manner:
