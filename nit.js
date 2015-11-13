@@ -21,7 +21,8 @@ function Nit() {
                {arg: "st", name: "Status", requiresClean: false, action: function(nit, arg, currentBranch){ nit.statusPrint(currentBranch); }},
                {arg: "fb", name: "CreateAndCheckoutFeatureBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutFeatureBranch(arg, currentBranch); }},
                {arg: "dev", name: "Checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
-               {arg: "push", name: "Push", requiresClean: true, action: function(nit, arg, currentBranch){ nit.pushFull(currentBranch); }},
+               {arg: "ush", name: "Push", requiresClean: true, action: function(nit, arg, currentBranch){ nit.push(currentBranch); }},
+               {arg: "ull", name: "Pull", requiresClean: false, action: function(nit, arg, currentBranch){ nit.pull(currentBranch); }},
                {arg: "fci", name: "Make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
                {arg: "qfci", name: "Quick stage and make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(function(){nit.featureCommit(arg, currentBranch); });}},
                {arg: "derge", name: "Merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
@@ -228,9 +229,8 @@ function Nit() {
         });
     };
 
-    this.pushFull = function(currentBranch){
-        var self = this;
-        self.push(currentBranch);
+    this.setPull = function(branch, cb) {
+        this.git(["push", "--set-upstream-to origin/" + branch], cb);
     };
 
     this.setPush = function(branch, cb) {
@@ -240,6 +240,13 @@ function Nit() {
     this.push = function(branch) {
         var self = this;
         this.git(["push", "origin", branch], function(data){
+            self.printer.print(data);
+        });
+    };
+
+    this.pull = function(branch) {
+        var self = this;
+        this.git(["pull", "origin", branch], function(data){
             self.printer.print(data);
         });
     };
