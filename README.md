@@ -1,6 +1,6 @@
 # Nit
 
-![alt tag](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
+![NIT](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
 
 ## About
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
