@@ -78,6 +78,7 @@ For now, to start Nerver:
  - Run ```nit nerver```
  - Enter your JIRA credentials
  - Leave the window running
+ - Now, commands like ```nit describe``` and ```nit comments``` will use this nerver to work.
 
 ##### Note:
  - Credentials are not verified when Nerver is started.  So, if you're having trouble, try restarting Nerver.
