@@ -16,26 +16,21 @@ function Nit() {
     this.nitClient = new require('./lib/nit_client.js')(this.nerver);
 
     this.cmds = [
-               {arg: "b", name: "DiscoverBranch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.onBranch(); }},
-               {arg: "cob", name: "CreateAndCheckoutBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutBranch(arg, currentBranch); }},
+               {arg: "help", name: "Help", requiresClean: false, action: function(nit, arg, currentBranch){ nit.help(); }},
                {arg: "st", name: "Status", requiresClean: false, action: function(nit, arg, currentBranch){ nit.statusPrint(currentBranch); }},
-               {arg: "fb", name: "CreateAndCheckoutFeatureBranch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutFeatureBranch(arg, currentBranch); }},
-               {arg: "dev", name: "Checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
+               {arg: "sts", name: "Status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
+               {arg: "b", name: "Discover branch", requiresClean: false, action: function(nit, arg, currentBranch){ nit.onBranch(); }},
                {arg: "push", name: "Push", requiresClean: true, action: function(nit, arg, currentBranch){ nit.push(currentBranch); }},
                {arg: "pull", name: "Pull", requiresClean: false, action: function(nit, arg, currentBranch){ nit.pull(currentBranch); }},
-               {arg: "fci", name: "Make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
-               {arg: "qfci", name: "Quick stage and make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(function(){nit.featureCommit(arg, currentBranch); });}},
+               {arg: "cob", name: "Create and checkout branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutBranch(arg, currentBranch); }},
+               {arg: "fb", name: "Create and checkout feature branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.createAndCheckoutFeatureBranch(arg, currentBranch); }},
+               {arg: "dev", name: "Checkout develop", requiresClean: true, action: function(nit, arg, currentBranch){ nit.gotoDevelop(currentBranch); }},
                {arg: "derge", name: "Merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
                {arg: "upderge", name: "Update develop and merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.updateDevThenMerge(currentBranch); }},
-               {arg: "ci", name: "Commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
-               {arg: "help", name: "Help", requiresClean: false, action: function(nit, arg, currentBranch){ nit.help(); }},
-               {arg: "browse", name: "Browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "stage", name: "Stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
-               {arg: "sts", name: "Status -s", requiresClean: false, action: function(nit, arg, currentBranch){ nit.sts(); }},
-               {arg: "nerver", name: "Start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
-               {arg: "describe", name: "Get JIRA description", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
-               {arg: "comments", name: "Get JIRA comments", requiresClean: false, action: function(nit, arg, currentBranch){ nit.comments(currentBranch); }},
-               //{arg: "init", name: "initConfig", requiresClean: false, action: function(nit, arg, currentBranch){ nit.nettings.init(); }},
+               {arg: "ci", name: "Commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
+               {arg: "fci", name: "Make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
+               {arg: "qfci", name: "Quick stage and make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(function(){nit.featureCommit(arg, currentBranch); });}},
                {arg: "qci", name: "Quick stage and commit with a generated message \"['currentBranch'] quick commit.\"", requiresClean: false, action:
                         function(nit, arg, currentBranch){
                             nit.stage(function(){
@@ -49,7 +44,11 @@ function Nit() {
                                nit.commit("[" + currentBranch + "] README update.", currentBranch);
                            });
                        }
-               }
+               },
+               {arg: "nerver", name: "Start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
+               {arg: "browse", name: "Browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
+               {arg: "describe", name: "Get JIRA description", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
+               {arg: "comments", name: "Get JIRA comments", requiresClean: false, action: function(nit, arg, currentBranch){ nit.comments(currentBranch); }}
          ];
 
     this.startNerver = function() {
@@ -72,6 +71,7 @@ function Nit() {
 
     this.help = function() {
         var self = this;
+        self.printer.logo('./logo');
         for(var i=0; i<this.cmds.length; i++){
             var c = this.cmds[i];
             self.printer.printCmd(c);
