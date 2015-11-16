@@ -238,14 +238,14 @@ function Nit() {
 
     this.push = function(branch) {
         var self = this;
-        this.git(["push", "origin", branch], function(data){
+        this.gitInherit(["push", "origin", branch], function(data){
             self.printer.print(data);
         });
     };
 
     this.pull = function(branch) {
         var self = this;
-        this.git(["pull", "origin", branch], function(data){
+        this.gitInherit(["pull", "origin", branch], function(data){
             self.printer.print(data);
         });
     };
