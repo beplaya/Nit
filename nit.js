@@ -238,16 +238,12 @@ function Nit() {
 
     this.push = function(branch) {
         var self = this;
-        this.gitInherit(["push", "origin", branch], function(data){
-            self.printer.print(data);
-        });
+        this.gitInherit(["push", "origin", branch]);
     };
 
     this.pull = function(branch) {
         var self = this;
-        this.gitInherit(["pull", "origin", branch], function(data){
-            self.printer.print(data);
-        });
+        this.gitInherit(["pull", "origin", branch]);
     };
 
     this.nerrorUnclean = function() {
