@@ -58,7 +58,6 @@ function Nit() {
                        });
                    }
                },
-
                {arg: "nerver", name: "Start nerver", requiresClean: false, action: function(nit, arg, currentBranch){ nit.startNerver(); }},
                {arg: "browse", name: "Browse jira", requiresClean: false, action: function(nit, arg, currentBranch){ nit.browse(currentBranch); }},
                {arg: "describe", name: "Get JIRA description", requiresClean: false, action: function(nit, arg, currentBranch){ nit.describe(currentBranch); }},
