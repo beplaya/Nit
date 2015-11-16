@@ -259,6 +259,13 @@ function Nit() {
         });
     };
 
+    this.logOneLiners = function(cb) {
+        var self = this;
+        self.git(["log", "--pretty=oneline"], function(data){
+            self.printer.logOneLiners(data);
+        });
+    };
+
     this.status = function(cb) {
          this.git(["status"], cb);
     };
