@@ -26,7 +26,7 @@ function Nit() {
                {arg: "derge", name: "Merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.devMerge(currentBranch); }},
                {arg: "upderge", name: "Update develop and merge develop into current branch", requiresClean: true, action: function(nit, arg, currentBranch){ nit.updateDevThenMerge(currentBranch); }},
                {arg: "stage", name: "Stage", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(); }},
-               {arg: "ci", name: "Commit", requiresClean: false, action: function(nit, arg, currentBranch){ nit.commit(arg, currentBranch); }},
+               {arg: "ci", name: "Commit", requiresClean: false, takesArray: true, action: function(nit, argz, currentBranch){ var message = nit.ciMessageFromArgs(argz); nit.commit(message, currentBranch); }},
                {arg: "fci", name: "Make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.featureCommit(arg, currentBranch); }},
                {arg: "qfci", name: "Quick stage and make a commit on feature", requiresClean: false, action: function(nit, arg, currentBranch){ nit.stage(function(){nit.featureCommit(arg, currentBranch); });}},
                {arg: "qci", name: "Quick stage and commit with a generated message \"['currentBranch'] quick commit.\"", requiresClean: false, action:
@@ -83,7 +83,11 @@ function Nit() {
         if(cmd) {
             self.isCleanStatus(function(data, clean, currentBranch){
                 if(clean || !cmd.requiresClean){
-                    cmd.action(self, cliArgs[1], currentBranch);
+                    if(cmd.takesArray) {
+                        cmd.action(self, cliArgs, currentBranch);
+                    } else {
+                        cmd.action(self, cliArgs[1], currentBranch);
+                    }
                 } else {
                     self.nerrorUnclean();
                 }
@@ -91,6 +95,18 @@ function Nit() {
         } else {
             self.gitInherit(cliArgs);
         }
+    };
+
+    this.ciMessageFromArgs = function(argz) {
+        var message = "";
+        try {
+            for(var i=1; i<argz.length; i++) {
+                message += " " + argz[i];
+            }
+        } catch (e) {
+            message = "";
+        }
+        return message.trim();
     };
     //
 
