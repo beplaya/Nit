@@ -52,6 +52,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
 	st              > Status
 	sts             > Status -s
 	b               > Discover branch
+	l1              > 'git log --pretty=oneline' with extra Nit formatting
 	push            > Push
 	pull            > Pull
 	cob             > Create and checkout branch
