@@ -17,8 +17,8 @@
 	sts             > Status -s
 	b               > Discover branch
 	l1              > 'git log --pretty=oneline' with extra Nit formatting
-	push            > Push
-	pull            > Pull
+	push            > Push (assumes origin/<branch>)
+	pull            > Pull (assumes origin/<branch>)
 	cob             > Create and checkout branch
 	fb              > Create and checkout feature branch
 	dev             > Checkout develop
