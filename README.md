@@ -70,8 +70,47 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
 	browse          > Browse jira
 	describe        > Get JIRA description
 	comments        > Get JIRA comments
+	lcf             > Log commit frequency information.
 ```
 
+##Stats (WIP) ```nit lcf```
+
+Get commit frequency on your current branch. E.g.
+```
+ALL: { N: 182,
+  sum:
+   { millis: 1138044000,
+     span: { hours: 316, minutes: 7, seconds: 24, millis: 0 } },
+  average:
+   { millis: 6252989.010989011,
+     span: { hours: 1, minutes: 44, seconds: 12, millis: 989.0109890112653 } },
+  stdev:
+   { millis: 107284420525.03455,
+     span:
+      { hours: 29801,
+        minutes: 13,
+        seconds: 40,
+        millis: 525.0345458984375 } } }
+Last 100: { N: 100,
+  sum:
+   { millis: 1039653000,
+     span: { hours: 288, minutes: 47, seconds: 33, millis: 0 } },
+  average:
+   { millis: 10396530,
+     span: { hours: 2, minutes: 53, seconds: 16, millis: 530 } },
+  stdev:
+   { millis: 144746774383.89438,
+     span:
+      { hours: 40207,
+        minutes: 26,
+        seconds: 14,
+        millis: 383.8943786621094 } } }
+trending  { deltaAvg: 4143540.9890109887,
+  percentDeltaAvg: 66.2649651507323,
+  deltaAvgPercentStdev: 0.00003862201956941273,
+  message: 'Cruise control' }
+
+```
 
 ##Nerver
 Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ```nit comments```.
