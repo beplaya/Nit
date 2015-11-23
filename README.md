@@ -3,12 +3,12 @@
 ## About
  - Nit avoids doing things that aliases can do
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
- - Nit enhances feature/KEY-### branch to develop branch type development (see ```nit fb```, ```nit fci```, nit ```upderge```, and more)
+ - Nit enhances 'feature/KEY-###' with 'develop' branch development (see ```nit fb```, ```nit fci```, nit ```upderge```, and more)
  - Nit accesses JIRA's rest api (see ```nit nerver```, ```nit describe```, and ```nit comments```)
  - Nit produces reports based on your commits (see ```nit lcf```)
- - Nit formats Git output
+ - Nit formats Git output where appropriate
  - Nit enables "" free commit message ```nit ci This is my message.  No quotation marks needed!!!```
-
+ - Nit passes through to Git any unrecognized command
 
 If you work with JIRA, you may work in the following manner:
 
