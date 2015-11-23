@@ -1,7 +1,6 @@
 ![NIT](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
 
 ## About
- - Nit avoids doing things that aliases can do
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
  - Nit enhances 'feature/KEY-###' with 'develop' branch development (see ```nit fb```, ```nit fci```, nit ```upderge```, and more)
  - Nit accesses JIRA's rest api (see ```nit nerver```, ```nit describe```, and ```nit comments```)
@@ -9,6 +8,7 @@
  - Nit formats Git output where appropriate
  - Nit enables "" free commit message ```nit ci This is my message.  No quotation marks needed!!!```
  - Nit passes through to Git any unrecognized command
+ - Nit avoids doing things that aliases can do
 
 ## Commands
 ```
