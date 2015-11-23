@@ -12,6 +12,7 @@ function Nit() {
     this.nira = require(__dirname + '/lib/nira/nira.js')(this.nettings);
     this.nerver = require(__dirname + '/lib/nerver.js')(this.nira);
     this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver);
+    this.log = require(__dirname + '/lib/log.js')(this);
     this.cmds = require(__dirname + '/lib/cmds.js')();
 
     this.startNerver = function() {
@@ -284,16 +285,17 @@ function Nit() {
         });
     };
 
-    this.discoverBranch = function(statusData){
+    this.discoverBranch = function(statusDataFull){
         var search = "On branch ";
         var branch = undefined;
-        if(statusData.indexOf(search) != -1){
-            var branchStartIndex = search.length;
-            var sub1 = statusData.substring(branchStartIndex, statusData.length);
-            var branchEndIndex = statusData.indexOf("Your branch");
-            branchEndIndex = branchEndIndex === -1 ? statusData.indexOf("nothing") : branchEndIndex;
-            branchEndIndex = branchEndIndex === -1 ? statusData.indexOf("Changes") : branchEndIndex;
-            branch = statusData.substring(branchStartIndex, branchEndIndex).trim();
+        var split = statusDataFull.split("\n") || [""];
+        var statusData = "";
+        for(var i=0; i<split.length; i++){
+            statusData = split[i];
+            if(statusData.indexOf(search) != -1){
+                branch = statusData.replace(search, "").trim();
+                break;
+            }
         }
         return branch;
     };
