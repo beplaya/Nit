@@ -12,6 +12,7 @@ function Nit() {
     this.nira = require(__dirname + '/lib/nira/nira.js')(this.nettings);
     this.nerver = require(__dirname + '/lib/nerver.js')(this.nira);
     this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver);
+    this.log = require(__dirname + '/lib/log.js')(this);
     this.cmds = require(__dirname + '/lib/cmds.js')();
 
     this.startNerver = function() {
