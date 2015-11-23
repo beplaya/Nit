@@ -1,11 +1,41 @@
 ![NIT](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
 
 ## About
+ - Nit avoids doing things that aliases can do
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
- - Nit enhances feature/KEY-### branch to develop branch type development.
+ - Nit enhances 'feature/KEY-###' with 'develop' branch development (see ```nit fb```, ```nit fci```, nit ```upderge```, and more)
  - Nit accesses JIRA's rest api (see ```nit nerver```, ```nit describe```, and ```nit comments```)
- - Nit produces reports on based on your commits (see ```nit lcf```)
+ - Nit produces reports based on your commits (see ```nit lcf```)
+ - Nit formats Git output where appropriate
+ - Nit enables "" free commit message ```nit ci This is my message.  No quotation marks needed!!!```
+ - Nit passes through to Git any unrecognized command
 
+## Commands
+```
+	help            > Help
+	st              > Status
+	sts             > Status -s
+	b               > Discover branch
+	l1              > 'git log --pretty=oneline' with extra Nit formatting
+	push            > Push
+	pull            > Pull
+	cob             > Create and checkout branch
+	fb              > Create and checkout feature branch
+	dev             > Checkout develop
+	derge           > Merge develop into current branch
+	upderge         > Update develop and merge develop into current branch
+	stage           > Stage
+	ci              > Commit
+	fci             > Make a commit on feature
+	qfci            > Quick stage and make a commit on feature
+	qci             > Quick stage and commit with a generated message "['currentBranch'] quick commit."
+	qrci            > Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
+	nerver          > Start nerver
+	browse          > Browse jira
+	describe        > Get JIRA description
+	comments        > Get JIRA comments
+	lcf             > Log commit frequency information.
+```
 
 If you work with JIRA, you may work in the following manner:
 
@@ -47,35 +77,7 @@ nit push
 If Nit does not recognize a command it will simply pass the command and args to Git, and give the same output as traditional Git.
 Therefore, you do not need to switch from "nit" to "git" for any command.  You can always use "nit"!
 
-## Commands
-```
-	help            > Help
-	st              > Status
-	sts             > Status -s
-	b               > Discover branch
-	l1              > 'git log --pretty=oneline' with extra Nit formatting
-	push            > Push
-	pull            > Pull
-	cob             > Create and checkout branch
-	fb              > Create and checkout feature branch
-	dev             > Checkout develop
-	derge           > Merge develop into current branch
-	upderge         > Update develop and merge develop into current branch
-	stage           > Stage
-	ci              > Commit
-	fci             > Make a commit on feature
-	qfci            > Quick stage and make a commit on feature
-	qci             > Quick stage and commit with a generated message "['currentBranch'] quick commit."
-	qrci            > Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
-	nerver          > Start nerver
-	browse          > Browse jira
-	describe        > Get JIRA description
-	comments        > Get JIRA comments
-	lcf             > Log commit frequency information.
-```
-
 ##Commit Statistics (WIP)
-
 Get commit frequency on your current branch. E.g.
 
 __nit lcf__
