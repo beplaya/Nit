@@ -77,6 +77,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
 
 Get commit frequency on your current branch. E.g.
 >>$ nit lcf
+
 ```
 
 ALL: { N: 182,
