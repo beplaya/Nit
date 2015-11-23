@@ -73,7 +73,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
 	lcf             > Log commit frequency information.
 ```
 
-##Commit Statistics (WIP) ``````
+##Commit Statistics (WIP)
 
 Get commit frequency on your current branch. E.g.
 ```
