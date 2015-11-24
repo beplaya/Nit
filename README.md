@@ -12,29 +12,31 @@
 
 ## Commands
 ```
-	help            > Help
-	st              > Status
-	sts             > Status -s
-	b               > Discover branch
-	l1              > 'git log --pretty=oneline' with extra Nit formatting
-	push            > Push (assumes origin/<branch>)
-	pull            > Pull (assumes origin/<branch>)
-	cob             > Create and checkout branch
-	fb              > Create and checkout feature branch
-	dev             > Checkout develop
-	derge           > Merge develop into current branch
-	upderge         > Update develop and merge develop into current branch
-	stage           > Stage
-	ci              > Commit
-	fci             > Make a commit on feature
-	qfci            > Quick stage and make a commit on feature
-	qci             > Quick stage and commit with a generated message "['currentBranch'] quick commit."
-	qrci            > Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
-	nerver          > Start nerver
-	browse          > Browse jira
-	describe        > Get JIRA description
-	comments        > Get JIRA comments
-	lcf             > Log commit frequency information.
+    help            > Help
+    st              > Status
+    sts             > Status -s
+    b               > Discover branch
+    l1              > 'git log --pretty=oneline' with extra Nit formatting
+    push            > Push (assumes origin/<branch>)
+    pull            > Pull (assumes origin/<branch>)
+    cob             > Create and checkout branch
+    fb              > Create and checkout feature branch
+    dev             > Checkout develop
+    derge           > Merge develop into current branch
+    upderge         > Update develop and merge develop into current branch
+    stage           > Stage
+    ci              > Commit
+    fci             > Make a commit on feature
+    qfci            > Quick stage and make a commit on feature
+    qci             > Quick stage and commit with a generated message "['currentBranch'] quick commit."
+    qrci            > Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
+    nerver          > Start nerver
+    browse          > Browse jira
+    describe        > Get JIRA description
+    comments        > Get JIRA comments
+    lcf             > Log commit frequency information
+    wcf             > Log commit frequency information to file
+    ccf             > Chart commit frequency information to file and open stat web page
 ```
 
 If you work with JIRA, you may work in the following manner:
@@ -150,8 +152,8 @@ For now, to start Nerver:
 ```
 
 ## Setup
+ - Start at nit root directory
  - npm install
+ - cd stats/ && bower install
  - add the repo folder to your path
 
-## Dependencies
-    Node JS
