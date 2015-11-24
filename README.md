@@ -1,4 +1,4 @@
-![NIT](https://raw.github.com/beplaya/Nit/develop/images/logo.png)
+![NIT](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
 
 ## About
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
@@ -83,7 +83,7 @@ Therefore, you do not need to switch from "nit" to "git" for any command.  You c
 Get commit frequency on your current branch. E.g.
 
 __nit ccf__
-![ccfgraphexample](https://raw.github.com/beplaya/Nit/develop/images/ccfgraph.png)
+![ccfgraphexample](https://raw.github.com/beplaya/Nit/develop/ccfgraph.png)
 
 ##Nerver
 Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ```nit comments```.
