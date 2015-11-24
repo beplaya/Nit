@@ -1,0 +1,22 @@
+{
+  "name": "nitstats",
+  "homepage": "https://github.com/beplaya/Nit",
+  "authors": [
+    "beplaya"
+  ],
+  "description": "",
+  "main": "index.html",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "highcharts": "~4.1.9"
+  }
+}
