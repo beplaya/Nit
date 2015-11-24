@@ -1,4 +1,4 @@
-![NIT](https://raw.github.com/beplaya/Nit/develop/images/nitlogo.png)
+![NIT](https://raw.github.com/beplaya/Nit/develop/images/logo.png)
 
 ## About
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
