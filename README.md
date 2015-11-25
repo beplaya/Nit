@@ -117,7 +117,8 @@ For now, to start Nerver:
 
 ## Setup
  - Start at nit root directory
- - npm install
- - cd stats/ && bower install
+ - ```nit setup```
  - add the repo folder to your path
+ 
+
 

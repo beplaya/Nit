@@ -1,12 +1,29 @@
 #!/usr/bin/env node
+var cliArgs = process.argv.slice(2);
+var runner = new Runner();
 
-var nit = new Nit();
-nit.start(process.argv.slice(2));
+if(cliArgs[0] === "setup"){
+	var cmd = "npm install && npm install -g bower && cd stats/ && bower install && cd ..";
+	child_process = require('child_process');
+ 
+	child_process.exec(cmd, function(err, out, code) {
+		if (err instanceof Error)
+			throw err;
+		process.stdout.write(out);
+	});	
+	
 
+} else {
+	var nit = new Nit(runner);
+	nit.start(cliArgs);
+}
 
-function Nit() {
+function Nit(runner) {
 
-    this.runner = new Runner();
+    this.runner = runner;
+
+	
+	
     this.printer = require(__dirname + '/lib/printer.js')();
     this.nettings = require(__dirname + '/lib/nit_settings.js')().load();
     this.nira = require(__dirname + '/lib/nira/nira.js')(this.nettings);
@@ -311,8 +328,15 @@ function Nit() {
 }
 
 function Runner() {
+	this.isWin = /^win/.test(process.platform);
     this.child_process = require('child_process');
     this.runInherit = function(cmd, cmdArgs, cb) {
+
+		if(this.isWin){
+			if(cmd === "open"){
+				cmd = "start";
+			}
+		}
         var msg = cmd;
         if(cmdArgs){
             for(var i=0; i<cmdArgs.length; i++) {
@@ -326,10 +350,14 @@ function Runner() {
     };
 
     this.run = function(cmd, cmdArgs, cb) {
-
+		if(this.isWin){
+			if(cmd === "open"){
+				cmd = "start";
+			}
+		}
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-        //console.log("RUNNING ", cmd, cmdArgs);
+        console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
         var out = "";
         var error = false;
         ls.stdout.on('data', function (data) {
