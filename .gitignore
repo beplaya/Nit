@@ -7,3 +7,4 @@ cmdresponse/
 .idea/
 .nitconfig
 open
+stats/commit_frequency_chart.js
