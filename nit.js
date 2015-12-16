@@ -236,7 +236,9 @@ function Nit(runner) {
 
     this.push = function(branch) {
         var self = this;
-        this.gitInherit(["push", "origin", branch]);
+        this.git(["push", "origin", branch], function(data){
+            self.printer.printPushResult(data);
+        });
     };
 
     this.pull = function(branch) {
