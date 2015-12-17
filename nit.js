@@ -96,7 +96,7 @@ function Nit(runner) {
         this.gitInherit(["status", "-s"]);
     };
 
-    this.featureCommit = function(message, currentBranch){
+    this.featureCommit = function(message, currentBranch, cb){
         var self = this;
         if(!message){
             self.printer.E("NERROR: Missing a commit message!");
@@ -105,16 +105,17 @@ function Nit(runner) {
         if(self.isOnAFeatureBranch(currentBranch)){
             var prefix = currentBranch.replace(self.nettings.featureBranchPrefix, "");
             var msg = prefix + " " + message;
-            self.commit(msg);
+            self.commit(msg, cb);
         } else {
             self.printer.E("NERROR: Cannot commit feature while on non-feature branch '" + currentBranch + "'");
+            cb && cb();
         }
     };
 
-    this.commit = function(message){
+    this.commit = function(message, currentBranch){
         var self= this;
         if(!message){
-            self.printer.E("NERROR: Missing a commit message!");
+            self.printer.missingCommitMessage();
             return;
         }
 
@@ -251,10 +252,10 @@ function Nit(runner) {
         self.printer.E("NERROR! Unclean status!");
     };
 
-    this.statusPrint = function() {
+    this.statusPrint = function(currentBranch) {
         var self = this;
         this.git(["status"], function(str){
-            self.printer.print(str);
+            self.printer.print(str, currentBranch);
         });
     };
 
@@ -288,6 +289,22 @@ function Nit(runner) {
 
     this.status = function(cb) {
          this.git(["status"], cb);
+    };
+
+    this.stageFeatureCommitAndStatus = function(message, currentBranch) {
+        var self = this;
+        if(!message || !currentBranch){
+            if(!message){
+                self.printer.missingCommitMessage();
+            }
+            cb && cb();
+            return;
+        }
+        self.stage(function(){
+            self.featureCommit(message, currentBranch, function(){
+                self.statusPrint(currentBranch);
+            });
+        });
     };
 
     this.stage = function(cb) {
@@ -359,7 +376,7 @@ function Runner() {
 		}
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-        //console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
+        // console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
         var out = "";
         var error = false;
         ls.stdout.on('data', function (data) {
