@@ -252,10 +252,10 @@ function Nit(runner) {
         self.printer.E("NERROR! Unclean status!");
     };
 
-    this.statusPrint = function() {
+    this.statusPrint = function(currentBranch) {
         var self = this;
         this.git(["status"], function(str){
-            self.printer.print(str);
+            self.printer.print(str, currentBranch);
         });
     };
 
