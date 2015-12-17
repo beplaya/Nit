@@ -112,7 +112,7 @@ function Nit(runner) {
         }
     };
 
-    this.commit = function(message, cb){
+    this.commit = function(message, currentBranch){
         var self= this;
         if(!message){
             self.printer.missingCommitMessage();
@@ -125,11 +125,9 @@ function Nit(runner) {
                     if(unstaged || untracked){
                         self.printer.print("NWARNING: Committed some things, but some changes were not staged to commit!");
                     }
-                    cb && cb();
                 });
             } else {
                 self.printer.E("NERROR: Nothing staged to commit!");
-                cb && cb();
             }
         });
     }
