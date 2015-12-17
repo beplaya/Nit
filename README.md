@@ -24,6 +24,7 @@
     dev             > Checkout develop
     derge           > Merge develop into current branch
     upderge         > Update develop and merge develop into current branch
+    sfcis           > Stage, feature commit, print status
     stage           > Stage
     ci              > Commit
     fci             > Make a commit on feature
