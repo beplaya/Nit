@@ -35,6 +35,7 @@
     browse          > Browse jira
     describe        > Get JIRA description
     comments        > Get JIRA comments
+    mkc             > Create JIRA comment
     lcf             > Log commit frequency information
     wcf             > Log commit frequency information to file
     ccf             > Chart commit frequency information to file and open stat web page
