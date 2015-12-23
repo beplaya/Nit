@@ -1,4 +1,4 @@
-![NIT](https://raw.github.com/beplaya/Nit/develop/nitlogo.png)
+![NIT](https://raw.github.com/beplaya/Nit/develop/logo.png)
 
 ## About
  - Nit combines multiple git commands into useful bundles.  e.g. ```nit qrci``` stages and commits only your README.md.
@@ -88,7 +88,7 @@ __nit ccf__
 ![ccfgraph.png](https://raw.github.com/beplaya/Nit/develop/ccfgraph.png)
 
 ##Nerver
-Nerver is a background process that connects to JIRA enabling commands like ```nit describe``` and ```nit comments```.
+Nerver is a background process that connects to JIRA enabling commands like  ```nit describe```, ```nit mkc ...```,  and ```nit comments```.
 Currently, it needs it's own terminal tab.  In the future, Nit will handle this for you.
 For now, to start Nerver:
  - Open a separate terminal window
@@ -97,12 +97,11 @@ For now, to start Nerver:
  - Run ```nit nerver```
  - Enter your JIRA credentials
  - Leave the window running
- - Now, commands like ```nit describe``` and ```nit comments``` will use this nerver to work.
+ - Now, commands like ```nit describe```, ```nit mkc ...```,  and ```nit comments``` will use this nerver to work.
 
 ##### Note:
- - Credentials are not verified when Nerver is started.  So, if you're having trouble, try restarting Nerver.
  - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.  It's recommended to use a functional user for Nerver.
- - Nerver is set to stop itself after 8 hours.
+ - Nerver is set to stop itself after 8 hours of running.
 
 ## Configuration
  - Create a .nitconfig file in repo root
