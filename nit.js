@@ -70,7 +70,7 @@ function Nit(runner) {
                     } else {
                         cmd.action(self, cliArgs[1], currentBranch);
                     }
-                    self.nerverStatus(currentBranch);
+
                 } else {
                     self.nerrorUnclean();
                 }
@@ -78,10 +78,11 @@ function Nit(runner) {
         } else {
             self.gitInherit(cliArgs);
         }
+        self.nerverStatus();
     };
 
     this.nerverStatus = function(currentBranch) {
-         this.nitClient.sendCmd("STATUS", this.nira.ticketIDFromBranch(currentBranch), "", function(d){ });
+         this.nitClient.sendCmd("STATUS", "", "", function(d){ });
     };
 
     this.ciMessageFromArgs = function(argz) {
