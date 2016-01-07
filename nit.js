@@ -19,7 +19,7 @@ if(cliArgs[0] === "setup"){
 }
 
 function Nit(runner) {
-
+    var NIT = this;
     this.runner = runner;
 
 	
@@ -32,8 +32,8 @@ function Nit(runner) {
     this.log = require(__dirname + '/lib/log.js')(this);
     this.cmds = require(__dirname + '/lib/cmds.js')();
 
-    this.startNerver = function() {
-        this.nerver.start();
+    this.startNerver = function(arg) {
+        this.nerver.start(arg);
     };
 
     this.browse = function(currentBranch) {
@@ -70,6 +70,7 @@ function Nit(runner) {
                     } else {
                         cmd.action(self, cliArgs[1], currentBranch);
                     }
+
                 } else {
                     self.nerrorUnclean();
                 }
@@ -77,6 +78,11 @@ function Nit(runner) {
         } else {
             self.gitInherit(cliArgs);
         }
+        self.nerverStatus();
+    };
+
+    this.nerverStatus = function(currentBranch) {
+         this.nitClient.sendCmd("STATUS", "", "", function(d){ });
     };
 
     this.ciMessageFromArgs = function(argz) {
@@ -252,10 +258,10 @@ function Nit(runner) {
         self.printer.E("NERROR! Unclean status!");
     };
 
-    this.statusPrint = function(currentBranch) {
-        var self = this;
-        this.git(["status"], function(str){
-            self.printer.print(str, currentBranch);
+    this.statusPrint = function() {
+        NIT.git(["status"], function(statusData){
+            currentBranch = NIT.discoverBranch(statusData);
+            NIT.printer.print(statusData, currentBranch);
         });
     };
 
@@ -343,7 +349,8 @@ function Nit(runner) {
     this.gitInherit = function(cmdArgs, cb) {
         this.runner.runInherit("git", cmdArgs, cb);
     };
-
+    //
+    this.nerver.init(this);
 }
 
 function Runner() {
@@ -391,4 +398,6 @@ function Runner() {
             cb && cb(out, error);
         });
     };
+
+
 }
