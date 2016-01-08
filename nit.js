@@ -258,10 +258,11 @@ function Nit(runner) {
         self.printer.E("NERROR! Unclean status!");
     };
 
-    this.statusPrint = function() {
+    this.statusPrint = function(cb) {
         NIT.git(["status"], function(statusData){
             currentBranch = NIT.discoverBranch(statusData);
             NIT.printer.print(statusData, currentBranch);
+            cb && cb();
         });
     };
 
@@ -290,6 +291,7 @@ function Nit(runner) {
         var self = this;
         self.git(["log", "--pretty=oneline"], function(data){
             self.printer.logOneLiners(data);
+            cb && cb();
         });
     };
 
@@ -308,7 +310,7 @@ function Nit(runner) {
         }
         self.stage(function(){
             self.featureCommit(message, currentBranch, function(){
-                self.statusPrint(currentBranch);
+                self.statusPrint();
             });
         });
     };
