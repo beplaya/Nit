@@ -335,6 +335,8 @@ function Nit(runner) {
         var branch = undefined;
         var split = statusDataFull.split("\n") || [""];
         var statusData = "";
+        self.isDetached = false;
+
         for(var i=0; i<split.length; i++){
             statusData = split[i];
             if(statusData.indexOf(search) != -1){
