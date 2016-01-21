@@ -2,8 +2,8 @@ node_modules/
 *.swp
 bower_components/
 .DS_Store
-cmds/
 cmdresponse/
+lib/cmds/
 .idea/
 .nitconfig
 open

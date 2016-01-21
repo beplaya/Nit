@@ -261,7 +261,7 @@ function Nit(runner) {
     this.statusPrint = function(cb) {
         NIT.git(["status"], function(statusData){
             currentBranch = NIT.discoverBranch(statusData);
-            NIT.printer.print(statusData, currentBranch);
+            NIT.printer.print(statusData, currentBranch, NIT.isDetached);
             cb && cb();
         });
     };
@@ -330,6 +330,7 @@ function Nit(runner) {
     };
 
     this.discoverBranch = function(statusDataFull){
+        var self = this;
         var search = "On branch ";
         var branch = undefined;
         var split = statusDataFull.split("\n") || [""];
@@ -339,6 +340,19 @@ function Nit(runner) {
             if(statusData.indexOf(search) != -1){
                 branch = statusData.replace(search, "").trim();
                 break;
+            }
+        }
+        if(!branch){
+            search = "HEAD detached at"
+            for(var i=0; i<split.length; i++){
+                statusData = split[i];
+                var indexFound = statusData.indexOf(search);
+                if(indexFound != -1){
+                    branch = statusData.substring(indexFound).trim();
+                    branch = statusData.replace(search, "").trim();
+                    self.isDetached = true;
+                    break;
+                }
             }
         }
         return branch;
