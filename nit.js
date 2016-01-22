@@ -266,6 +266,12 @@ function Nit(runner) {
         });
     };
 
+    this.getBranchAndDescribe = function() {
+        NIT.git(["status"], function(statusData){
+            NIT.describe(NIT.discoverBranch(statusData));
+        });
+    };
+
     this.describe = function(currentBranch) {
         var self = this;
         self.nitClient.sendCmd("DESCRIBE", "", self.nira.ticketIDFromBranch(currentBranch), "", function(fields){
