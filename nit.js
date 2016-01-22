@@ -82,7 +82,7 @@ function Nit(runner) {
     };
 
     this.nerverStatus = function(currentBranch) {
-         this.nitClient.sendCmd("STATUS", "", "", function(d){ });
+         this.nitClient.sendCmd("STATUS", "", "", "", function(d){ });
     };
 
     this.ciMessageFromArgs = function(argz) {
@@ -268,21 +268,21 @@ function Nit(runner) {
 
     this.describe = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd("DESCRIBE", self.nira.ticketIDFromBranch(currentBranch), "", function(fields){
+        self.nitClient.sendCmd("DESCRIBE", "", self.nira.ticketIDFromBranch(currentBranch), "", function(fields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), fields);
         });
     };
 
     this.comments = function(currentBranch) {
         var self = this;
-        self.nitClient.sendCmd("COMMENTS", self.nira.ticketIDFromBranch(currentBranch), "", function(data){
+        self.nitClient.sendCmd("COMMENTS", "", self.nira.ticketIDFromBranch(currentBranch), "", function(data){
             self.printer.comments(data);
         });
     };
 
     this.createComment = function(comment, currentBranch) {
         var self = this;
-        self.nitClient.sendCmd("CREATE_COMMENT", self.nira.ticketIDFromBranch(currentBranch), comment, function(data){
+        self.nitClient.sendCmd("CREATE_COMMENT", comment, self.nira.ticketIDFromBranch(currentBranch), "", function(data){
             console.log("done");
         });
     };
