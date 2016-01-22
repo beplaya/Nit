@@ -261,7 +261,7 @@ function Nit(runner) {
     this.statusPrint = function(cb) {
         NIT.git(["status"], function(statusData){
             currentBranch = NIT.discoverBranch(statusData);
-            NIT.printer.print(statusData, currentBranch, NIT.isDetached);
+            NIT.printer.printStatus(statusData, currentBranch, NIT.isDetached);
             cb && cb();
         });
     };
