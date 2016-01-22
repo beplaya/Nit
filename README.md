@@ -101,7 +101,7 @@ For now, to start Nerver:
 
 ##### Note:
  - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.  It's recommended to use a functional user for Nerver.
- - Nerver is set to stop itself after 2 hours of running.
+ - Nerver is set to stop itself after 5 hours of running.
 
 ## Configuration
  - Create a .nitconfig file in repo root
