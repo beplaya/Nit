@@ -280,10 +280,17 @@ function Nit(runner) {
         });
     };
 
-    this.comments = function(currentBranch) {
+    this.getBranchComments = function(cb) {
+        NIT.git(["status"], function(statusData){
+            NIT.comments(NIT.discoverBranch(statusData), cb);
+        });
+    };
+
+    this.comments = function(currentBranch, cb) {
         var self = this;
         self.nitClient.sendCmd("COMMENTS", "", self.nira.ticketIDFromBranch(currentBranch), "", function(data){
             self.printer.comments(data);
+            cb && cb();
         });
     };
 
