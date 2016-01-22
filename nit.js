@@ -266,16 +266,17 @@ function Nit(runner) {
         });
     };
 
-    this.getBranchAndDescribe = function() {
+    this.getBranchAndDescribe = function(cb) {
         NIT.git(["status"], function(statusData){
-            NIT.describe(NIT.discoverBranch(statusData));
+            NIT.describe(NIT.discoverBranch(statusData), cb);
         });
     };
 
-    this.describe = function(currentBranch) {
+    this.describe = function(currentBranch, cb) {
         var self = this;
         self.nitClient.sendCmd("DESCRIBE", "", self.nira.ticketIDFromBranch(currentBranch), "", function(fields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), fields);
+            cb && cb();
         });
     };
 
