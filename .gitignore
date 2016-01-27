@@ -8,4 +8,4 @@ lib/cmds/
 .nitconfig
 open
 stats/commit_frequency_chart.js
-project_cache/
+/web/project_cache/
