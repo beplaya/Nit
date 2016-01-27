@@ -262,7 +262,7 @@ function Nit(runner) {
         NIT.git(["status"], function(statusData){
             currentBranch = NIT.discoverBranch(statusData);
             NIT.printer.printStatus(statusData, currentBranch, NIT.isDetached);
-            cb && cb();
+            cb && cb(statusData);
         });
     };
 
@@ -305,7 +305,7 @@ function Nit(runner) {
         var self = this;
         self.git(["log", "--pretty=oneline"], function(data){
             self.printer.logOneLiners(data);
-            cb && cb();
+            cb && cb(data);
         });
     };
 
