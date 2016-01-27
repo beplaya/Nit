@@ -1,30 +1,56 @@
 
+3157a3d1b238479a34db36b9351f028c731e1b31 NIT-2 creates status and log one line dta files
+
 0046731cc702f1dbc771228ad9992b3f44877470 NIT-2 wip. data files
 
 0ddae54bad9c51bc4213b484c1322f897239b686 added start of web
+
 67bcfcdf8074881d98a6414acdd4230ff2d46347 less white space
+
 a5dd1cf4f7bcb095fefba39e0f1b844c9b9001be hr
+
 12151f8e225fefdb810c8c5118b0345878b37e5f mkc clears cache
+
 57c046e53aafe480135b085e246f26d406ef0537 comments in nerver screen
+
 da49d9537e1f3bfce37e653709d2e3b93edac3b6 clearscreen
+
 60c1caf05b5a1472e9adff62fee8d9988534e321 fixed mkc error
+
 ff269feeef5e9adbc2912bb624434dcb435e03dc Merge pull request #20 from beplaya/develop
+
 0d2f9a5b624bb3add0e115a47d5e42b3a14bdca0 Merge pull request #53 from cah-grantjames/develop
+
 3f0a15d200517e12edf3f1bdafaf5647417be2f5 show description in nerver screen
+
 7cf6e8ff7d1e0ef852ab0c134966113273348ec0 skip nira if not logged in
+
 7c9b0e56c2290e08080a94223f7ab8111baf53f2 caches issues
+
 263b145f800c0b25e3115c8885825307d6be2413 wip nerver jira stuff
+
 0b3cb9f280daa211af4d08fc93ea0547ea44b172 don't delete other project's commands files
+
 3651c175bdaeee6a683c9c0a33a0ae6056a5e792 wip nerver per project listening
+
 3ec6417b123c5aa5132b137e09343b420368045d status min period updates
+
 7c76e9f435793401aa570169b86f598c1b4fc132 prevent too frequent status print
+
 e843ae81ce6647fd8608c9c4bb620b6cadeaf4c7 printer hr2
+
 02105f92fe90b1d87c88c9fc632e4470a23a06dd Merge pull request #52 from cah-grantjames/develop
+
 84a78946a35c5acafc20c9b3f1e5a91aac6d2d7a resets isdetached
+
 b1136a3945182f065a2e9151c3e66eafb59c93c7 Merge pull request #51 from cah-grantjames/develop
+
 99f7a9d4e5290a4170fde859fd06dd7d15f5bbb2 timeout based on time not count
+
 54042bb578a38d686448549afb33dc966c0cde9e [develop] README update.
+
 2e2df21238132ad32cebdfdcdf0c345b4e41aa31 pushpin
+
 547d08f49664f74c4b0533d1396a501fe32d59eb support for detached state
 
 682e6124d61299de7552f19c9a7901b93935be34 improved clearing
@@ -72,10 +98,15 @@ e3474edc25d1a4b349124d1ef9891fa87d6ef4a7 show l1 for nerver status
 1020f5811d29c77229164e1b37534c27a2f9df6b [develop] README update.
 
 a37799ae5c0cb6b4f9754d5d6da48a07b50415bf [develop] README update.
+
 420518bef0370ae9178600ce02d6d543eee2f8a5 Merge pull request #47 from cah-grantjames/develop
+
 88256cb4e0cd2382067161754f2763a391811785 [develop] README update.
+
 b644b0913b9a1c1d7084103ba806f6865841b01c [develop] quick commit.
+
 69e6a231835db88d9469c01b8ab5cfef1a8d7eab can create comment
+
 7b206600bdf096515e9605430a49ec226e131ee0 show host when login
 
 4349ffd51c64f2044b93d10cec09f2c3e628b628 nira login auth
@@ -208,37 +239,69 @@ a9f222d80e62ac62248959c1c20a6857a304d537 [develop] README update.
 caf8e5cebb67bf231971c7d4f4f9bd42f720afa0 [develop] README update.
 
 a81488c1ea370e370fa0cb20b77268c0db540c7b [develop] README update.
+
 587f1bb691b38a5b8a538ea18dd35b31042f2ba1 [develop] README update.
+
 fa1b8b61b1049a25524fd31c4cd6bacadda555d0 [develop] README update.
+
 1427e04482671dae489b326b1ef9d1014e548900 [develop] README update.
+
 a139a57c7e69f0c07f9d7f36c5a193b593d62467 lcf
+
 f104f497d58581c322a68fd93ed9a86a5b3cf001 [develop] quick commit.
+
 562ce0b804e0124c97fa447c3e93c12b4559030a logs
+
 1058a8a47a0c562045a41572362cc90840d5ad75 fix branch name parsing
+
 87e1bb29a00ead8a8dc84c4349288ebd5ec8d72a started log.js
+
 4f0242f12bbdbdfddc87068bef522c3aa29a4090 Merge pull request #14 from beplaya/develop
+
 16955f843c87b5585626e9c9d49e9b269496afcd Merge pull request #36 from cah-grantjames/develop
+
 b7670ada291fd7f43a19c5df05b7c44410c66607 [develop] README update.
+
 f9cb9bef6cb722bc5ae018bbd8a05fdb64581271 lg1
+
 aba8da5bf6ce23c2dd9909e53f855070eda65e4f moved cmds to a file
+
 2b6ba55a2ffa44fe6f0c640f636c495007622de2 [develop] quick commit.
+
 77f42682f1ef6b25dea790f0728ce47bd5a183e1 ads asd
+
 515eb8ca3578da801b13519fea3772f3952f5eb1 NIT-quotes no quotes baby!
+
 ebac638d77549e918e0fdf72ad1b8f1a5e07e990 no need for quotes
+
 dbd96e7f5ecaf406c3648f654cbdf86d3fe4cad0 asda asd asd asd ads
+
 9e5b953902dcd9b53ef528feeb8e35d9faae768e [develop] quick commit.
+
 b9ffb28c8e19c86ca8e66b6007eb2ba8bff0bc64 [develop] quick commit.
+
 cf71214ec276091ed76c5fbd987f197f124a634d Merge pull request #35 from cah-grantjames/develop
+
 86f7e1e3c380c3b25bb7ffd927ed4c29753ad1fa [develop] quick commit.
+
 58016580f7a24bf51d9146f3e445182f86dfd57f Merge pull request #13 from beplaya/develop
+
 2204abec6950d380283d7608de4f8a590e9b3f76 Merge pull request #34 from cah-grantjames/develop
+
 f7ebf701b74ebe8f8dcefc7e13e0e1209bab10f4 [develop] quick commit.
+
 52e174dac3fc4a33809d3ef092361770da3b9c92 Merge pull request #33 from cah-grantjames/develop
+
 fc8f59054cc519bc760bdfc6ee46c46bbfe973e0 [develop] README update.
+
 44373ae6c16980a1cf7972d9503e8c52ad4ab27f [develop] README update.
+
 ab4a22af94bbcba3ff0e609ac46f1f16bae4e752 Merge pull request #32 from cah-grantjames/develop
+
 a08751a6ae0548f91e2d977b7e1285fbe51b8134 [develop] README update.
+
 3336e9f9bc0a32cb46baa5bd1ee18c34b58fff35 Merge pull request #31 from cah-grantjames/develop
+
 7d19c80e806c5569843938949ef7c06d826372d5 [develop] README update.
 
 e2e97b45295a90897b148fa623ef8874c520644b [develop] README update.
@@ -246,10 +309,15 @@ e2e97b45295a90897b148fa623ef8874c520644b [develop] README update.
 28c6561cc6a422cdea300be3d53ee35bdf6aea7e [develop] quick commit.
 
 fd3510a9c6bc428d06e8440d133950907bd2bac5 Merge pull request #30 from cah-grantjames/develop
+
 3687c65c263737caf2ad01a5a2cb1f484044ea32 [develop] quick commit.
+
 053e0077732e6cda758dfd3a4ca8933c6df6eec9 [develop] quick commit.
+
 90d3efd663173958617137202d9ad516de8fce5f [develop] quick commit.
+
 c72fb58bb90dc1efa66a0fd0df141d3e29868496 [develop] quick commit.
+
 a6ef79372555da3900cd81b0f4d3cbc14ae387cb [develop] quick commit.
 
 d6a789ba93cb7b7097b81b2b63ad9ae48177a26f deletes response files
@@ -331,29 +399,53 @@ cab5494cd0e7521f17eec58769a838ca7b5fbee0 Merge pull request #25 from cah-grantja
 4b22ada779a784af463b9174b9baa61ee1cf5f4e Merge pull request #11 from beplaya/develop
 
 2570aff1a5c8ce273c5f36b5d917c6329565cf91 Merge pull request #24 from cah-grantjames/feature/NIT-nira
+
 0f486d2b9e6ef0661a1a02e7cdf12db82880093f NIT-nira formatting
+
 b31f281f020695ceca5feaac9c79bb65e45bcb21 quick commit
+
 e70b6bc62cd3ac8b561857bedf1de966fe83341e Merge pull request #10 from beplaya/develop
+
 b11b6640eb50849adf0f15fc73bd042a679d0bfd Merge pull request #23 from cah-grantjames/feature/NIT-nira
+
 08c795a1455f9c3a5636a1eb8e3390e082902980 comments work.  needs formating
+
 977ed3b5b8c05fb3566077dd86e8474cd95e955b quick commit
+
 6157ad1b34bf6671ca737112ca1cb10061e4ef14 Merge pull request #9 from beplaya/develop
+
 b61535efab047faaf9003065a0a9f17e88b46a03 Merge pull request #22 from cah-grantjames/develop
+
 704080f7397d55f242d09a1f0a982d3d58e3c296 error handle
+
 b9f3f15be44ae961301e86e0277032c3fd231819 Merge pull request #21 from cah-grantjames/develop
+
 3923e461aff4dabcc8ef051ccd0a4cb234f4186f quick commit
+
 61f49d0b0d9ec93592d0189347caa6f6ff52e69e Merge pull request #8 from beplaya/develop
+
 1fabd0896068818f23bbe68393e04240e315e615 Merge pull request #20 from cah-grantjames/feature/NIT-nira
+
 2aeb87a166703601116cd8699da87bbf15c518cd quick commit
+
 7793bd4456f4ec9e9ef7bb25709adf8aa2fd3946 quick commit
+
 ffc660a0b2d2500011e7ec4e32238ba5cd1a0ea8 quick commit
+
 662bef4e0efc1fb5222dd61d80eac4b3f6e231eb quick commit
+
 5ab7e958b9d3a695a3f58e7dd4a6732f15acd9b0 quick commit
+
 3083edb497f943e52f2bb5cae943443021546b6a NIT-nira gets description
+
 67443fcff88a4d3a99aeefd8d9246bffaf9183bc quick commit
+
 dcb2832922954fe0c3ee92becd9604e8e54b62a6 ads
+
 98c46c66e3571ef7bfbae8c423449050c80f39df quick commit
+
 928da4e5666d08a881833e16e17d21cbafa8ad84 NIT-nira jira get issue works
+
 f5104789d4d8c00bb25e2509d7a26b506ad75332 NIT-nira cmd resp
 0190cf6dec9a933b6a9a2177778fcc517946764f NIT-nira started nerver
 9a92578b9033d05ea9fce91db153332ad9080b5a quick commit
@@ -362,26 +454,18 @@ bf81193d4a2458a6308607ca6b4da82a04e680f6 quick commit
 a7638ac41cafbf331da8c901575805650f5c7f85 NIT-nira express
 139a189a7113f979eba78ca106fd99888d2449b2 Merge pull request #7 from beplaya/develop
 de54071dedfa25ddf1a4e496819a3a111b696aa3 Merge pull request #19 from beplaya/master
-
 f5ecfbd9774dc447b20d7006fa454d9c3ef441e0 Merge pull request #18 from cah-grantjames/feature/NIT-derge
-
 4f3ffbb7171c11f93542a0a147b24baa6566977f quick commit
-
 e7548cb0740daae01d6982dc45677b47f24bf70a quick commit
-
 5a10684978f4d541b579c2189dcb8a4195bc0c32 quick commit
-
 64ea9c3d4db16383451bf20ce444dff9a658969b Merge pull request #17 from cah-grantjames/feature/NIT-derge
-
 239d6c1a9f76012ef8331c7181266577d45d525d quick commit
 e5554c6f656e3a4a48856565b3d68e934b44ded8 NIT-derge readme
-
 9657a3f3621cf507926dc7426dbec6ad968e4235 Merge pull request #6 from beplaya/develop
 cac7488b491dc358e117c9acd0b0aebd713bfc81 Merge pull request #16 from cah-grantjames/feature/NIT-derge
 f750c71d548dc87b4dfdb7fe5311a036ac43a683 quick commit
 c5ef5a4ce832826db76c9a48075a0332cd3b5b12 quick commit
 7792533e4ff0a13199c9457f55a6c0dd07c0b68d quick commit
-
 ad8527830d338c39a004e9a01853409862ef9023 NIT-derge derge and upderge
 1e045b9558af0ce883129c73742166589c961d9c quick commit
 7257d8a0450e63cf368c58af4b9bc60321616b6c quick commit
@@ -389,112 +473,59 @@ ad8527830d338c39a004e9a01853409862ef9023 NIT-derge derge and upderge
 05179fc8f44d38acc108897fb6985c7b66626d7d quick commit
 9402d84b783b07abf9b467940542b665cbd862d0 NIT-derge currentBranch
 39e58ce2f9c4cd62786bdac3af42dd1fd9178e3b NIT-derge derge
-
 b29489cb587cc782c83b896a3cf21415d11aabee Merge pull request #5 from beplaya/develop
-
 5e131d0decc100059188e8654bc9faee970744f2 Merge pull request #15 from cah-grantjames/feature/NIT-derge
-
 e9c293a9885e26e45d2c12d59ecd0fb89821000c Merge pull request #14 from cah-grantjames/develop
-
 8ee06f0087344ff4f3326a0134c30fb414ca7581 Merge branch 'feature/NIT-derg' into feature/NIT-derge
-
 e0ac4295e6c060bb0333a1550f01092f99b8d9c9 NIT-derg All conflicts fixed but you are still merging.   (use "git commit" to conclude merge) merged
-
 79910f8faa820be8f386fa4586afff28d55e2207 Merge branches 'develop' and 'develop' of github.com:cah-grantjames/Nit into feature/NIT-derge
-
 2cd3b7a1d7fbfb26be62db1166fb968f75c11d69 Merge pull request #4 from beplaya/develop
-
 c77487a1861b6eb8a0530dc2f13843c6b480cc7d Merge branch 'develop' into feature/NIT-derge
-
 9d9f164b1bac89fadadded4ed1489546d8e9e32f Merge pull request #13 from cah-grantjames/develop
-
 f0cdaae53d646cb36d1f4890c2ef14b58a3a2f78 Merge pull request #12 from beplaya/develop
-
 9a63d57881b643f665f75ec70a76fc0d34bbdd1f Merge pull request #11 from beplaya/master
-
 318249d72a2e713b26985a6e16a5bf2cf94e5d02 Merge pull request #3 from beplaya/develop
-
 c1a0396a804ec5b247aa522f3c6b58267be7b339 Merge pull request #10 from beplaya/develop
-
 31d9c3a1af99d2631ff78b952438fcee1ee309ff Merge pull request #9 from cah-grantjames/develop
-
 9ff28d04382f7d64113a42801628452ed604ee73 Merge branch 'develop' into feature/NIT-derge
-
 3e9845ab549ad31428e098f23c598db095603818 Merge pull request #1 from beplaya/develop
-
 512404651d116fe5bb0150a3bead5ecdc86d99f1 NIT-derge no }
-
 5358fb9b397f7cc50fe129118c85f30a8bc0cd4d Merge pull request #7 from cah-grantjames/feature/NIT-derge
 ca1a506e4f5dcfd10194af9ce92ef26e7d36a93e quick commit
-
 d373e82257c327315b3bdbf9025bc1ae5cc2c67f quick commit
-
 62d86dcfd95b36290c92a51e416941b465d3010b quick commit
-
 669e345cda3c3dc6cfc1c8a3ba24cae60e107c08 quick commit
-
 3ad69a7cafb7df33939b9dbefb27026e6a8dd2b5 quick commit
-
 54c67e74dea3cedc203b97cf8f077b3584f5c25c quick commit
-
 2f2905ee7f2e4d48bf002821ca36426d2128193a quick commit
-
 e7519cbc39ec8993eb119c5aeaeccb59d7691ed1 quick commit
-
 eb4d80a71abc4f32c617c6f7421fdd336430846e quick commit
-
 1d86f6cece5d355f15caa5c8263916716fb72ca2 quick commit
-
 34f660ee828a2baa1f973d492691c38a44b14484 Merge branch 'develop' into feature/NIT-derge
-
 afd0a2a3475ebfa9cc34c9f329e4551c21f51d9b quick commit
-
 339796ea7d406ab2b6327b8f002a95c14ef9589c NIT-derge derge works
-
 4b9520298b2506885eb524a1646152e7edc9f146 quick commit
-
 a877f7c592803899ecfe92834d1f89140a4271e6 quick commit
-
 aa4931f506e72b51e40fb56827918a8bd45f1db6 NIT-derge derge
-
 6a81b3ff2f57bfad04c1c038c4ada53b17d58c2f Merge pull request #6 from cah-grantjames/develop
-
 b7368668579c9801a0fed8755cbea0a8a6e601bb quick commit
-
 869a4071e1c4fc7d516c7d207fdf2ca547dd77df Merge pull request #5 from cah-grantjames/develop
-
 67d1e490603712e081794093f7caccd34f578f1a quick commit
-
 94c53cf60fff99d99688f717b94581f890800a24 quick commit
-
 6888ae89ecfb1d967cb32ffbc5c0537134bf77c2 NIT-fb n
-
 f9306eb2b3f98038412550459114b4c9f7fa8803 NIT-fb fixed fb
-
 41d9f570f9313eb4d33f9a273ceb457a3329523a -m
-
 b920a03e0bacf188c98df055e577f61c5d9636b1 quick commit
-
 7fa96c737dc3cf2133f18eea55d7556ec42f1fde NIT-readme readme
-
 4b3346c0c6329a81ff0284f8aba565f5773b1c15 Merge pull request #3 from cah-grantjames/develop
-
 d4e88f6a5753f6c767eae90babd2b4f5583a5aca quick commit
-
 431018539bbe6d2451473ba810055597ab9d93ba Merge pull request #2 from cah-grantjames/develop
-
 99b26ec7aae14c24f4dea091827b26517acaea3b added nitconfig template'
-
 d9e39d62e1f21f5a1ab936dd90067cf28b2793bc NIT-readme printer.E
-
 937eb3250280da5fc61ee6aef7f6bff373d01524 NIT-readme removed dumb logging
-
 3da614a2264cf93c39bada9349ebcc7f0e012416 NIT-readme added help to readme
-
 fa301c8dd324bd2c1a9d03d9315eb7f036235ef1 NIT-init temp removed init
-
 ba8311316ceb805cd564bbe610794152bf6075de Merge pull request #1 from cah-grantjames/master
-
 7acf319fddcd8e04df1bc8aacc92bfc9332716d3 quick commit
 c6dc5c11847f467e6dfc645cdd29911a282fcea0 start
 c316a2cc0daeb74e6079b656f95702a83c39e86d Initial commit
