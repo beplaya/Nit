@@ -276,7 +276,7 @@ function Nit(runner) {
         var self = this;
         self.nitClient.sendCmd("DESCRIBE", "", self.nira.ticketIDFromBranch(currentBranch), "", function(fields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), fields);
-            cb && cb();
+            cb && cb(self.nira.ticketIDFromBranch(currentBranch), fields);
         });
     };
 
