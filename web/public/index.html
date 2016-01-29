@@ -3,34 +3,46 @@
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
 
-<link rel="stylesheet"
-	href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
 </head>
 <body ng-app="myApp">
-	<div ng-controller="statusControler" >
-		<span>Project: {{projectKey}}</span>
-		<h3>Branch: {{status.currentBranch}} <span ng-hide="!status.isDetached" class="ng-hide">DETACHED</span></h3>
-        <span ng-repeat="l in status.lines track by $index"><br> {{l}}</span>
+<div ng-controller="statusControler">
+    <span>Project: {{projectKey}}</span>
+    <h3>Branch: {{status.currentBranch}} <span ng-hide="!status.isDetached" class="ng-hide">DETACHED</span></h3>
+    <span ng-repeat="l in status.lines track by $index"><br> {{l}}</span>
 
-	</div>
-    <div ng-controller="logsControler">
-        <div ng-repeat="l in oneLineLogs track by $index">{{l}}</div>
+</div>
+<div ng-controller="logsControler">
+    <div ng-repeat="l in oneLineLogs track by $index">{{l}}</div>
+</div>
+<hr>
+<hr>
+<div ng-controller="issueControler" >
+    <a href="{{url}}" target="_blank">{{ticketID}} &nbsp;&nbsp; {{issueTitle}}</a>
+    <div>{{summary}}</div>
+    <br>
+    <div ng-repeat="comment in comments track by $index">
+        {{comment.concise}}
+        <br>
+        &nbsp;&nbsp;&nbsp;{{comment.body}}
     </div>
+</div>
 
-	
-	<script src="bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="bower_components/angularjs/angular.min.js"></script>
-	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script src="js/main.js"></script>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/angularjs/angular.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 
 </html>
