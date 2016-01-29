@@ -15,25 +15,29 @@
 
 </head>
 <body ng-app="myApp">
-<div ng-controller="statusControler">
-    <span>Project: {{projectKey}}</span>
-    <h3>Branch: {{status.currentBranch}} <span ng-hide="!status.isDetached" class="ng-hide">DETACHED</span></h3>
-    <span ng-repeat="l in status.lines track by $index"><br> {{l}}</span>
+<div class="row">
+    <div class="col-sm-6">
+        <div ng-controller="statusControler">
+            <span>Project: {{projectKey}}</span>
+            <h3>Branch: {{status.currentBranch}} <span ng-hide="!status.isDetached" class="ng-hide">DETACHED</span></h3>
+            <span ng-repeat="l in status.lines track by $index"><br> {{l}}</span>
 
-</div>
-<div ng-controller="logsControler">
-    <div ng-repeat="l in oneLineLogs track by $index">{{l}}</div>
-</div>
-<hr>
-<hr>
-<div ng-controller="issueControler" >
-    <a href="{{url}}" target="_blank">{{ticketID}} &nbsp;&nbsp; {{issueTitle}}</a>
-    <div>{{summary}}</div>
-    <br>
-    <div ng-repeat="comment in comments track by $index">
-        {{comment.concise}}
-        <br>
-        &nbsp;&nbsp;&nbsp;{{comment.body}}
+        </div>
+        <div ng-controller="logsControler">
+            <div ng-repeat="l in oneLineLogs track by $index">{{l}}</div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div ng-controller="issueControler">
+            <a href="{{url}}" target="_blank">{{ticketID}} &nbsp;&nbsp; {{issueTitle}}</a>
+            <div>{{summary}}</div>
+            <br>
+            <div ng-repeat="comment in comments track by $index">
+                {{comment.concise}}
+                <br>
+                &nbsp;&nbsp;&nbsp;{{comment.body}}
+            </div>
+        </div>
     </div>
 </div>
 
