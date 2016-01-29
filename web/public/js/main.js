@@ -2,6 +2,17 @@ var app = angular.module('myApp', []);
 
 var projectKey = getParameterByName('project_key');
 
+//
+//var socket = io.connect('http://localhost:9000');
+//
+//// listening for the connected event from the server
+//socket.on('connected', function(data) {
+//    console.log('The server said: ' + data.message);
+//});
+//
+//// sending a message event to the server
+//socket.emit('message', { message: 'Hi!' });
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -9,7 +20,46 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-app.controller('statusControler', ['$scope', '$http', function($scope, $http) {
+app.factory('socket', function ($rootScope) {
+    var socket = io.connect();
+    return {
+        on: function (eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                console.log("ON~!!");
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        },
+        emit: function (eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                var args = arguments;
+                console.log("emit~!!");
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            });
+        }
+    };
+});
+
+
+app.controller('socketController', ['$scope', 'socket', function($scope, socket) {
+    $scope.connected = false;
+    socket.on('connected', function (data) {
+        console.log('connected!!');
+        $scope.connected = true;
+    });
+    socket.on('update', function (data) {
+        console.log('update now!!');
+    });
+}]);
+
+app.controller('statusControler', ['$scope', '$http',
+                                                function($scope, $http) {
   $scope.projectKey = projectKey;
   $scope.status = {};
 

@@ -3,7 +3,6 @@ var app = express();
 var port = '9000';
 var fs = require('fs');
 
-app.listen(port);
 
 app.get('/test', function(req, res){
 	res.send('it works');
@@ -24,6 +23,76 @@ app.get('/projects/:project_key/:which_data', function(req, res){
     }
 });
 
-
 app.use(express.static(__dirname + '/public'));
+var server = require('http').createServer(app);
+//
+
+
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', function (socket) {
+    console.log('Someone connected to me, hooray!');
+
+    // sending a message back to the client
+    socket.emit('connected', { message: 'Thanks for connecting!' });
+
+    // listening for messages from the client
+    socket.on('message', function(message) {
+         console.log(message);
+    });
+
+
+
+    socket.lastCheckSum = 0;
+    setInterval(function(){
+        var sum = 0;
+        var dir = __dirname+"/project_cache";
+        var files = fs.readdirSync(dir);
+        walk(dir, function(err, results) {
+            if (err)
+                throw err;
+
+            for(var i=0; i<results.length; i++){
+                var stat = fs.statSync(results[i]);
+                sum += 1*Date.parse(stat.atime);
+                sum += 1*Date.parse(stat.ctime);
+                sum += 1*Date.parse(stat.mtime);
+                sum += 1*stat.size;
+            }
+            if(sum!=socket.lastCheckSum){
+                socket.lastCheckSum = sum;
+                socket.emit('update', { message: '' });
+            }
+        });
+
+    },1000);
+});
+
+
+function walk(dir, cb) {
+  var results = [];
+  fs.readdir(dir, function(err, list) {
+    if (err) return cb(err);
+    var i = 0;
+    (function next() {
+      var file = list[i++];
+      if (!file) return cb(null, results);
+      file = dir + '/' + file;
+      fs.stat(file, function(err, stat) {
+        if (stat && stat.isDirectory()) {
+          walk(file, function(err, res) {
+            results = results.concat(res);
+            next();
+          });
+        } else {
+          results.push(file);
+          next();
+        }
+      });
+    })();
+  });
+};
+///
+
+server.listen(port);
 console.log('listening on ' + port);

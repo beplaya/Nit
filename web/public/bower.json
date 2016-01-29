@@ -10,6 +10,8 @@
   ],
   "dependencies": {
     "angularjs": "~1.4.1",
-    "bootstrap": "~3.3.5"
+    "bootstrap": "~3.3.5",
+    "socket.io": "~1.4.5",
+    "socket.io-client": "~1.4.5"
   }
 }
