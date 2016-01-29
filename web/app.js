@@ -54,12 +54,11 @@ io.sockets.on('connection', function (socket) {
 
             for(var i=0; i<results.length; i++){
                 var stat = fs.statSync(results[i]);
-                sum += 1*Date.parse(stat.atime);
-                sum += 1*Date.parse(stat.ctime);
                 sum += 1*Date.parse(stat.mtime);
                 sum += 1*stat.size;
             }
-            if(sum!=socket.lastCheckSum){
+            if(sum != socket.lastCheckSum){
+                console.log('EMIT UPDATE!');
                 socket.lastCheckSum = sum;
                 socket.emit('update', { message: '' });
             }

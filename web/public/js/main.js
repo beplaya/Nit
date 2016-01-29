@@ -53,85 +53,111 @@ app.controller('socketController', ['$scope', 'socket', function($scope, socket)
         console.log('connected!!');
         $scope.connected = true;
     });
-    socket.on('update', function (data) {
-        console.log('update now!!');
-    });
+
 }]);
 
-app.controller('statusControler', ['$scope', '$http',
-                                                function($scope, $http) {
-  $scope.projectKey = projectKey;
-  $scope.status = {};
+app.controller('statusControler', ['$scope', '$http', 'socket',
+                                                function($scope, $http, socket) {
+    $scope.projectKey = projectKey;
+    $scope.status = {};
 
-  $scope.update = function(){
+    $scope.update = function(){
     $http.get("projects/"+$scope.projectKey+"/status")
         .then(function(response) {
             $scope.status = response.data;
     }, function(){
         console.log("Error!");
     });
-  };
+    };
 
-  $scope.isDetached = function(){
+    $scope.isDetached = function(){
     return $scope.status.isDetached;
-  };
+    };
 
-  $scope.update();
+    $scope.update();
+    socket.on('update', function (data) {
+        $scope.status = {};
+        setTimeout(function(){
+            $scope.update();
+        }, 500);
+    });
 }]);
 
 
-app.controller('logsControler', ['$scope', '$http', function($scope, $http) {
-  $scope.projectKey = projectKey;
-  $scope.oneLineLogs = [];
-  $scope.update = function(){
+app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $http, socket) {
+    $scope.projectKey = projectKey;
+    $scope.oneLineLogs = [];
+    $scope.update = function(){
     $http.get("projects/"+$scope.projectKey+"/one_line_log_data")
         .then(function(response) {
             $scope.oneLineLogs = response.data.slice(0,15);
     }, function(){
         console.log("Error!");
     });
-  };
-  $scope.update();
+    };
+    $scope.update();
+    socket.on('update', function (data) {
+        $scope.oneLineLogs = [];
+        setTimeout(function(){
+            $scope.update();
+        }, 500);
+    });
 }]);
 
 
-app.controller('issueControler', ['$scope', '$http', function($scope, $http) {
-  $scope.projectKey = projectKey;
-  $scope.update = function(){
-    $http.get("projects/"+$scope.projectKey+"/issue")
-        .then(function(response) {
-            $scope.ticketID = response.data.ticketID;
-            $scope.fields = response.data.fields;
-            $scope.url = response.data.url;
-            var fields = $scope.fields;
-            $scope.cachedAge = fields.cachedAge || 0;
-            $scope.issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
-            $scope.status = fields.status ? fields.status.name || "" : "without any status";
-            $scope.assignee = fields.assignee ? fields.assignee.displayName || "" : "no one";
-            $scope.summary = fields.summary || "";
+app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, $http, socket) {
+    $scope.projectKey = projectKey;
+    $scope.update = function(){
+        $http.get("projects/"+$scope.projectKey+"/issue")
+            .then(function(response) {
+                $scope.ticketID = response.data.ticketID;
+                $scope.fields = response.data.fields;
+                $scope.url = response.data.url;
+                var fields = $scope.fields;
+                $scope.cachedAge = fields.cachedAge || 0;
+                $scope.issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
+                $scope.status = fields.status ? fields.status.name || "" : "without any status";
+                $scope.assignee = fields.assignee ? fields.assignee.displayName || "" : "no one";
+                $scope.summary = fields.summary || "";
 
-            $scope.issueTitle = "A '"+$scope.issuetype+"'"
-            + " issue that is '"+$scope.status+"'"
-            + " assigned to '"+$scope.assignee+"'";
-            //
-            var comments = fields.comment.comments;
-            $scope.comments = [];
-            for(var i=0; i<comments.length; i++) {
-                var c = comments[i];
-                var com = {
-                    author : c.author.displayName,
-                    concise : "    # author: "
-                        + c.author.name  + " created: "
-                        + c.created  + " updated: "+c.updated,
-                    body : c.body
-                };
-                $scope.comments.push(com);
-            }
-    }, function(){
-        console.log("Error!");
+                $scope.issueTitle = "A '"+$scope.issuetype+"'"
+                + " issue that is '"+$scope.status+"'"
+                + " assigned to '"+$scope.assignee+"'";
+                //
+                var comments = fields.comment.comments;
+                $scope.comments = [];
+                for(var i=0; i<comments.length; i++) {
+                    var c = comments[i];
+                    var com = {
+                        author : c.author.displayName,
+                        concise : "    # author: "
+                            + c.author.name  + " created: "
+                            + c.created  + " updated: "+c.updated,
+                        body : c.body
+                    };
+                    $scope.comments.push(com);
+                }
+        }, function(){
+            console.log("Error!");
+        });
+    };
+    $scope.update();
+    socket.on('update', function (data) {
+        $scope.ticketID = "";
+        $scope.fields = {};
+        $scope.url = "";
+        $scope.cachedAge = 0;
+        $scope.issuetype = "";
+        $scope.status = "";
+        $scope.assignee = "";
+        $scope.summary = "";
+        $scope.issueTitle = "...";
+        //
+        $scope.comments = [];
+        setTimeout(function(){
+            $scope.update();
+        }, 2000);
     });
-  };
-  $scope.update();
 }]);
 
 
