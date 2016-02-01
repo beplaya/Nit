@@ -64,7 +64,17 @@ app.controller('statusControler', ['$scope', '$http', 'socket',
     $scope.update = function(){
     $http.get("projects/"+$scope.projectKey+"/status")
         .then(function(response) {
-            $scope.status = response.data;
+            var statusData = response.data;
+            $scope.status = {raw : statusData};
+            $scope.status.lines = [];
+            var lines = statusData.data.split("\n");
+            for(var i=0; i<lines.length; i++){
+                var l = lines[i].trim();
+                if(l.length>0)
+                    $scope.status.lines.push(lines[i]);
+            }
+            $scope.status.currentBranch = statusData.currentBranch;
+            $scope.status.issueKey = statusData.issueKey;
     }, function(){
         console.log("Error!");
     });
@@ -90,7 +100,7 @@ app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $
     $scope.update = function(){
     $http.get("projects/"+$scope.projectKey+"/one_line_log_data")
         .then(function(response) {
-            $scope.oneLineLogs = response.data.slice(0,15);
+            $scope.oneLineLogs = response.data.data.slice(0,15);
     }, function(){
         console.log("Error!");
     });

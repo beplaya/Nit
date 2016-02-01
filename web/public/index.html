@@ -22,7 +22,7 @@
     <div class="col-sm-6">
         <div ng-controller="statusControler">
             <div class="project">Project: {{projectKey}}</div>
-            <div class="branch">Branch: {{status.currentBranch}}</div>
+            <div class="branch">Branch: {{status.currentBranch}} &nbsp; Issue Key: {{status.issueKey}}</div>
             <span ng-hide="!status.isDetached" class="ng-hide">DETACHED</span>
             <p class="status">
                 <span ng-repeat="l in status.lines track by $index"><br> {{l}}</span>
