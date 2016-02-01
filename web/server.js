@@ -1,8 +1,10 @@
-module.exports = function(){
+module.exports = function(nira){
     var express = require('express');
     var app = express();
+    app.nira = nira;
     var port = '9000';
     var fs = require('fs');
+    var nettings = require(__dirname + '/../lib/nit_settings.js')().load();
 
     app.get('/test', function(req, res){
         res.send('it works');
@@ -14,16 +16,15 @@ module.exports = function(){
             var projectKey = req.params.project_key.toUpperCase();
             var whichData = req.params.which_data.toLowerCase();
             var contents = {};
-            //if(whichData==="status"){
-            //    contents = app.projectData[projectKey][whichData];
-            //} else {
-                var file = __dirname+"/project_cache/project_"+projectKey+"/json/"+whichData+".json";
-                contents = fs.readFileSync(file, "utf8");
-                contents = JSON.parse(contents);
-            //}
-            res.status(200).json(contents);
+            contents = app.projectData[projectKey][whichData];
+            //console.log("\n~~", projectKey, whichData, contents);
+            if(contents){
+                res.status(200).json(contents);
+            } else {
+                res.status(404).json({});
+            }
         }catch(e){
-            console.log(e);
+            console.log("!", e);
             res.status(503).send("503");
         }
     });

@@ -277,7 +277,7 @@ function Nit(runner) {
 
     this.describe = function(currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdHTTP("issue_fields", {}, self.nira.ticketIDFromBranch(currentBranch), function(repliedFields){
+        NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", function(repliedFields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
             cb && cb(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
         });
@@ -285,7 +285,7 @@ function Nit(runner) {
 
     this.comments = function(currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdHTTP("comments", {}, self.nira.ticketIDFromBranch(currentBranch), function(repliedComments){
+        NIT.nitClient.sendCmdToServer("comments", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", function(repliedComments){
             self.printer.comments(repliedComments);
             cb && cb(repliedComments);
         });
@@ -293,15 +293,39 @@ function Nit(runner) {
 
     this.createComment = function(comment, currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdHTTP("create_comment", comment, self.nira.ticketIDFromBranch(currentBranch), function(){
+        NIT.nitClient.sendCmdToServer("create_comment", comment, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "user", function(){
             cb && cb();
         });
     };
 
     this.logOneLiners = function(currentBranch, cb) {
         var self = this;
+
         self.git(["log", "--pretty=oneline"], function(logs){
-            NIT.nitClient.sendCmdHTTP("log_one_liners", logs, self.nira.ticketIDFromBranch(currentBranch), function(){
+            var max = 20;
+            var lines = logs.split('\n');
+            var lineMessages = [];
+            var largestLineMessageLength = 0;
+            for(var i=0; i<lines.length; i++) {
+                var words = lines[i].split(" ");
+                var hash = words[0];
+                if(hash.length > 0){
+                    var message = "";
+                    for(var j=1; j<words.length; j++) {
+                        message += " " + words[j];
+                    }
+                    message = message.trim();
+                    var smallHash = hash.substring(0, 7);
+                    message = (i+1) + " | " + smallHash + " | - | " + message;
+                    lineMessages.push(message);
+                    if(lineMessages.length>max)
+                        break;
+                    if(message.length > largestLineMessageLength) {
+                        largestLineMessageLength = message.length;
+                    }
+                }
+            }
+            NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", function(){
             });
             self.printer.logOneLiners(logs);
             cb && cb(logs);
@@ -311,7 +335,7 @@ function Nit(runner) {
     this.status = function(cb) {
          this.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
-            NIT.nitClient.sendCmdHTTP("status", status, NIT.nira.ticketIDFromBranch(currentBranch), function(){
+            NIT.nitClient.sendCmdToServer("status", status, currentBranch, NIT.nira.ticketIDFromBranch(currentBranch), "git", function(){
             });
             cb && cb(status);
          });
