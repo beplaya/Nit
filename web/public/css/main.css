@@ -1,21 +1,36 @@
 
 
+
+.project {
+    background-color: rgba(0, 0, 0, 0.13);
+    margin: 0px;
+    padding: 5px;
+    font-size: 20px;
+    text-decoration: underline;
+}
+
+.branch {
+    background-color: rgba(0, 0, 0, 0.13);
+    margin: 0px;
+    padding: 2px 2px 2px 70px;
+}
+
 .status {
-    background-color: #337AB8;
+    background-color: rgba(0, 120, 200, 0.13);
     margin:2px 2px 2px 2px;
     padding: 10px 10px 10px 10px;
 }
 
 
 .logs {
-    background-color: #8A6D3B;
+    background-color: rgba(0, 200, 120, 0.13);
     margin:2px 2px 2px 2px;
     padding: 10px 10px 10px 10px;
 }
 
 
 .summary {
-    background-color: #D9EDFA;
+    background-color: rgba(2000, 120, 0, 0.13);
     margin:2px 2px 2px 2px;
     padding: 10px 10px 10px 10px;
 }
