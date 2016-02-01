@@ -2,17 +2,6 @@ var app = angular.module('myApp', []);
 
 var projectKey = getParameterByName('project_key');
 
-//
-//var socket = io.connect('http://localhost:9000');
-//
-//// listening for the connected event from the server
-//socket.on('connected', function(data) {
-//    console.log('The server said: ' + data.message);
-//});
-//
-//// sending a message event to the server
-//socket.emit('message', { message: 'Hi!' });
-
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -89,7 +78,7 @@ app.controller('statusControler', ['$scope', '$http', 'socket',
         $scope.status = {};
         setTimeout(function(){
             $scope.update();
-        }, 500);
+        }, 100);
     });
 }]);
 
@@ -110,7 +99,7 @@ app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $
         $scope.oneLineLogs = [];
         setTimeout(function(){
             $scope.update();
-        }, 500);
+        }, 100);
     });
 }]);
 
@@ -166,7 +155,7 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
         $scope.comments = [];
         setTimeout(function(){
             $scope.update();
-        }, 2000);
+        }, 100);
     });
 }]);
 
