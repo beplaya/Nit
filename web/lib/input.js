@@ -4,29 +4,30 @@ module.exports = function(app){
     //
     app.projectData = {};
     //
-    app.post('/rest/1.0/input/projects/:project_key/:issue_key/:which_data/:tool', function(req, res){
+    app.post('/rest/1.0/input/projects/:project_key/:issue_key/:which_data/:tool/:from_update', function(req, res){
         try {
             var data = req.body;
 
             var projectKey = req.params.project_key.toUpperCase();
 
+            var fromUpdate = req.params.from_update.toLowerCase() === "true";
             var whichData = req.params.which_data.toLowerCase();
             var issueKey = req.params.issue_key;
             var tool = req.params.tool.toLowerCase();
-            console.log("<",projectKey, issueKey, whichData, tool, ">");
+            console.log("<",projectKey, issueKey, whichData, tool, fromUpdate, ">");
             if(!app.projectData[projectKey])
             {
                 app.projectData[projectKey] = {};
             }
             if(tool==="jira"){
-                app.nira.getIssue(issueKey, function(issueData){
+                app.nerver.nira.getIssue(issueKey, function(issueData){
                     app.projectData[projectKey]["issue"] = issueData;
-                    app.inputListener.onData(projectKey);
+                    app.inputListener.onData(issueData, projectKey, fromUpdate);
                     res.status(200).send(issueData);
                 });
             }else{
                 app.projectData[projectKey][whichData] = data;
-                app.inputListener.onData(projectKey);
+                app.inputListener.onData(data, projectKey, fromUpdate);
                 res.status(200).send("{}");
             }
         }catch(e){

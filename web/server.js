@@ -1,7 +1,7 @@
-module.exports = function(nira){
+module.exports = function(nerver){
     var express = require('express');
     var app = express();
-    app.nira = nira;
+    app.nerver = nerver;
     var port = '9000';
     var fs = require('fs');
     var nettings = require(__dirname + '/../lib/nit_settings.js')().load();
@@ -9,7 +9,6 @@ module.exports = function(nira){
     app.get('/test', function(req, res){
         res.send('it works');
     });
-
 
     app.get('/projects/:project_key/:which_data', function(req, res){
         try {
@@ -23,7 +22,7 @@ module.exports = function(nira){
                 res.status(404).json({});
             }
         }catch(e){
-            console.log("!", e);
+            console.log("get '/projects/:project_key/:which_data'", e);
             res.status(503).send("503");
         }
     });
@@ -54,10 +53,18 @@ module.exports = function(nira){
 
 
     app.inputListener = {
-        onData : function(data, projectKey){
+        onData : function(data, projectKey, fromUpdate){
             console.log('emit update!');
             for(var i=0; i<sockets.length; i++){
                 try{ sockets[i].emit('update', { message: '', projectKey: projectKey }); } catch(e){}
+            }
+            if(!fromUpdate){
+                setTimeout(function(){
+                    app.nerver.nit.updateNerver();
+                    setTimeout(function(){
+                        app.nerver.nit.updateNerver();
+                    },3000);
+                },1000);
             }
         }
     };

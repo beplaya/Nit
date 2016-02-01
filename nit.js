@@ -32,10 +32,6 @@ function Nit(runner) {
     this.log = require(__dirname + '/lib/log.js')(this);
     this.cmds = require(__dirname + '/lib/cmds.js')();
 
-    this.startNerver = function(arg) {
-        this.nerver.start(arg);
-    };
-
     this.browse = function(currentBranch) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
         this.runner.run("open", [this.nira.baseURL + ticket]);
@@ -71,9 +67,9 @@ function Nit(runner) {
                         cmd.action(self, cliArgs[1], currentBranch);
                     }
 
-                    setTimeout(function(){
-                        NIT.updateNerver();
-                    }, 1000);
+                    if(cmd.arg != "updateNerver"){
+                        NIT.runner.run("nit", ["updateNerver"]);
+                    }
                 } else {
                     self.nerrorUnclean();
                 }
@@ -277,14 +273,15 @@ function Nit(runner) {
     };
 
     NIT.updateNerver = function(){
+        console.log("updateNerver called!");
         NIT.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
             var issueKey = NIT.nira.ticketIDFromBranch(currentBranch);
             NIT.git(["log", "--pretty=oneline"], function(logs){
                 var lineMessages = NIT.getLineMessages(logs);
-                NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, issueKey, "jira", function(repliedFields){
-                    NIT.nitClient.sendCmdToServer("status", status, currentBranch, issueKey, "git", function(){
-                        NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, issueKey, "git", function(){
+                NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, issueKey, "jira", true, function(repliedFields){
+                    NIT.nitClient.sendCmdToServer("status", status, currentBranch, issueKey, "git", true, function(){
+                        NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, issueKey, "git", true, function(){
                         });
                     });
                 });
@@ -294,7 +291,7 @@ function Nit(runner) {
 
     this.describe = function(currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", function(repliedFields){
+        NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", false, function(repliedFields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
             cb && cb(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
         });
@@ -302,7 +299,7 @@ function Nit(runner) {
 
     this.comments = function(currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdToServer("comments", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", function(repliedComments){
+        NIT.nitClient.sendCmdToServer("comments", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", false, function(repliedComments){
             self.printer.comments(repliedComments);
             cb && cb(repliedComments);
         });
@@ -310,17 +307,17 @@ function Nit(runner) {
 
     this.createComment = function(comment, currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdToServer("create_comment", comment, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "user", function(){
+//        NIT.nitClient.sendCmdToServer("create_comment", comment, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "user", false, function(){
             cb && cb();
-        });
+//        });
     };
 
     this.logOneLiners = function(currentBranch, cb) {
         var self = this;
         self.git(["log", "--pretty=oneline"], function(logs){
             var lineMessages = NIT.getLineMessages(logs);
-            NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", function(){
-            });
+//            NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", false, function(){
+//            });
             self.printer.logOneLiners(logs);
             cb && cb(logs);
         });
@@ -356,7 +353,7 @@ function Nit(runner) {
     this.status = function(cb) {
          this.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
-            NIT.nitClient.sendCmdToServer("status", status, currentBranch, NIT.nira.ticketIDFromBranch(currentBranch), "git", function(){
+            NIT.nitClient.sendCmdToServer("status", status, currentBranch, NIT.nira.ticketIDFromBranch(currentBranch), "git", false, function(){
             });
             cb && cb(status);
          });
@@ -432,6 +429,10 @@ function Nit(runner) {
     };
     //
     this.nerver.init(this);
+
+    NIT.startNerver = function(arg) {
+        NIT.nerver.start(arg);
+    };
 }
 
 function Runner() {
