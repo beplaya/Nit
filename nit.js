@@ -78,12 +78,9 @@ function Nit(runner) {
         } else {
             self.gitInherit(cliArgs);
         }
-        self.nerverStatus();
     };
 
-    this.nerverStatus = function(currentBranch) {
-         this.nitClient.sendCmd("STATUS", "", "", "", function(d){ });
-    };
+//    };
 
     this.ciMessageFromArgs = function(argz) {
         var message = "";
@@ -272,49 +269,51 @@ function Nit(runner) {
         });
     };
 
-    this.describe = function(currentBranch, cb) {
-        var self = this;
-        self.nitClient.sendCmd("DESCRIBE", "", self.nira.ticketIDFromBranch(currentBranch), "", function(fields){
-            self.printer.description(self.nira.ticketIDFromBranch(currentBranch), fields);
-            cb && cb(self.nira.ticketIDFromBranch(currentBranch), fields);
-        });
-    };
-
     this.getBranchComments = function(cb) {
         NIT.git(["status"], function(statusData){
             NIT.comments(NIT.discoverBranch(statusData), cb);
         });
     };
 
+    this.describe = function(currentBranch, cb) {
+        var self = this;
+        NIT.nitClient.sendCmdHTTP("issue_fields", {}, self.nira.ticketIDFromBranch(currentBranch), function(repliedFields){
+            self.printer.description(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
+            cb && cb(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
+        });
+    };
+
     this.comments = function(currentBranch, cb) {
         var self = this;
-        self.nitClient.sendCmd("COMMENTS", "", self.nira.ticketIDFromBranch(currentBranch), "", function(data){
-            self.printer.comments(data);
+        NIT.nitClient.sendCmdHTTP("comments", {}, self.nira.ticketIDFromBranch(currentBranch), function(repliedComments){
+            self.printer.comments(repliedComments);
+            cb && cb(repliedComments);
+        });
+    };
+
+    this.createComment = function(comment, currentBranch, cb) {
+        var self = this;
+        NIT.nitClient.sendCmdHTTP("create_comment", comment, self.nira.ticketIDFromBranch(currentBranch), function(){
             cb && cb();
         });
     };
 
-    this.createComment = function(comment, currentBranch) {
+    this.logOneLiners = function(currentBranch, cb) {
         var self = this;
-        self.nitClient.sendCmd("CREATE_COMMENT", comment, self.nira.ticketIDFromBranch(currentBranch), "", function(data){
-            console.log("done");
-        });
-    };
-
-    this.logOneLiners = function(cb) {
-        var self = this;
-        self.git(["log", "--pretty=oneline"], function(data){
-            self.printer.logOneLiners(data);
-            cb && cb(data);
+        self.git(["log", "--pretty=oneline"], function(logs){
+            NIT.nitClient.sendCmdHTTP("log_one_liners", logs, self.nira.ticketIDFromBranch(currentBranch), function(){
+            });
+            self.printer.logOneLiners(logs);
+            cb && cb(logs);
         });
     };
 
     this.status = function(cb) {
-         this.git(["status"], function(data){
-            NIT.nitClient.sendCmdHTTP("STATUS", data, function(){
-                //console.log("sent status http");
+         this.git(["status"], function(status){
+            var currentBranch = NIT.discoverBranch(status);
+            NIT.nitClient.sendCmdHTTP("status", status, NIT.nira.ticketIDFromBranch(currentBranch), function(){
             });
-            cb && cb(data);
+            cb && cb(status);
          });
     };
 
