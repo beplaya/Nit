@@ -30,7 +30,19 @@
 
 
 .summary {
-    background-color: rgba(2000, 120, 0, 0.13);
+    background-color: rgba(20, 50, 120, 0.22);
     margin:2px 2px 2px 2px;
     padding: 10px 10px 10px 10px;
+}
+
+.description {
+    background-color: rgba(20, 50, 120, 0.13);
+    margin:2px 2px 2px 2px;
+    padding: 10px 10px 10px 10px;
+}
+
+.comments {
+    background-color: rgba(120, 50, 20, 0.13);
+    margin: 2px;
+    padding: 1px;
 }

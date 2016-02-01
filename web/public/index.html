@@ -22,7 +22,9 @@
     <div class="col-sm-6">
         <div ng-controller="statusControler">
             <div class="project">Project: {{projectKey}}</div>
-            <div class="branch">Branch: {{status.currentBranch}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issue Key: {{status.issueKey}}</div>
+            <div class="branch">Branch: {{status.currentBranch}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issue Key:
+                {{status.issueKey}}
+            </div>
             <span ng-hide="!status.isDetached" class="ng-hide">DETACHED</span>
             <p class="status">
                 <span ng-repeat="l in status.lines track by $index"><br> {{l}}</span>
@@ -38,11 +40,15 @@
         <div ng-controller="issueControler">
             <a href="{{url}}" target="_blank">{{ticketID}} &nbsp;&nbsp; {{issueTitle}}</a>
             <div class="summary">{{summary}}</div>
+            <div class="description" ng-bind-html="description">{{description}}</div>
             <br>
-            <div ng-repeat="comment in comments track by $index">
-                {{comment.concise}}
-                <br>
-                &nbsp;&nbsp;&nbsp;{{comment.body}}
+            <div class="comments">
+                <span ng-repeat="comment in comments track by $index">
+                    <br>
+                    {{comment.concise}}
+                    <br>
+                    &nbsp;&nbsp;&nbsp;{{comment.body}}
+                </span>
             </div>
         </div>
     </div>
@@ -50,8 +56,8 @@
 
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/angularjs/angular.min.js"></script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/socket.io-client/socket.io.js"></script>
 <script src="js/main.js"></script>

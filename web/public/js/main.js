@@ -1,4 +1,4 @@
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ['ngSanitize']);
 
 var projectKey = getParameterByName('project_key');
 
@@ -107,28 +107,32 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
                 $scope.fields = response.data.fields;
                 $scope.url = response.data.url;
                 var fields = $scope.fields;
-                $scope.cachedAge = fields.cachedAge || 0;
-                $scope.issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
-                $scope.status = fields.status ? fields.status.name || "" : "without any status";
-                $scope.assignee = fields.assignee ? fields.assignee.displayName || "" : "no one";
-                $scope.summary = fields.summary || "";
+                if(fields){
+                    $scope.cachedAge = fields.cachedAge || 0;
+                    $scope.issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
+                    $scope.status = fields.status ? fields.status.name || "" : "without any status";
+                    $scope.assignee = fields.assignee ? fields.assignee.displayName || "" : "no one";
+                    $scope.summary = fields.summary || "";
+                    $scope.description = fields.description || "";
+                    $scope.description =  $scope.description.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
-                $scope.issueTitle = "A '"+$scope.issuetype+"'"
-                + " issue that is '"+$scope.status+"'"
-                + " assigned to '"+$scope.assignee+"'";
-                //
-                var comments = fields.comment.comments;
-                $scope.comments = [];
-                for(var i=0; i<comments.length; i++) {
-                    var c = comments[i];
-                    var com = {
-                        author : c.author.displayName,
-                        concise : "    # author: "
-                            + c.author.name  + " created: "
-                            + c.created  + " updated: "+c.updated,
-                        body : c.body
-                    };
-                    $scope.comments.push(com);
+                    $scope.issueTitle = "A '"+$scope.issuetype+"'"
+                    + " issue that is '"+$scope.status+"'"
+                    + " assigned to '"+$scope.assignee+"'";
+                    //
+                    var comments = fields.comment.comments;
+                    $scope.comments = [];
+                    for(var i=0; i<comments.length; i++) {
+                        var c = comments[i];
+                        var com = {
+                            author : c.author.displayName,
+                            concise : "    # author: "
+                                + c.author.name  + " created: "
+                                + c.created  + " updated: "+c.updated,
+                            body : c.body
+                        };
+                        $scope.comments.push(com);
+                    }
                 }
         }, function(){
             console.log("Error!");
