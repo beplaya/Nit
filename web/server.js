@@ -17,7 +17,6 @@ module.exports = function(nira){
             var whichData = req.params.which_data.toLowerCase();
             var contents = {};
             contents = app.projectData[projectKey][whichData];
-            //console.log("\n~~", projectKey, whichData, contents);
             if(contents){
                 res.status(200).json(contents);
             } else {
