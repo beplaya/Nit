@@ -327,7 +327,7 @@ function Nit(runner) {
         var max = max || 20;
         var lines = logs.split('\n');
         var lineMessages = [];
-        var largestLineMessageLength = 0;
+        var count = 0;
         for(var i=0; i<lines.length; i++) {
             var words = lines[i].split(" ");
             var hash = words[0];
@@ -338,12 +338,12 @@ function Nit(runner) {
                 }
                 message = message.trim();
                 var smallHash = hash.substring(0, 7);
-                message = (i+1) + " | " + smallHash + " | - | " + message;
-                lineMessages.push(message);
-                if(lineMessages.length>max)
-                    break;
-                if(message.length > largestLineMessageLength) {
-                    largestLineMessageLength = message.length;
+                if(message.length>0){
+                    count++;
+                    message = count + " | " + smallHash + " | - | " + message;
+                    lineMessages.push(message);
+                    if(lineMessages.length>max)
+                        break;
                 }
             }
         }
