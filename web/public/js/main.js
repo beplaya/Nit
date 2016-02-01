@@ -148,6 +148,7 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
         $scope.status = "";
         $scope.assignee = "";
         $scope.summary = "";
+        $scope.description = "";
         $scope.issueTitle = "...";
         //
         $scope.comments = [];
