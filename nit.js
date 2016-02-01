@@ -28,7 +28,7 @@ function Nit(runner) {
     this.nettings = require(__dirname + '/lib/nit_settings.js')().load();
     this.nira = require(__dirname + '/lib/nira/nira.js')(this.nettings);
     this.nerver = require(__dirname + '/lib/nerver.js')(this.nira);
-    this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver);
+    this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver, this.nettings);
     this.log = require(__dirname + '/lib/log.js')(this);
     this.cmds = require(__dirname + '/lib/cmds.js')();
 
@@ -310,7 +310,12 @@ function Nit(runner) {
     };
 
     this.status = function(cb) {
-         this.git(["status"], cb);
+         this.git(["status"], function(data){
+            NIT.nitClient.sendCmdHTTP("STATUS", data, function(){
+                //console.log("sent status http");
+            });
+            cb && cb(data);
+         });
     };
 
     this.stageFeatureCommitAndStatus = function(message, currentBranch) {

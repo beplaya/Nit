@@ -1,0 +1,21 @@
+
+
+.status {
+    background-color: #337AB8;
+    margin:2px 2px 2px 2px;
+    padding: 10px 10px 10px 10px;
+}
+
+
+.logs {
+    background-color: #8A6D3B;
+    margin:2px 2px 2px 2px;
+    padding: 10px 10px 10px 10px;
+}
+
+
+.summary {
+    background-color: #D9EDFA;
+    margin:2px 2px 2px 2px;
+    padding: 10px 10px 10px 10px;
+}
