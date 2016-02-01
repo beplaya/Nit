@@ -75,10 +75,7 @@ app.controller('statusControler', ['$scope', '$http', 'socket',
 
     $scope.update();
     socket.on('update', function (data) {
-        $scope.status = {};
-        setTimeout(function(){
-            $scope.update();
-        }, 100);
+        $scope.update();
     });
 }]);
 
@@ -96,10 +93,7 @@ app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $
     };
     $scope.update();
     socket.on('update', function (data) {
-        $scope.oneLineLogs = [];
-        setTimeout(function(){
-            $scope.update();
-        }, 100);
+        $scope.update();
     });
 }]);
 
@@ -153,9 +147,7 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
         $scope.issueTitle = "...";
         //
         $scope.comments = [];
-        setTimeout(function(){
-            $scope.update();
-        }, 100);
+        $scope.update();
     });
 }]);
 

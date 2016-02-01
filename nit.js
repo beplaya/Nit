@@ -71,6 +71,9 @@ function Nit(runner) {
                         cmd.action(self, cliArgs[1], currentBranch);
                     }
 
+                    setTimeout(function(){
+                        NIT.updateNerver();
+                    }, 1000);
                 } else {
                     self.nerrorUnclean();
                 }
@@ -79,8 +82,6 @@ function Nit(runner) {
             self.gitInherit(cliArgs);
         }
     };
-
-//    };
 
     this.ciMessageFromArgs = function(argz) {
         var message = "";
@@ -275,6 +276,22 @@ function Nit(runner) {
         });
     };
 
+    NIT.updateNerver = function(){
+        NIT.git(["status"], function(status){
+            var currentBranch = NIT.discoverBranch(status);
+            var issueKey = NIT.nira.ticketIDFromBranch(currentBranch);
+            NIT.git(["log", "--pretty=oneline"], function(logs){
+                var lineMessages = NIT.getLineMessages(logs);
+                NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, issueKey, "jira", function(repliedFields){
+                    NIT.nitClient.sendCmdToServer("status", status, currentBranch, issueKey, "git", function(){
+                        NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, issueKey, "git", function(){
+                        });
+                    });
+                });
+            });
+        });
+    };
+
     this.describe = function(currentBranch, cb) {
         var self = this;
         NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", function(repliedFields){
@@ -300,36 +317,40 @@ function Nit(runner) {
 
     this.logOneLiners = function(currentBranch, cb) {
         var self = this;
-
         self.git(["log", "--pretty=oneline"], function(logs){
-            var max = 20;
-            var lines = logs.split('\n');
-            var lineMessages = [];
-            var largestLineMessageLength = 0;
-            for(var i=0; i<lines.length; i++) {
-                var words = lines[i].split(" ");
-                var hash = words[0];
-                if(hash.length > 0){
-                    var message = "";
-                    for(var j=1; j<words.length; j++) {
-                        message += " " + words[j];
-                    }
-                    message = message.trim();
-                    var smallHash = hash.substring(0, 7);
-                    message = (i+1) + " | " + smallHash + " | - | " + message;
-                    lineMessages.push(message);
-                    if(lineMessages.length>max)
-                        break;
-                    if(message.length > largestLineMessageLength) {
-                        largestLineMessageLength = message.length;
-                    }
-                }
-            }
+            var lineMessages = NIT.getLineMessages(logs);
             NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", function(){
             });
             self.printer.logOneLiners(logs);
             cb && cb(logs);
         });
+    };
+
+    NIT.getLineMessages = function(logs, max) {
+        var max = max || 20;
+        var lines = logs.split('\n');
+        var lineMessages = [];
+        var largestLineMessageLength = 0;
+        for(var i=0; i<lines.length; i++) {
+            var words = lines[i].split(" ");
+            var hash = words[0];
+            if(hash.length > 0){
+                var message = "";
+                for(var j=1; j<words.length; j++) {
+                    message += " " + words[j];
+                }
+                message = message.trim();
+                var smallHash = hash.substring(0, 7);
+                message = (i+1) + " | " + smallHash + " | - | " + message;
+                lineMessages.push(message);
+                if(lineMessages.length>max)
+                    break;
+                if(message.length > largestLineMessageLength) {
+                    largestLineMessageLength = message.length;
+                }
+            }
+        }
+        return lineMessages;
     };
 
     this.status = function(cb) {
