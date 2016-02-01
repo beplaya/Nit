@@ -31,7 +31,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
-    console.log('Someone connected to me, hooray!');
+    console.log('Someone connected to me, hooray!' + Math.random());
 
     // sending a message back to the client
     socket.emit('connected', { message: 'Thanks for connecting!' });
@@ -58,7 +58,7 @@ io.sockets.on('connection', function (socket) {
                 sum += 1*stat.size;
             }
             if(sum != socket.lastCheckSum){
-                console.log('EMIT UPDATE!');
+                //console.log('EMIT UPDATE!');
                 socket.lastCheckSum = sum;
                 socket.emit('update', { message: '' });
             }
@@ -92,6 +92,7 @@ function walk(dir, cb) {
   });
 };
 ///
-
+require('./lib/input.js')(app);
+///
 server.listen(port);
 console.log('listening on ' + port);
