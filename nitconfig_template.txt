@@ -1,7 +1,9 @@
 {
-   "jira" : {
-       "host" : "my.jira.location.net",
-       "projectKey" : "NIT"
-   },
-   "featureBranchPrefix" : "feature/"
+    "projectKey": "NIT",
+    "jira": {
+        "host": "???"
+    },
+    "featureBranchPrefix": "feature/",
+    "jiraPrefix": "NIT-",
+    "featurePrefix": "feature/NIT-"
 }

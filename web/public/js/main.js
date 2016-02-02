@@ -1,6 +1,7 @@
 var app = angular.module('myApp', ['ngSanitize']);
 
-var projectKey = getParameterByName('project_key');
+var GLOBAL = {};
+
 function pad(num, size) {
     var s = num+"";
     while (s.length < size) s = "0" + s;
@@ -44,9 +45,11 @@ app.factory('socket', function ($rootScope) {
     };
 });
 
+app.controller('titleController', ['$scope', function($scope) {
+    $scope.projectKey = GLOBAL.projectKey;
+}]);
 
 app.controller('socketController', ['$scope', '$http', 'socket', function($scope, $http, socket) {
-    $scope.projectKey = projectKey;
     $scope.connected = false;
     $scope.isLoggedIn = false;
 
@@ -56,17 +59,16 @@ app.controller('socketController', ['$scope', '$http', 'socket', function($scope
 
     socket.on('connected', function (data) {
         console.log('connected!!', data);
+        GLOBAL.projectKey = data.projectKey;
         $scope.connected = true;
         $scope.isLoggedIn = data.isLoggedIn;
         console.log($scope.loggedInStatus());
-        socket.emit("connection_init", {projectKey: projectKey});
     });
 
 }]);
 
 app.controller('statusControler', ['$scope', '$http', 'socket',
                                                 function($scope, $http, socket) {
-    $scope.projectKey = projectKey;
     $scope.whichData = "status";
     $scope.status = {};
 
@@ -116,7 +118,6 @@ app.controller('statusControler', ['$scope', '$http', 'socket',
 
 
 app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $http, socket) {
-    $scope.projectKey = projectKey;
     $scope.whichData = "one_line_log_data";
     $scope.oneLineLogs = [];
     $scope.updateData = function(response){
@@ -141,7 +142,6 @@ app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $
 
 
 app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, $http, socket) {
-    $scope.projectKey = projectKey;
     $scope.whichData = "issue";
     $scope.cachedAge = 0;
     $scope.updateSpeed = 20000;
