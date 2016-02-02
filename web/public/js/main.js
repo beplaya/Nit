@@ -6,11 +6,18 @@ function pad(num, size) {
     while (s.length < size) s = "0" + s;
     return s;
 }
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function formatDate(date){
+    var df = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear()
+       + "  "+pad(date.getHours(), 2) + ":" + pad(date.getMinutes(), 2);
+    return df;
 }
 
 app.factory('socket', function ($rootScope) {
@@ -179,6 +186,12 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
                 var c = comments[i];
                 var com = {
                     author : c.author.displayName,
+                    date : {
+                        createdFormatted : formatDate(new Date(c.created)),
+                        updatedFormatted : formatDate(new Date(c.updated)),
+                        created : c.created,
+                        updated : c.updated,
+                    },
                     concise : "    # author: "
                         + c.author.name  + " created: "
                         + c.created  + " updated: "+c.updated,
@@ -188,6 +201,7 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
             }
         }
     };
+
     $scope.clear = function(){
         $scope.ticketID = "";
         $scope.fields = {};

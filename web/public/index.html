@@ -51,7 +51,9 @@
             <div class="comments">
                 <span ng-repeat="comment in comments track by $index">
                     <br>
-                    {{comment.concise}}
+                    {{comment.author}}&nbsp;&nbsp;
+                    -&nbsp;&nbsp;&nbsp;
+                    {{comment.date.createdFormatted}}
                     <br>
                     &nbsp;&nbsp;&nbsp;{{comment.body}}
                 </span>
