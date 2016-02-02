@@ -1,7 +1,11 @@
 var app = angular.module('myApp', ['ngSanitize']);
 
 var projectKey = getParameterByName('project_key');
-
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -15,7 +19,6 @@ app.factory('socket', function ($rootScope) {
         on: function (eventName, callback) {
             socket.on(eventName, function () {
                 var args = arguments;
-                console.log("ON~!!");
                 $rootScope.$apply(function () {
                     callback.apply(socket, args);
                 });
@@ -24,7 +27,6 @@ app.factory('socket', function ($rootScope) {
         emit: function (eventName, data, callback) {
             socket.emit(eventName, data, function () {
                 var args = arguments;
-                console.log("emit~!!");
                 $rootScope.$apply(function () {
                     if (callback) {
                         callback.apply(socket, args);
@@ -39,10 +41,17 @@ app.factory('socket', function ($rootScope) {
 app.controller('socketController', ['$scope', '$http', 'socket', function($scope, $http, socket) {
     $scope.projectKey = projectKey;
     $scope.connected = false;
+    $scope.isLoggedIn = false;
+
+    $scope.loggedInStatus = function(){
+        return $scope.isLoggedIn === true ? "Signed In" : "Signed Out";
+    };
+
     socket.on('connected', function (data) {
         console.log('connected!!', data);
         $scope.connected = true;
-
+        $scope.isLoggedIn = data.isLoggedIn;
+        console.log($scope.loggedInStatus());
         socket.emit("connection_init", {projectKey: projectKey});
     });
 
@@ -127,9 +136,26 @@ app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $
 app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, $http, socket) {
     $scope.projectKey = projectKey;
     $scope.whichData = "issue";
+    $scope.cachedAge = 0;
+    $scope.updateSpeed = 20000;
+
+    $scope.setInterval = setInterval(function(){
+        $scope.cachedAge+=$scope.updateSpeed/1000;
+        $scope.$apply();
+    }, $scope.updateSpeed);
+
+    $scope.getCachedAgeFormatted = function(){
+        var leftOver = $scope.cachedAge;
+        var hours = Math.floor(leftOver/60/60);
+        leftOver -= (hours*60*60);
+        var minutes = Math.floor(leftOver/60);
+        leftOver -= (minutes*60);
+        var seconds = leftOver;
+        return pad(hours, 2)+":"+pad(minutes, 2)+":"+pad(seconds, 2);
+    };
+
     $scope.updateData = function(response) {
         $scope.clear();
-        console.log(response);
         $scope.ticketID = response.ticketID;
         $scope.fields = response.fields;
         $scope.url = response.url;

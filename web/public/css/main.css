@@ -3,6 +3,20 @@ div {
     border-radius: 9px;
 }
 
+.info {
+    font-style: italic;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.goodText {
+    color:green
+}
+
+.errorText {
+    color:red
+}
+
 .project {
     margin: 0px;
     padding: 5px;

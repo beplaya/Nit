@@ -17,7 +17,11 @@
 
 </head>
 <body ng-app="myApp">
-<div ng-controller="socketController">Connected: {{connected}}</div>
+<div ng-controller="socketController">
+    <span class="info" ng-class="{errorText: !connected, goodText: connected}">Connected: {{connected}}</span>
+    &nbsp;&nbsp;
+    <span class="info" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
+</div>
 <div class="row">
     <div class="col-sm-6">
         <div ng-controller="statusControler">
@@ -39,7 +43,9 @@
     <div class="col-sm-6">
         <div ng-controller="issueControler">
             <a href="{{url}}" target="_blank">{{ticketID}} &nbsp;&nbsp; {{issueTitle}}</a>
-            <div class="summary">{{summary}}</div>
+            <div class="summary">{{summary}} &nbsp;
+                <span class="info">Cached Age: {{getCachedAgeFormatted()}}</span>
+            </div>
             <div class="description" ng-bind-html="description">{{description}}</div>
             <br>
             <div class="comments">

@@ -40,7 +40,7 @@ module.exports = function(nerver){
         console.log('Connection establish:', socket.id);
 
         // sending a message back to the client
-        socket.emit('connected', { message: 'connected'});
+        socket.emit('connected', { message: 'connected', isLoggedIn: nerver.isLoggedIn});
 
         // listening for messages from the client
         socket.on('connection_init', function (data) {
