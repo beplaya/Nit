@@ -3,6 +3,17 @@ div {
     border-radius: 9px;
 }
 
+.commentHeading {
+    font-weight: bold;
+    color: #333;
+    font-family: monospace;
+}
+
+.commentBody {
+    color: #666;
+    font-family: monospace;
+}
+
 .info {
     font-style: italic;
     font-family: monospace;
@@ -34,6 +45,8 @@ div {
     margin:2px 2px 2px 2px;
     padding: 10px 10px 10px 10px;
     border-radius: 9px;
+    height: 275px;
+    overflow:auto;
 }
 
 
@@ -41,6 +54,8 @@ div {
     background-color: rgba(200, 200, 120, 0.13);
     margin:2px 2px 2px 2px;
     padding: 10px 10px 10px 10px;
+    height: 275px;
+    overflow:auto;
 }
 
 
@@ -54,11 +69,20 @@ div {
     background-color: rgba(20, 50, 120, 0.13);
     margin:2px 2px 2px 2px;
     padding: 10px 10px 10px 10px;
+    height: 275px;
+    overflow:auto;
 }
 
 .comments {
     background-color: rgba(120, 50, 20, 0.13);
     margin: 2px;
-    padding: 1px;
+    padding: 7px;
+}
+
+.commentsContainer {
+    margin: 2px;
+    padding: 0px;
+    height: 275px;
+    overflow:auto;
 }
 

@@ -47,16 +47,15 @@
                 <span class="info">Cached Age: {{getCachedAgeFormatted()}}</span>
             </div>
             <div class="description" ng-bind-html="description">{{description}}</div>
-            <br>
-            <div class="comments">
-                <span ng-repeat="comment in comments track by $index">
-                    <br>
-                    {{comment.author}}&nbsp;&nbsp;
-                    -&nbsp;&nbsp;&nbsp;
-                    {{comment.date.createdFormatted}}
-                    <br>
-                    &nbsp;&nbsp;&nbsp;{{comment.body}}
-                </span>
+            <div class="commentsContainer">
+                <div class="comments" ng-repeat="comment in comments track by $index">
+                    <div class="commentHeading">
+                        {{comment.date.createdFormatted}}
+                        &nbsp;&nbsp;-&nbsp;&nbsp;
+                        {{comment.author}}
+                    </div>
+                    <span class="commentBody">{{comment.body}}</span>
+                </div>
             </div>
         </div>
     </div>

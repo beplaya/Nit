@@ -124,7 +124,7 @@ app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $
         $scope.oneLineLogs = $scope.getLogLines(response);
     };
     $scope.getLogLines = function(response) {
-        return response.data.slice(0,15);
+        return response.data.slice(0, 15);
     };
     socket.on('update_'+$scope.whichData, function (response) {
         $scope.updateData(response);
