@@ -5,6 +5,8 @@ module.exports = function(nerver){
     var port = '9000';
     var fs = require('fs');
     var nettings = require(__dirname + '/../lib/nit_settings.js')().load();
+    app.use(express.static(__dirname + '/public'));
+
 
     app.get('/test', function(req, res){
         res.send('it works');
@@ -27,7 +29,6 @@ module.exports = function(nerver){
         }
     });
 
-    app.use(express.static(__dirname + '/public'));
     var server = require('http').createServer(app);
     //
 
@@ -36,27 +37,36 @@ module.exports = function(nerver){
     var sockets = [];
     io.sockets.on('connection', function (socket) {
         sockets.push(socket);
-        console.log('Someone connected to me, hooray!' + Math.random());
+        console.log('Connection establish:', socket.id);
 
         // sending a message back to the client
-        socket.emit('connected', { message: 'Thanks for connecting!' });
+        socket.emit('connected', { message: 'connected'});
 
         // listening for messages from the client
-        socket.on('message', function(message) {
-             console.log(message);
+        socket.on('connection_init', function (data) {
+            console.log("connection_init", data);
+            var socketID = socket.id;
+            var projectKey = data.projectKey;
+            for(var i=0; i<sockets.length; i++){
+                if(sockets[i].id===socketID){
+                    sockets[i].projectKey = projectKey;
+                    console.log("Mapped socket", socketID, "to project", projectKey);
+                }
+            }
         });
-
-
 
         socket.lastCheckSum = 0;
     });
 
-
     app.inputListener = {
         onData : function(data, projectKey, fromUpdate){
-            console.log('emit update!');
             for(var i=0; i<sockets.length; i++){
-                try{ sockets[i].emit('update', { message: '', projectKey: projectKey }); } catch(e){}
+                if(sockets[i].projectKey === projectKey){
+                    try{
+                        console.log('emit update for project', projectKey);
+                        sockets[i].emit('update', { message: '', projectKey: projectKey });
+                    } catch(e){}
+                }
             }
             if(!fromUpdate){
                 setTimeout(function(){

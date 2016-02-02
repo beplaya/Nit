@@ -36,11 +36,14 @@ app.factory('socket', function ($rootScope) {
 });
 
 
-app.controller('socketController', ['$scope', 'socket', function($scope, socket) {
+app.controller('socketController', ['$scope', '$http', 'socket', function($scope, $http, socket) {
+    $scope.projectKey = projectKey;
     $scope.connected = false;
     socket.on('connected', function (data) {
-        console.log('connected!!');
+        console.log('connected!!', data);
         $scope.connected = true;
+
+        socket.emit("connection_init", {projectKey: projectKey});
     });
 
 }]);
