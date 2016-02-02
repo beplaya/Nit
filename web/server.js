@@ -60,11 +60,12 @@ module.exports = function(nerver){
 
     app.inputListener = {
         onData : function(data, projectKey, fromUpdate, whichData){
+
             for(var i=0; i<sockets.length; i++){
                 if(sockets[i].projectKey === projectKey){
                     try{
                         console.log('emit update for project', projectKey);
-                        sockets[i].emit('update_'+whichData, data);
+                        sockets[i].emit('update_pending', data);
                     } catch(e){}
                 }
             }
@@ -78,9 +79,15 @@ module.exports = function(nerver){
             }
         }
     };
+
     require('./lib/input.js')(app);
     ///
     server.listen(port);
     console.log('listening on ' + port);
-
+    setTimeout(function(){
+    app.nerver.nit.updateNerver();
+        setTimeout(function(){
+            app.nerver.nit.updateNerver();
+        },3000);
+    },1000);
 }

@@ -143,6 +143,7 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
 
     };
     socket.on('update_'+$scope.whichData, function (data) {
+        console.log(data);
         $scope.updateData(data);
     });
 }]);
