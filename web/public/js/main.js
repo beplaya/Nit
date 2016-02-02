@@ -55,26 +55,47 @@ app.controller('statusControler', ['$scope', '$http', 'socket',
     $scope.status = {};
 
     $scope.updateData = function(response) {
-        var statusData = response;
-        $scope.status = {raw : statusData};
-        $scope.status.lines = [];
-        var lines = statusData.data.split("\n");
+        $scope.status = {raw : response};
+
+        $scope.status.lines = $scope.createStatusLines(response);
+        $scope.status.currentBranch = response.currentBranch;
+        $scope.status.issueKey = response.issueKey;
+    };
+
+    $scope.createStatusLines = function(response) {
+        var lines = response.data.split("\n");
+        var statusLines = [];
         for(var i=0; i<lines.length; i++){
             var l = lines[i].trim();
             if(l.length>0)
-                $scope.status.lines.push(lines[i]);
+                statusLines.push(lines[i]);
         }
-        $scope.status.currentBranch = statusData.currentBranch;
-        $scope.status.issueKey = statusData.issueKey;
+        return statusLines;
     };
 
     $scope.isDetached = function(){
-    return $scope.status.isDetached;
+        return $scope.status.isDetached;
     };
 
-    socket.on('update_'+$scope.whichData, function (data) {
-        $scope.updateData(data);
+    $scope.clear = function(){
+        $scope.status = {raw : {}};
+        $scope.status.lines = [];
+        $scope.status.currentBranch = "?";
+        $scope.status.issueKey = "?";
+    };
+
+    socket.on('update_'+$scope.whichData, function (response) {
+        $scope.updateData(response);
     });
+
+    socket.on('update_pending', function (response) {
+        if(!$scope.status.lines || $scope.status.lines.toString() !== $scope.createStatusLines(response).toString()){
+            $scope.clear();
+            $scope.status.currentBranch = response.currentBranch;
+            $scope.status.issueKey = response.issueKey;
+        }
+    });
+
 }]);
 
 
@@ -83,10 +104,22 @@ app.controller('logsControler', ['$scope', '$http', 'socket', function($scope, $
     $scope.whichData = "one_line_log_data";
     $scope.oneLineLogs = [];
     $scope.updateData = function(response){
-        $scope.oneLineLogs = response.data.slice(0,15);
+        $scope.rawResponse = response;
+        $scope.oneLineLogs = $scope.getLogLines(response);
     };
-    socket.on('update_'+$scope.whichData, function (data) {
-        $scope.updateData(data);
+    $scope.getLogLines = function(response) {
+        return response.data.slice(0,15);
+    };
+    socket.on('update_'+$scope.whichData, function (response) {
+        $scope.updateData(response);
+    });
+    $scope.clear = function(){
+        $scope.oneLineLogs = [];
+    };
+    socket.on('update_pending', function (response) {
+        if(!$scope.rawResponse || response.toString() !== $scope.rawResponse.toString()){
+            $scope.clear();
+        }
     });
 }]);
 
@@ -96,6 +129,7 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
     $scope.whichData = "issue";
     $scope.updateData = function(response) {
         $scope.clear();
+        console.log(response);
         $scope.ticketID = response.ticketID;
         $scope.fields = response.fields;
         $scope.url = response.url;
@@ -142,9 +176,13 @@ app.controller('issueControler', ['$scope', '$http', 'socket', function($scope, 
         $scope.comments = [];
 
     };
-    socket.on('update_'+$scope.whichData, function (data) {
-        console.log(data);
-        $scope.updateData(data);
+    socket.on('update_'+$scope.whichData, function (response) {
+        $scope.updateData(response);
+    });
+    socket.on('update_pending', function (response) {
+        if($scope.ticketID !== response.ticketID) {
+            $scope.clear();
+        }
     });
 }]);
 

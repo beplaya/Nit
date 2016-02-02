@@ -64,9 +64,11 @@ module.exports = function(nerver){
             for(var i=0; i<sockets.length; i++){
                 if(sockets[i].projectKey === projectKey){
                     try{
-                        console.log('emit update for project', projectKey);
-                        sockets[i].emit('update_pending', data);
-                    } catch(e){}
+                        //console.log('emit update for project', projectKey);
+                        sockets[i].emit(fromUpdate ? ("update_"+whichData) : 'update_pending', data);
+                    } catch(e){
+                        console.log(e);
+                    }
                 }
             }
             if(!fromUpdate){
@@ -74,8 +76,8 @@ module.exports = function(nerver){
                     app.nerver.nit.updateNerver();
                     setTimeout(function(){
                         app.nerver.nit.updateNerver();
-                    },3000);
-                },1000);
+                    }, 3000);
+                }, 1000);
             }
         }
     };

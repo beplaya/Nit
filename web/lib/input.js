@@ -14,13 +14,14 @@ module.exports = function(app){
             var whichData = req.params.which_data.toLowerCase();
             var issueKey = req.params.issue_key;
             var tool = req.params.tool.toLowerCase();
-            console.log("<",projectKey, issueKey, whichData, tool, fromUpdate, ">");
+            //console.log("<",projectKey, issueKey, whichData, tool, fromUpdate, ">");
             if(!app.projectData[projectKey])
             {
                 app.projectData[projectKey] = {};
             }
             if(tool==="jira"){
                 app.nerver.nira.getIssue(issueKey, function(issueData){
+                    issueData.url = app.nerver.nira.baseURL + issueKey;
                     app.projectData[projectKey]["issue"] = issueData;
                     app.inputListener.onData(issueData, projectKey, fromUpdate, whichData);
                     res.status(200).send(issueData);
