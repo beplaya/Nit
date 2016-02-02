@@ -22,12 +22,12 @@ module.exports = function(app){
             if(tool==="jira"){
                 app.nerver.nira.getIssue(issueKey, function(issueData){
                     app.projectData[projectKey]["issue"] = issueData;
-                    app.inputListener.onData(issueData, projectKey, fromUpdate);
+                    app.inputListener.onData(issueData, projectKey, fromUpdate, whichData);
                     res.status(200).send(issueData);
                 });
             }else{
                 app.projectData[projectKey][whichData] = data;
-                app.inputListener.onData(data, projectKey, fromUpdate);
+                app.inputListener.onData(data, projectKey, fromUpdate, whichData);
                 res.status(200).send("{}");
             }
         }catch(e){
