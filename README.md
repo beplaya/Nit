@@ -108,11 +108,13 @@ For now, to start Nerver:
  - Example .nitconfig:
 ```json
 {
-   "jira" : {
-       "host" : "my.jira.location.net",
-       "projectKey" : "NIT"
-   },
-   "featureBranchPrefix" : "feature/"
+    "projectKey": "NIT",
+    "jira": {
+        "host": "???"
+    },
+    "nerver": {
+        "port": 9001
+    }
 }
 ```
 

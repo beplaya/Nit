@@ -1,9 +1,0 @@
-{
-    "projectKey": "NIT",
-    "jira": {
-        "host": "???"
-    },
-    "featureBranchPrefix": "feature/",
-    "jiraPrefix": "NIT-",
-    "featurePrefix": "feature/NIT-"
-}
