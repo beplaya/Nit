@@ -1,4 +1,5 @@
 module.exports = function(nerver){
+    var INTERVAL_PERIOD = 30000;
     var express = require('express');
     var app = express();
     app.nerver = nerver;
@@ -67,14 +68,17 @@ module.exports = function(nerver){
         }
     };
 
+    app.updateInterval = setInterval(function(){
+        console.log("Server interval STARTED>>>");
+        app.nerver.nit.updateNerver();
+        console.log("Server interval STOPPED<<<");
+    }, INTERVAL_PERIOD);
+
     require('./lib/input.js')(app);
     ///
     server.listen(port);
     console.log('listening on ' + port);
     setTimeout(function(){
-    app.nerver.nit.updateNerver();
-        setTimeout(function(){
-            app.nerver.nit.updateNerver();
-        },3000);
-    },1000);
+        app.nerver.nit.updateNerver();
+    },5000);
 }
