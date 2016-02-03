@@ -1,10 +1,11 @@
 module.exports = function(nerver){
+    var INTERVAL_PERIOD = 30000;
     var express = require('express');
     var app = express();
     app.nerver = nerver;
-    var port = '9000';
     var fs = require('fs');
     var nettings = require(__dirname + '/../lib/nit_settings.js')().load();
+    var port = nettings.nerver.port;
     app.use(express.static(__dirname + '/public'));
 
 
@@ -40,20 +41,7 @@ module.exports = function(nerver){
         console.log('Connection establish:', socket.id);
 
         // sending a message back to the client
-        socket.emit('connected', { message: 'connected', isLoggedIn: nerver.isLoggedIn});
-
-        // listening for messages from the client
-        socket.on('connection_init', function (data) {
-            console.log("connection_init", data);
-            var socketID = socket.id;
-            var projectKey = data.projectKey;
-            for(var i=0; i<sockets.length; i++){
-                if(sockets[i].id===socketID){
-                    sockets[i].projectKey = projectKey;
-                    console.log("Mapped socket", socketID, "to project", projectKey);
-                }
-            }
-        });
+        socket.emit('connected', { message: 'connected', isLoggedIn: nerver.isLoggedIn, projectKey: nettings.projectKey});
 
         socket.lastCheckSum = 0;
     });
@@ -62,13 +50,11 @@ module.exports = function(nerver){
         onData : function(data, projectKey, fromUpdate, whichData){
 
             for(var i=0; i<sockets.length; i++){
-                if(sockets[i].projectKey === projectKey){
-                    try{
-                        //console.log('emit update for project', projectKey);
-                        sockets[i].emit(fromUpdate ? ("update_"+whichData) : 'update_pending', data);
-                    } catch(e){
-                        console.log(e);
-                    }
+                try{
+                    //console.log('emit update for project', projectKey);
+                    sockets[i].emit(fromUpdate ? ("update_"+whichData) : 'update_pending', data);
+                } catch(e){
+                    console.log(e);
                 }
             }
             if(!fromUpdate){
@@ -82,14 +68,17 @@ module.exports = function(nerver){
         }
     };
 
+    app.updateInterval = setInterval(function(){
+        console.log("Server interval STARTED>>>");
+        app.nerver.nit.updateNerver();
+        console.log("Server interval STOPPED<<<");
+    }, INTERVAL_PERIOD);
+
     require('./lib/input.js')(app);
     ///
     server.listen(port);
     console.log('listening on ' + port);
     setTimeout(function(){
-    app.nerver.nit.updateNerver();
-        setTimeout(function(){
-            app.nerver.nit.updateNerver();
-        },3000);
-    },1000);
+        app.nerver.nit.updateNerver();
+    },5000);
 }
