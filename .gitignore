@@ -9,3 +9,4 @@ lib/cmds/
 open
 stats/commit_frequency_chart.js
 /web/project_cache/
+npm-debug.log
