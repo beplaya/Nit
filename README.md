@@ -97,7 +97,7 @@ For now, to start Nerver:
  - Run ```nit nerver```
  - Enter your JIRA credentials
  - Leave the window running
- - Now, commands like ```nit describe```, ```nit mkc ...```,  and ```nit comments``` will use this nerver to work.
+ - Open your favorite browser and go to http://localhost:<nerverPort> to see live git status and Jira info as you nit along
 
 ##### Note:
  - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.  It's recommended to use a functional user for Nerver.
