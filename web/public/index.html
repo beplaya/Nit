@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myApp">
 
 <head>
 
@@ -10,13 +10,14 @@
     <meta name="author" content="">
 
     <link rel="stylesheet"
-          href="css/main.css">
-    <link rel="stylesheet"
           href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="css/main.css">
 
-
+    <title ng-controller="titleController">NIT - {{projectKey}}</title>
 </head>
-<body ng-app="myApp">
+<body>
+
 <div ng-controller="socketController">
     <span class="info" ng-class="{errorText: !connected, goodText: connected}">Connected: {{connected}}</span>
     &nbsp;&nbsp;
@@ -25,9 +26,10 @@
 <div class="row">
     <div class="col-sm-6">
         <div ng-controller="statusControler">
-            <div class="project">Project: {{projectKey}}</div>
-            <div class="branch">Branch: {{status.currentBranch}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issue Key:
-                {{status.issueKey}}
+            <div><span class="project">Project: {{projectKey}}</span>
+                <span class="branch">Branch: {{status.currentBranch}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issue Key:
+                    {{status.issueKey}}
+                </span>
             </div>
             <span ng-hide="!status.isDetached" class="ng-hide">DETACHED</span>
             <p class="status">
@@ -38,6 +40,7 @@
         <div ng-controller="logsControler" class="logs">
             <div ng-repeat="l in oneLineLogs track by $index">{{l}}</div>
         </div>
+
     </div>
 
     <div class="col-sm-6">
@@ -58,6 +61,11 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div ng-controller="diffControler" class="diff">
+        <div ng-repeat="d in diff track by $index"  ng-bind-html="d">{{d}}</div>
     </div>
 </div>
 
