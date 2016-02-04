@@ -45,8 +45,11 @@ app.factory('socket', function ($rootScope) {
     };
 });
 
-app.controller('titleController', ['$scope', function($scope) {
-    $scope.projectKey = GLOBAL.projectKey;
+app.controller('titleController', ['$scope', 'socket', function($scope, socket) {
+    $scope.projectKey = "?";
+    socket.on('update_status', function (response) {
+        $scope.projectKey = socket.projectKey;
+    });
 }]);
 
 app.controller('socketController', ['$scope', '$http', 'socket', function($scope, $http, socket) {
@@ -59,29 +62,66 @@ app.controller('socketController', ['$scope', '$http', 'socket', function($scope
 
     socket.on('connected', function (data) {
         console.log('connected!!', data);
-        GLOBAL.projectKey = data.projectKey;
         $scope.connected = true;
         $scope.isLoggedIn = data.isLoggedIn;
         console.log($scope.loggedInStatus());
+        socket.projectKey = data.projectKey;
     });
 
 }]);
+app.controller('diffControler', ['$scope', 'socket', function($scope, socket) {
+    $scope.whichData = "diff";
 
+    $scope.clear = function(){
+        $scope.diff = { raw : {}, isCleanStatus:true, diff:""};
+    };
+
+    $scope.updateData = function(response) {
+        console.log(response.data.diff);
+        $scope.diff = $scope.createDiffLines(response.data.diff);
+        $scope.isCleanStatus = response.data.isCleanStatus;
+    };
+
+    $scope.createDiffLines = function(diff) {
+        var lines = diff.split("\n");
+        var diffLines = [];
+        for(var i=0; i<lines.length; i++){
+            var l = lines[i].trim();
+            if(l.length>0) {
+                var lmsg = lines[i];
+                if(lmsg.indexOf())
+                diffLines.push(lmsg);
+            }
+        }
+        return diffLines;
+    };
+
+    socket.on('update_'+$scope.whichData, function (response) {
+        $scope.updateData(response);
+    });
+
+    socket.on('update_pending', function (response) {
+        $scope.clear();
+    });
+}]);
 app.controller('statusControler', ['$scope', '$http', 'socket',
                                                 function($scope, $http, socket) {
     $scope.whichData = "status";
     $scope.status = {};
-
     $scope.updateData = function(response) {
         $scope.status = {raw : response};
-
         $scope.status.lines = $scope.createStatusLines(response);
         $scope.status.currentBranch = response.currentBranch;
+        $scope.status.isCleanStatus = response.isCleanStatus;
         $scope.status.issueKey = response.issueKey;
+        $scope.projectKey = socket.projectKey;
     };
 
     $scope.createStatusLines = function(response) {
-        var lines = response.data.split("\n");
+        var data = response.data;
+        $scope.isCleanStatus = data.isCleanStatus;
+        var status = data.status;
+        var lines = status.split("\n");
         var statusLines = [];
         for(var i=0; i<lines.length; i++){
             var l = lines[i].trim();
