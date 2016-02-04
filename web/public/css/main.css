@@ -68,6 +68,29 @@ div {
     overflow:auto;
 }
 
+.diffOnFile {
+    color: #56B1FF;
+}
+
+.diffAddition {
+    color: #29C529;
+}
+
+.diffSubtraction {
+    color: #FD5B5B;
+}
+
+.diffLineAddition {
+    color: #0f0;
+}
+
+.diffLineSubtraction {
+    color: #f00;
+}
+
+.diffOther {
+    color: #F3C9F3;
+}
 
 .summary {
     background-color: rgba(20, 50, 120, 0.3);

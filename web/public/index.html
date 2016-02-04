@@ -65,7 +65,7 @@
 </div>
 <div class="row">
     <div ng-controller="diffControler" class="diff">
-        <div ng-repeat="d in diff track by $index">{{d}}</div>
+        <div ng-repeat="d in diff track by $index"  ng-bind-html="d">{{d}}</div>
     </div>
 </div>
 

@@ -77,7 +77,6 @@ app.controller('diffControler', ['$scope', 'socket', function($scope, socket) {
     };
 
     $scope.updateData = function(response) {
-        console.log(response.data.diff);
         $scope.diff = $scope.createDiffLines(response.data.diff);
         $scope.isCleanStatus = response.data.isCleanStatus;
     };
@@ -86,10 +85,21 @@ app.controller('diffControler', ['$scope', 'socket', function($scope, socket) {
         var lines = diff.split("\n");
         var diffLines = [];
         for(var i=0; i<lines.length; i++){
-            var l = lines[i].trim();
-            if(l.length>0) {
-                var lmsg = lines[i];
-                if(lmsg.indexOf())
+            var lmsg = lines[i].trim();
+            if(lmsg.length>0) {
+                if(lmsg.indexOf("diff --git") != -1){
+                    lmsg = "<div class='diffOnFile'>" + lmsg + "</div>";
+                } else if(lmsg.indexOf("+++") != -1){
+                    lmsg = "<div class='diffAddition'>" + lmsg + "</div>";
+                } else if(lmsg.indexOf("---") != -1){
+                    lmsg = "<div class='diffSubtraction'>" + lmsg + "</div>";
+                } else if(lmsg.indexOf("+") != -1){
+                     lmsg = "<div class='diffLineAddition'>" + lmsg + "</div>";
+                 } else if(lmsg.indexOf("-") != -1){
+                     lmsg = "<div class='diffLineSubtraction'>" + lmsg + "</div>";
+                 } else {
+                    lmsg = "<div class='diffOther'>" + lmsg + "</div>";
+                }
                 diffLines.push(lmsg);
             }
         }
