@@ -277,11 +277,16 @@ function Nit(runner) {
         NIT.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
             var issueKey = NIT.nira.ticketIDFromBranch(currentBranch);
+            var isCleanStatus = NIT.determineIsCleanFromStatus(status);
             NIT.git(["log", "--pretty=oneline"], function(logs){
                 var lineMessages = NIT.getLineMessages(logs);
                 NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, issueKey, "jira", true, function(repliedFields){
-                    NIT.nitClient.sendCmdToServer("status", status, currentBranch, issueKey, "git", true, function(){
+                    NIT.nitClient.sendCmdToServer("status", {status: status, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
                         NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, issueKey, "git", true, function(){
+                            NIT.git(["diff"], function(diff){
+                                NIT.nitClient.sendCmdToServer("diff", {diff: diff, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
+                                });
+                            });
                         });
                     });
                 });
@@ -307,17 +312,13 @@ function Nit(runner) {
 
     this.createComment = function(comment, currentBranch, cb) {
         var self = this;
-//        NIT.nitClient.sendCmdToServer("create_comment", comment, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "user", false, function(){
-            cb && cb();
-//        });
+        cb && cb();
     };
 
     this.logOneLiners = function(currentBranch, cb) {
         var self = this;
         self.git(["log", "--pretty=oneline"], function(logs){
             var lineMessages = NIT.getLineMessages(logs);
-//            NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", false, function(){
-//            });
             self.printer.logOneLiners(logs);
             cb && cb(logs);
         });
@@ -353,7 +354,8 @@ function Nit(runner) {
     this.status = function(cb) {
          this.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
-            NIT.nitClient.sendCmdToServer("status", status, currentBranch, NIT.nira.ticketIDFromBranch(currentBranch), "git", false, function(){
+            var isCleanStatus = NIT.determineIsCleanFromStatus(status);
+            NIT.nitClient.sendCmdToServer("status", {status: status, isCleanStatus: isCleanStatus}, currentBranch, NIT.nira.ticketIDFromBranch(currentBranch), "git", false, function(){
             });
             cb && cb(status);
          });
@@ -385,8 +387,12 @@ function Nit(runner) {
     this.isCleanStatus = function(cb){
         var self = this;
         self.status(function(data) {
-            cb && cb(data, data.indexOf("nothing to commit") != -1, self.discoverBranch(data));
+            cb && cb(data, self.determineIsCleanFromStatus(data), self.discoverBranch(data));
         });
+    };
+
+    this.determineIsCleanFromStatus = function(status) {
+        return status.indexOf("nothing to commit") != -1;
     };
 
     this.discoverBranch = function(statusDataFull){

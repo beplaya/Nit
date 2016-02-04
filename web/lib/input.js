@@ -14,7 +14,7 @@ module.exports = function(app){
             var whichData = req.params.which_data.toLowerCase();
             var issueKey = req.params.issue_key;
             var tool = req.params.tool.toLowerCase();
-            //console.log("<",projectKey, issueKey, whichData, tool, fromUpdate, ">");
+            console.log("<",projectKey, issueKey, whichData, tool, fromUpdate, ">");
             if(!app.projectData[projectKey])
             {
                 app.projectData[projectKey] = {};
