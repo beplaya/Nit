@@ -50,7 +50,7 @@ app.controller('socketController', ['$scope', '$http', 'socket', function($scope
 
 }]);
 
-app.controller('pocControler', ['$scope', 'socket',
+app.controller('pocController', ['$scope', 'socket',
                                                 function($scope, socket) {
     $scope.data = "NOTHING";
 
@@ -70,6 +70,7 @@ app.controller('pocControler', ['$scope', 'socket',
     });
 
     socket.on('update_pending', function (response) {
+        console.log(response);
     });
 
 }]);
