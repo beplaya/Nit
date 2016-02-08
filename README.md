@@ -112,8 +112,10 @@ For now, to start Nerver:
     "jira": {
         "host": "???"
     },
-    "nerver": {
-        "port": 9001
+    nerver : { port : 9000, 
+        team : { 
+            url: "localhost", port:9100
+        }
     }
 }
 ```
