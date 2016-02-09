@@ -26,12 +26,15 @@ module.exports = function(nerver){
 
     app.inputListener = {
         onData : function(data, projectKey, fromUpdate, whichData){
-            console.log("onData received!", whichData)
-            for(var i=0; i<sockets.length; i++){
-                try{
-                    sockets[i].emit(fromUpdate ? ("update_"+whichData) : 'update_pending', data);
-                } catch(e){
-                    console.log(e);
+            console.log("onData received!", whichData);
+
+            if(projectKey===nettings.projectKey){
+                for(var i=0; i<sockets.length; i++){
+                    try{
+                        sockets[i].emit(fromUpdate ? ("update_"+whichData) : 'update_pending', data);
+                    } catch(e){
+                        console.log(e);
+                    }
                 }
             }
         }

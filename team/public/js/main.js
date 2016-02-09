@@ -79,7 +79,10 @@ app.controller('statusController', ['$scope', 'socket',
     socket.on('update_status', function (response) {
         var userIndex = $scope.findUserIndex(response.gitUser);
         if(userIndex == -1) {
-            $scope.users.push({name : response.gitUser.name, email : response.gitUser.email});
+            $scope.users.push({
+                name : response.gitUser.name,
+                email : response.gitUser.email,
+                allIssues : []});
             userIndex = $scope.users.length-1;
         }
         $scope.users[userIndex].status = {
@@ -87,17 +90,22 @@ app.controller('statusController', ['$scope', 'socket',
             currentIssueKey : response.issueKey,
             status : response.data
         };
-
     });
+
     socket.on('update_issue', function (response) {
+        console.log(response);
         var userIndex = $scope.findUserIndex(response.gitUser);
         if(userIndex == -1) {
-            $scope.users.push({name : response.gitUser.name, email : response.gitUser.email});
+            $scope.users.push({
+                name : response.gitUser.name,
+                email : response.gitUser.email,
+                allIssues : []});
             userIndex = $scope.users.length-1;
         }
-        $scope.users[userIndex].issue = {};
+        $scope.users[userIndex].issue = { active : true};
         //~
-        $scope.users[userIndex].issue.ticketID = response.ticketID;
+        var key = response.key;
+        $scope.users[userIndex].issue.key = response.key;
         $scope.users[userIndex].issue.fields = response.fields;
         $scope.users[userIndex].issue.url = response.url;
         var fields = $scope.users[userIndex].issue.fields;
@@ -133,6 +141,21 @@ app.controller('statusController', ['$scope', 'socket',
                 };
                 $scope.users[userIndex].issue.comments.push(com);
             }
+        }
+        if(key) {
+            var issueIndex = -1;
+            for(var i=0; i<$scope.users[userIndex].allIssues.length; i++) {
+                if($scope.users[userIndex].allIssues[i].key == key){
+                    issueIndex = i;
+                } else{
+                    $scope.users[userIndex].allIssues[i].active = false;
+                }
+            }
+            if(issueIndex==-1){
+                 $scope.users[userIndex].allIssues.push({});
+                 issueIndex =  $scope.users[userIndex].allIssues.length-1;
+            }
+            $scope.users[userIndex].allIssues[issueIndex] = $scope.users[userIndex].issue;
         }
         //~
     });

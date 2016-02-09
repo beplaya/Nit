@@ -26,6 +26,10 @@ div {
     font-size: 12px;
 }
 
+.tiny {
+    font-size:8px;
+}
+
 .goodText {
     color:green
 }
@@ -109,7 +113,7 @@ div {
 
 .user_block {
     background-color: rgb(0,0,0);
-    margin: 2px;
+    margin: 4px;
     padding: 7px;
 }
 

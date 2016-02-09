@@ -18,15 +18,18 @@
 <body>
 
 <div ng-controller="socketController">
-    <span class="info" ng-class="{errorText: !connected, goodText: connected}">Connected: {{connected}}</span>
+    <span class="info tiny" ng-class="{errorText: !connected, goodText: connected}">Connected: {{connected}}</span>
     &nbsp;&nbsp;
-    <span class="info" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
+    <span class="info tiny" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
 <div ng-controller="statusController">
-    <div class="user_block" ng-repeat="user in users track by $index">
-        <span class="">{{user.name}} {{ user.email}}</span>
+    <div class="user_block" ng-repeat="U in users track by $index">
+        {{U.name}}&nbsp;&nbsp;|&nbsp;&nbsp;{{U.email}}
         <hr>
-        <span class="summary"> {{user.status.currentIssueKey}} {{user.issue.summary}}</span>
+        <span class="summary"> {{U.status.currentIssueKey}}:&nbsp;&nbsp;{{U.issue.summary}}</span>
+        <span class="info" ng-repeat="X in U.allIssues track by $index">
+            <span ng-class="{errorText: X.active}">[{{X.key}}]</span>
+        </span>
     </div>
 </div>
 
