@@ -133,3 +133,16 @@ div {
 }
 
 
+.author {
+    color : #7EE6A5;
+}
+
+.swimlane {
+    background : rgba(255,255,255, .8);
+    color:#000;
+    width: 32.5%;
+    margin: 5px;
+    height:100%;
+    border-radius: 4px;
+    overflow:auto;
+}
