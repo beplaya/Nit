@@ -22,6 +22,7 @@ module.exports = function(app){
             if(tool==="jira"){
                 app.nerver.nira.getIssue(issueKey, function(issueData){
                     issueData.url = app.nerver.nira.baseURL + issueKey;
+                    issueData.gitUser = data.gitUser;
                     app.projectData[projectKey]["issue"] = issueData;
                     console.log("ON DATA ",projectKey, issueKey, whichData, tool, fromUpdate, ">");
                     app.inputListener.onData(issueData, projectKey, fromUpdate, whichData);

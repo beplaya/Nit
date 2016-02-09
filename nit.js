@@ -29,7 +29,7 @@ function Nit(runner) {
     this.nira = require(__dirname + '/lib/nira/nira.js')(this.nettings);
     this.nerver = require(__dirname + '/lib/nerver.js')(this.nira);
     this.teamNerver = require(__dirname + '/lib/team_nerver.js')(this.nira);
-    this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver, this.nettings);
+    this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver);
     this.log = require(__dirname + '/lib/log.js')(this);
     this.cmds = require(__dirname + '/lib/cmds.js')();
 
@@ -58,6 +58,7 @@ function Nit(runner) {
 
     this.start = function(cliArgs){
         var self = this;
+
         var cmd = cliArgs[0] ? self.getCommand(cliArgs[0]) : self.getCommand("help");
         if(cmd) {
             self.isCleanStatus(function(data, clean, currentBranch){
@@ -274,7 +275,7 @@ function Nit(runner) {
     };
 
     NIT.updateNerver = function(){
-        console.log("updateNerver called!");
+
         NIT.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
             var issueKey = NIT.nira.ticketIDFromBranch(currentBranch);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp">
+<html lang="en" ng-app="myApp" xmlns="http://www.w3.org/1999/html">
 
 <head>
 
@@ -22,10 +22,13 @@
     &nbsp;&nbsp;
     <span class="info" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
-<div ng-controller="pocController">
-    {{data}}
+<div ng-controller="statusController">
+    <div class="user_block" ng-repeat="user in users track by $index">
+        <span class="">{{user.name}} {{ user.email}}</span>
+        <hr>
+        <span class="summary"> {{user.status.currentIssueKey}} {{user.issue.summary}}</span>
+    </div>
 </div>
-
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/angular/angular.min.js"></script>
