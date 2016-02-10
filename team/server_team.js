@@ -3,8 +3,8 @@ module.exports = function(nerver){
     var app = express();
     app.nerver = nerver;
     var fs = require('fs');
-    var inputReceiver = require(__dirname + '/lib/input_receiver.js')();
     var nettings = require(__dirname + '/../lib/nit_settings.js')().load();
+    var inputReceiver = require(__dirname + '/lib/input_receiver.js')(nettings);
     var port = nettings.nerver.team.port;
     app.use(express.static(__dirname + '/public'));
 
@@ -55,4 +55,9 @@ module.exports = function(nerver){
     ///
     server.listen(port);
     console.log('listening on ' + port);
+    inputReceiver.cacheSaver.loadCache();
+
+    setInterval(function(){
+        inputReceiver.cacheSaver.saveCache();
+    }, 30000);
 }

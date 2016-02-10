@@ -1,4 +1,4 @@
-module.exports = function(){
+module.exports = function(nettings){
     var INREC = {};
     INREC.cache = {};
     INREC.cache.users = [];
@@ -6,6 +6,40 @@ module.exports = function(){
     INREC.receiver = {eventMap:{}};
     INREC.receiver.on = function(eventKey, action){
         INREC.receiver.eventMap[eventKey] = action;
+    };
+
+    // +++++++++++
+    // +++++++++++
+    // +++++++++++
+    INREC.cacheSaver = { fs : require('fs') };
+    INREC.cacheSaver.cacheDir = __dirname + "/../cache/" + nettings.projectKey;
+    INREC.cacheSaver.cacheFilePath = INREC.cacheSaver.cacheDir + "/cache.json";
+
+    INREC.cacheSaver.mkDir = function(dir){
+        try {
+            INREC.cacheSaver.fs.mkdirSync(dir);
+        } catch(e){
+            if(e.code !== "EEXIST"){
+                console.log(e);
+            }
+        }
+    };
+
+    INREC.cacheSaver.loadCache = function(){
+        INREC.cacheSaver.mkDir(INREC.cacheSaver.cacheDir);
+        INREC.cacheSaver.fs.writeFileSync(INREC.cacheSaver.cacheFilePath, JSON.stringify(INREC.cache, 0, 4));
+    };
+    // +++++++++++
+    // +++++++++++
+    // +++++++++++
+
+    INREC.cacheSaver.saveCache = function(){
+        try{
+            var contents = INREC.cacheSaver.fs.readFileSync(INREC.cacheSaver.cacheFilePath).toString();
+            INREC.cache = JSON.parse(contents);
+        } catch(e) {
+            console.log(e);
+        }
     };
 
     INREC.pad = function(num, size) {
