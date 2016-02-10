@@ -25,7 +25,7 @@ module.exports = function(nettings){
         }
     };
 
-    INREC.cacheSaver.loadCache = function(){
+    INREC.cacheSaver.saveCache = function(){
         INREC.cacheSaver.mkDir(INREC.cacheSaver.cacheDir);
         INREC.cacheSaver.fs.writeFileSync(INREC.cacheSaver.cacheFilePath, JSON.stringify(INREC.cache, 0, 4));
     };
@@ -33,7 +33,7 @@ module.exports = function(nettings){
     // +++++++++++
     // +++++++++++
 
-    INREC.cacheSaver.saveCache = function(){
+    INREC.cacheSaver.loadCache = function(){
         try{
             var contents = INREC.cacheSaver.fs.readFileSync(INREC.cacheSaver.cacheFilePath).toString();
             INREC.cache = JSON.parse(contents);
