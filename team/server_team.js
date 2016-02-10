@@ -38,8 +38,8 @@ module.exports = function(nerver){
     app.inputListener = {
         onData : function(data, projectKey, fromUpdate, whichData){
             var eventKey = fromUpdate ? ("update_"+whichData) : 'update_pending';
-            inputReceiver.handleEvent(eventKey, data);
             if(projectKey===nettings.projectKey){
+                inputReceiver.handleEvent(eventKey, data);
                 for(var i=0; i<sockets.length; i++){
                     try{
                         sockets[i].emit(eventKey, data);
@@ -59,5 +59,13 @@ module.exports = function(nerver){
 
     setInterval(function(){
         inputReceiver.cacheSaver.saveCache();
+        for(var i=0; i<sockets.length; i++){
+            try{
+                sockets[i].emit("server_cache", inputReceiver.cache);
+            } catch(e){
+                console.log(e);
+            }
+        }
     }, 30000);
+
 }
