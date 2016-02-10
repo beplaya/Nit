@@ -3,6 +3,7 @@ module.exports = function(nerver){
     var app = express();
     app.nerver = nerver;
     var fs = require('fs');
+    var inputReceiver = require(__dirname + '/lib/input_receiver.js')();
     var nettings = require(__dirname + '/../lib/nit_settings.js')().load();
     var port = nettings.nerver.team.port;
     app.use(express.static(__dirname + '/public'));
@@ -15,8 +16,18 @@ module.exports = function(nerver){
     var io = require('socket.io').listen(server);
     var sockets = [];
     io.sockets.on('connection', function (socket) {
-        sockets.push(socket);
         console.log('Connection establish:', socket.id);
+        var found = false;
+        for(var i=0; i<sockets.length; i++) {
+            if(sockets[i].id == socket.id){
+                sockets[i] = socket;
+                found = true;
+                break;
+            }
+        }
+        if(!found) {
+            sockets.push(socket);
+        }
 
         // sending a message back to the client
         socket.emit('connected', { serverType: 'team', message: 'connected', isLoggedIn: nerver.isLoggedIn, projectKey: nettings.projectKey});
@@ -26,12 +37,13 @@ module.exports = function(nerver){
 
     app.inputListener = {
         onData : function(data, projectKey, fromUpdate, whichData){
-            console.log("onData received!", whichData);
-
+            var eventKey = fromUpdate ? ("update_"+whichData) : 'update_pending';
+            inputReceiver.handleEvent(eventKey, data);
             if(projectKey===nettings.projectKey){
                 for(var i=0; i<sockets.length; i++){
                     try{
-                        sockets[i].emit(fromUpdate ? ("update_"+whichData) : 'update_pending', data);
+                        sockets[i].emit(eventKey, data);
+                        sockets[i].emit("server_cache", inputReceiver.cache);
                     } catch(e){
                         console.log(e);
                     }
