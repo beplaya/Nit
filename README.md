@@ -125,9 +125,11 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
     "jira": {
         "host": "???"
     },
-    nerver : { port : 9000, 
-        team : { 
-            url: "localhost", port:9100
+    "nerver" : { 
+        "port" : 9000, 
+        "team" : { 
+            "url": "localhost", 
+            "port":9100
         }
     }
 }
