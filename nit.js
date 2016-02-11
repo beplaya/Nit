@@ -3,13 +3,18 @@ var cliArgs = process.argv.slice(2);
 var runner = new Runner();
 
 if(cliArgs[0] === "setup"){
-	var cmd = "npm install && npm install -g bower && cd stats/ && bower install && cd ..";
+
+	var cmd = "cd "+__dirname+" && npm install && sudo npm install -g bower "
+	    +" && cd web/ && npm install && cd public && bower install && cd "+__dirname
+	    +" && cd team/ && npm install && cd public && bower install && cd "+__dirname;
+
+	console.log("Running: "+cmd);
 	child_process = require('child_process');
  
 	child_process.exec(cmd, function(err, out, code) {
 		if (err instanceof Error)
 			throw err;
-		process.stdout.write(out);
+		process.stdout.write("."+out);
 	});	
 	
 
