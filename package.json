@@ -5,7 +5,6 @@
   "main": "nit.js",
   "dependencies": {
     "colors": "^1.1.2",
-    "glimr": "^1.0.20",
     "prompt": "^0.2.14"
   },
   "devDependencies": {
