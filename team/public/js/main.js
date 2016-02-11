@@ -66,6 +66,7 @@ app.controller('socketController', ['$scope', '$http', 'socket', function($scope
 app.controller('statusController', ['$scope', 'socket',
                                                 function($scope, socket) {
     $scope.users = [];
+    $scope.cards = [];
 
     $scope.findUserIndex = function(gitUser) {
         for(var i=0; i<$scope.users.length; i++){
@@ -76,89 +77,32 @@ app.controller('statusController', ['$scope', 'socket',
         return -1;
     };
 
-    socket.on('update_status', function (response) {
-        var userIndex = $scope.findUserIndex(response.gitUser);
-        if(userIndex == -1) {
-            $scope.users.push({
-                name : response.gitUser.name,
-                email : response.gitUser.email,
-                allIssues : []});
-            userIndex = $scope.users.length-1;
+    $scope.findCardIndex = function(issueKey) {
+        for(var i=0; i<$scope.cards.length; i++){
+            if($scope.cards[i].key==issueKey){
+                return i;
+            }
         }
-        $scope.users[userIndex].status = {
-            currentBranch : response.currentBranch,
-            currentIssueKey : response.issueKey,
-            status : response.data
-        };
+        return -1;
+    };
+
+    socket.on('server_cache', function (response) {
+        $scope.cards = response.cards;
+        $scope.users = response.users;
     });
 
-    socket.on('update_issue', function (response) {
-        console.log(response);
-        var userIndex = $scope.findUserIndex(response.gitUser);
-        if(userIndex == -1) {
-            $scope.users.push({
-                name : response.gitUser.name,
-                email : response.gitUser.email,
-                allIssues : []});
-            userIndex = $scope.users.length-1;
+    $scope.addAuthorToCard = function(cardIndex, gitUser) {
+        if(!$scope.cards[cardIndex].authors) {
+            $scope.cards[cardIndex].authors = [];
         }
-        $scope.users[userIndex].issue = { active : true};
-        //~
-        var key = response.key;
-        $scope.users[userIndex].issue.key = response.key;
-        $scope.users[userIndex].issue.fields = response.fields;
-        $scope.users[userIndex].issue.url = response.url;
-        var fields = $scope.users[userIndex].issue.fields;
-        if(fields){
-            $scope.users[userIndex].issue.cachedAge = fields.cachedAge || 0;
-            $scope.users[userIndex].issue.issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
-            $scope.users[userIndex].issue.status = fields.status ? fields.status.name || "" : "without any status";
-            $scope.users[userIndex].issue.assignee = fields.assignee ? fields.assignee.displayName || "" : "no one";
-            $scope.users[userIndex].issue.summary = fields.summary || "";
-            $scope.users[userIndex].issue.description = fields.description || "";
-            $scope.users[userIndex].issue.description =  $scope.users[userIndex].issue.description.replace(/(?:\r\n|\r|\n)/g, '<br>');
-
-            $scope.users[userIndex].issue.issueTitle = "A '"+$scope.users[userIndex].issue.issuetype+"'"
-            + " issue that is '"+$scope.users[userIndex].issue.status+"'"
-            + " assigned to '"+$scope.users[userIndex].issue.assignee+"'";
-            //
-            var comments = fields.comment.comments;
-            $scope.users[userIndex].issue.comments = [];
-            for(var i=0; i<comments.length; i++) {
-                var c = comments[i];
-                var com = {
-                    author : c.author.displayName,
-                    date : {
-                        createdFormatted : formatDate(new Date(c.created)),
-                        updatedFormatted : formatDate(new Date(c.updated)),
-                        created : c.created,
-                        updated : c.updated,
-                    },
-                    concise : "    # author: "
-                        + c.author.name  + " created: "
-                        + c.created  + " updated: "+c.updated,
-                    body : c.body
-                };
-                $scope.users[userIndex].issue.comments.push(com);
+        var authors = $scope.cards[cardIndex].authors;
+        for(var i=0; i<authors.length; i++) {
+            if(authors[i].email == gitUser.email){
+                return;
             }
         }
-        if(key) {
-            var issueIndex = -1;
-            for(var i=0; i<$scope.users[userIndex].allIssues.length; i++) {
-                if($scope.users[userIndex].allIssues[i].key == key){
-                    issueIndex = i;
-                } else{
-                    $scope.users[userIndex].allIssues[i].active = false;
-                }
-            }
-            if(issueIndex==-1){
-                 $scope.users[userIndex].allIssues.push({});
-                 issueIndex =  $scope.users[userIndex].allIssues.length-1;
-            }
-            $scope.users[userIndex].allIssues[issueIndex] = $scope.users[userIndex].issue;
-        }
-        //~
-    });
+        $scope.cards[cardIndex].authors.push(gitUser);
+    };
 }]);
 
 app.controller('pocController', ['$scope', 'socket',

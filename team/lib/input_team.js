@@ -14,30 +14,34 @@ module.exports = function(app){
             var whichData = req.params.which_data.toLowerCase();
             var issueKey = req.params.issue_key;
             var tool = req.params.tool.toLowerCase();
-
+            //console.log("<",projectKey, issueKey, whichData, tool, fromUpdate, ">");
             if(!app.projectData[projectKey])
             {
                 app.projectData[projectKey] = {};
             }
             if(tool==="jira"){
-                app.nerver.nira.getIssue(issueKey, function(issueData){
-                    issueData.url = app.nerver.nira.baseURL + issueKey;
-                    issueData.gitUser = data.gitUser;
-                    app.projectData[projectKey]["issue"] = issueData;
-                    console.log("ON DATA ",projectKey, issueKey, whichData, tool, fromUpdate, ">");
-                    app.inputListener.onData(issueData, projectKey, fromUpdate, whichData);
-                    res.status(200).send(issueData);
-                });
-            }else{
-                app.projectData[projectKey][whichData] = data;
-                console.log("ON DATA ",projectKey, issueKey, whichData, tool, fromUpdate, ">");
-                app.inputListener.onData(data, projectKey, fromUpdate, whichData);
-                res.status(200).send("{}");
+                if(app.nerver.isLoggedIn){
+                    app.nerver.nira.getIssue(issueKey, function(issueData){
+                        if(issueData.errorMessages && issueData.errorMessages[0] == "Issue Does Not Exist") {
+                        } else {
+                            issueData.url = app.nerver.nira.baseURL + issueKey;
+                            issueData.gitUser = data.gitUser;
+                            app.projectData[projectKey]["issue"] = issueData;
+                            app.inputListener.onData(issueData, projectKey, fromUpdate, whichData);
+                        }
+                        res.status(200).send(issueData);
+                    });
+                } else {
+                    res.status(200).send({});
+                }
+            } else {
+               app.projectData[projectKey][whichData] = data;
+               app.inputListener.onData(data, projectKey, fromUpdate, whichData);
+               res.status(200).send("{}");
             }
-        }catch(e){
+        } catch(e) {
             console.log("503", e);
             res.status(503).send("503");
         }
     });
-
 };

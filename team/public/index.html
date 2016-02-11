@@ -23,13 +23,33 @@
     <span class="info tiny" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
 <div ng-controller="statusController">
-    <div class="user_block" ng-repeat="U in users track by $index">
-        {{U.name}}&nbsp;&nbsp;|&nbsp;&nbsp;{{U.email}}
-        <hr>
-        <span class="summary"> {{U.status.currentIssueKey}}:&nbsp;&nbsp;{{U.issue.summary}}</span>
-        <span class="info" ng-repeat="X in U.allIssues track by $index">
-            <span ng-class="{errorText: X.active}">[{{X.key}}]</span>
-        </span>
+    <!--<div class="row">-->
+    <!--<div class="user_block" ng-repeat="U in users track by $index">-->
+        <!--{{U.name}}&nbsp;&nbsp;|&nbsp;&nbsp;{{U.email}}-->
+        <!--<hr>-->
+        <!--<span class="summary"> {{U.status.currentIssueKey}}:&nbsp;&nbsp;{{U.issue.summary}}</span>-->
+        <!--<span class="info" ng-repeat="X in U.allIssues track by $index">-->
+            <!--<span ng-class="{errorText: X.active}">[{{X.key}}]</span>-->
+        <!--</span>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="row">
+        <div class="col-md-4 swimlane">
+            TODO
+        </div>
+        <div class="col-md-4 swimlane">
+            IN DEV
+            <div class="summary" ng-repeat="C in cards track by $index">
+                {{C.key}}
+                <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
+                <div class="info author" ng-repeat="A in C.authors track by $index">
+                    {{A.name}} | {{A.email}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 swimlane">
+            MERGED
+        </div>
     </div>
 </div>
 
