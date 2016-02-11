@@ -3,13 +3,18 @@ var cliArgs = process.argv.slice(2);
 var runner = new Runner();
 
 if(cliArgs[0] === "setup"){
-	var cmd = "npm install && npm install -g bower && cd stats/ && bower install && cd ..";
+
+	var cmd = "cd "+__dirname+" && npm install && sudo npm install -g bower "
+	    +" && cd web/ && npm install && cd public && bower install && cd "+__dirname
+	    +" && cd team/ && npm install && cd public && bower install && cd "+__dirname;
+
+	console.log("Running: "+cmd);
 	child_process = require('child_process');
  
 	child_process.exec(cmd, function(err, out, code) {
 		if (err instanceof Error)
 			throw err;
-		process.stdout.write(out);
+		process.stdout.write("."+out);
 	});	
 	
 
@@ -107,14 +112,17 @@ function Nit(runner) {
         if(self.isOnAFeatureBranch(currentBranch)){
             var prefix = currentBranch.replace(self.nettings.featureBranchPrefix, "");
             var msg = prefix + " " + message;
-            self.commit(msg, cb);
+            self.commit(msg, currentBranch, cb);
+
+            NIT.nitClient.sendCmdToServer("feature_commit", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", true, function(repliedFields){});
+
         } else {
             self.printer.E("NERROR: Cannot commit feature while on non-feature branch '" + currentBranch + "'");
             cb && cb();
         }
     };
 
-    this.commit = function(message, currentBranch){
+    this.commit = function(message, currentBranch, cb){
         var self= this;
         if(!message){
             self.printer.missingCommitMessage();
@@ -124,6 +132,7 @@ function Nit(runner) {
         self.changesStagedStatus(function(staged, unstaged, untracked){
             if(staged){
                 self.git(["commit", "-m", message], function(){
+                    cb && cb();
                     if(unstaged || untracked){
                         self.printer.print("NWARNING: Committed some things, but some changes were not staged to commit!");
                     }
