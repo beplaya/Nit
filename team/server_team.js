@@ -66,7 +66,7 @@ module.exports = function(nerver){
                 console.log(e);
             }
         }
-    }, 30000);
+    }, 45000);
     var updatePeriodMin = 15;
     setInterval(function(){
         updateDevelop();

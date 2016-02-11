@@ -91,18 +91,6 @@ app.controller('statusController', ['$scope', 'socket',
         $scope.users = response.users;
     });
 
-    $scope.addAuthorToCard = function(cardIndex, gitUser) {
-        if(!$scope.cards[cardIndex].authors) {
-            $scope.cards[cardIndex].authors = [];
-        }
-        var authors = $scope.cards[cardIndex].authors;
-        for(var i=0; i<authors.length; i++) {
-            if(authors[i].email == gitUser.email){
-                return;
-            }
-        }
-        $scope.cards[cardIndex].authors.push(gitUser);
-    };
 }]);
 
 app.controller('pocController', ['$scope', 'socket',

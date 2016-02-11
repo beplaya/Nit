@@ -26,6 +26,7 @@ module.exports = function(nettings){
     };
 
     INREC.cacheSaver.saveCache = function(){
+        console.log("_______Saving cache");
         INREC.cacheSaver.mkDir(INREC.cacheSaver.cacheDir);
         INREC.cacheSaver.fs.writeFileSync(INREC.cacheSaver.cacheFilePath, JSON.stringify(INREC.cache, 0, 4));
     };
@@ -34,6 +35,7 @@ module.exports = function(nettings){
     // +++++++++++
 
     INREC.cacheSaver.loadCache = function(){
+        console.log("_______Loading cache");
         try{
             var filePath = INREC.cacheSaver.cacheFilePath;
             if(!INREC.cacheSaver.fs.existsSync(filePath)) {
@@ -109,7 +111,7 @@ module.exports = function(nettings){
             INREC.cache.cards[cardIndex].commits = [];
         }
         INREC.cache.cards[cardIndex].commits.push({
-            time:commitTime,
+            time : commitTime,
             issueKey : issueKey,
             user : {name : INREC.cache.users[userIndex].name, email : INREC.cache.users[userIndex].email}
         });
@@ -153,9 +155,8 @@ module.exports = function(nettings){
         //~
         var key = response.key;
         INREC.cache.users[userIndex].issue.key = response.key;
-        INREC.cache.users[userIndex].issue.fields = response.fields;
         INREC.cache.users[userIndex].issue.url = response.url;
-        var fields = INREC.cache.users[userIndex].issue.fields;
+        var fields = response.fields;
         if(fields){
             INREC.cache.users[userIndex].issue.cachedAge = fields.cachedAge || 0;
             INREC.cache.users[userIndex].issue.issuetype = fields.issuetype ? fields.issuetype.name || "" : "typeless";
@@ -203,20 +204,36 @@ module.exports = function(nettings){
                  INREC.cache.users[userIndex].allIssues.push({});
                  issueIndex =  INREC.cache.users[userIndex].allIssues.length-1;
             }
-            INREC.cache.users[userIndex].allIssues[issueIndex] = INREC.cache.users[userIndex].issue;
-            INREC.cache.cards[cardIndex] = INREC.cache.users[userIndex].allIssues[issueIndex];
+            INREC.cache.users[userIndex].allIssues[issueIndex] = INREC.createPartialIssue(INREC.cache.users[userIndex].issue);
+            INREC.cache.cards[cardIndex] = INREC.createPartialIssue(INREC.cache.users[userIndex].issue, INREC.cache.cards[cardIndex].authors);
             INREC.addAuthorToCard(cardIndex, response.gitUser);
         }
 
         //~
     });
 
+    INREC.createPartialIssue = function(fullIssue, authors) {
+        var partialIssue = {};
+        partialIssue.summary = fullIssue.summary;
+        partialIssue.assignee = fullIssue.assignee;
+        partialIssue.description = fullIssue.description;
+        partialIssue.issuetype = fullIssue.issuetype;
+        partialIssue.status = fullIssue.status;
+        partialIssue.issueTitle = fullIssue.issueTitle;
+        partialIssue.key = fullIssue.key;
+        partialIssue.comments = fullIssue.comments;
+        partialIssue.authors = authors;
+        return partialIssue;
+    };
+
     INREC.addAuthorToCard = function(cardIndex, gitUser) {
         if(!INREC.cache.cards[cardIndex].authors) {
             INREC.cache.cards[cardIndex].authors = [];
         }
+
         var authors = INREC.cache.cards[cardIndex].authors;
         for(var i=0; i<authors.length; i++) {
+            console.log(authors[i].email, gitUser.email);
             if(authors[i].email == gitUser.email){
                 return;
             }
