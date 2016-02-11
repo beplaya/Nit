@@ -233,7 +233,6 @@ module.exports = function(nettings){
 
         var authors = INREC.cache.cards[cardIndex].authors;
         for(var i=0; i<authors.length; i++) {
-            console.log(authors[i].email, gitUser.email);
             if(authors[i].email == gitUser.email){
                 return;
             }
