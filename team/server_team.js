@@ -67,5 +67,23 @@ module.exports = function(nerver){
             }
         }
     }, 30000);
+    var updatePeriodMin = 15;
+    setInterval(function(){
+        updateDevelop();
+    }, updatePeriodMin * 60 * 1000);
 
+    updateDevelop();
+    function updateDevelop(){
+        console.log("Updating current branch in team repo every", updatePeriodMin, " minutes.");
+        var cmd = "nit pull";
+        console.log("Updating team repo");
+        console.log("Running: "+cmd);
+        child_process = require('child_process');
+
+        child_process.exec(cmd, function(err, out, code) {
+            if (err instanceof Error)
+                throw err;
+            process.stdout.write(out);
+        });
+    }
 }
