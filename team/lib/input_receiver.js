@@ -77,6 +77,40 @@ module.exports = function(nettings){
         return -1;
     };
 
+    INREC.receiver.on('update_feature_commit', function (response) {
+        var key = response.key;
+        var commitTime = (new Date().getTime());
+        var userIndex = INREC.findUserIndex(response.gitUser);
+        if(userIndex == -1) {
+            INREC.cache.users.push({
+                name : response.gitUser.name,
+                email : response.gitUser.email,
+                allIssues : []});
+            userIndex = INREC.cache.users.length-1;
+        }
+        //
+        var cardIndex = INREC.findCardIndex(response.key);
+        if(cardIndex == -1){
+            INREC.cache.cards.push({
+            });
+            cardIndex = INREC.cache.cards.length-1;
+        }
+        //
+        if(!INREC.cache.users[userIndex].commits){
+            INREC.cache.users[userIndex].commits = [];
+        }
+        INREC.cache.users[userIndex].commits.push({time:commitTime, issueKey : key});
+        //
+        if(!INREC.cache.cards[cardIndex].commits){
+            INREC.cache.cards[cardIndex].commits = [];
+        }
+        INREC.cache.cards[cardIndex].commits.push({
+            time:commitTime,
+            issueKey : key,
+            user : INREC.cache.users[userIndex]
+        });
+    });
+
     INREC.receiver.on('update_status', function (response) {
         var userIndex = INREC.findUserIndex(response.gitUser);
         if(userIndex == -1) {
