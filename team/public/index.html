@@ -44,6 +44,7 @@
                 <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
                 <div class="info author" ng-repeat="A in C.authors track by $index">
                     {{A.name}} | {{A.email}}
+                    <span class="commit" ng-repeat="COM in A.commits track by $index"></span>
                 </div>
             </div>
         </div>

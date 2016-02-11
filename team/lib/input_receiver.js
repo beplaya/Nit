@@ -113,8 +113,18 @@ module.exports = function(nettings){
         INREC.cache.cards[cardIndex].commits.push({
             time : commitTime,
             issueKey : issueKey,
-            user : {name : INREC.cache.users[userIndex].name, email : INREC.cache.users[userIndex].email}
+            user : {name : response.gitUser.name, email : response.gitUser.email}
         });
+
+        for(var i=0; i< INREC.cache.cards[cardIndex].authors.length; i++){
+            if(INREC.cache.cards[cardIndex].authors[i].email == response.gitUser.email){
+                if(!INREC.cache.cards[cardIndex].authors[i].commits){
+                    INREC.cache.cards[cardIndex].authors[i].commits = [];
+                }
+                INREC.cache.cards[cardIndex].authors[i].commits.push({time:commitTime, issueKey : issueKey});
+            }
+        }
+
         INREC.cacheSaver.saveCache();
     });
 

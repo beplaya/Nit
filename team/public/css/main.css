@@ -146,3 +146,13 @@ div {
     border-radius: 4px;
     overflow:auto;
 }
+
+.commit {
+    width: 4px;
+    height: 4px;
+    background: #a94442;
+    color:#009;
+    display: inline-block;
+    margin: 1px;
+    vertical-align: middle;
+}
