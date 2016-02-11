@@ -1,3 +1,4 @@
+#Nit For Git
 
 <div>
 <pre>
@@ -137,7 +138,7 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
 
 
 ## Setup
- - ```npm install -g```
+ - ```npm install -g nit_for_git```
  - Ensure nit folder is in your path.
  - ```nit setup``` 
  
