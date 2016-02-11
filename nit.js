@@ -107,7 +107,12 @@ function Nit(runner) {
         if(self.isOnAFeatureBranch(currentBranch)){
             var prefix = currentBranch.replace(self.nettings.featureBranchPrefix, "");
             var msg = prefix + " " + message;
-            self.commit(msg, cb);
+            self.commit(msg, currentBranch, function(){
+                NIT.nitClient.sendCmdToServer("feature_commit", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", false, function(repliedFields){
+                    cb && cb();
+                });
+            });
+
         } else {
             self.printer.E("NERROR: Cannot commit feature while on non-feature branch '" + currentBranch + "'");
             cb && cb();
