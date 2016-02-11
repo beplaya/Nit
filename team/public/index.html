@@ -34,11 +34,7 @@
     <!--</div>-->
     <!--</div>-->
     <div class="row">
-        <div class="col-md-4 swimlane">
-            TODO
-        </div>
-        <div class="col-md-4 swimlane">
-            IN DEV
+        <div class="swimlane">
             <div class="summary" ng-repeat="C in cards track by $index">
                 {{C.key}}
                 <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
@@ -47,9 +43,6 @@
                     <span class="commit" ng-repeat="COM in A.commits track by $index"></span>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 swimlane">
-            MERGED
         </div>
     </div>
 </div>
