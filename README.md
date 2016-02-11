@@ -137,9 +137,9 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
 
 
 ## Setup
- - Start at nit root directory
- - ```nit setup```
- - add the repo folder to your path
+ - ```npm install -g```
+ - Ensure nit folder is in your path.
+ - ```nit setup``` 
  
 
 
