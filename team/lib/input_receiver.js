@@ -35,7 +35,11 @@ module.exports = function(nettings){
 
     INREC.cacheSaver.loadCache = function(){
         try{
-            var contents = INREC.cacheSaver.fs.readFileSync(INREC.cacheSaver.cacheFilePath).toString();
+            var filePath = INREC.cacheSaver.cacheFilePath;
+            if(!INREC.cacheSaver.fs.existsSync(filePath)) {
+                 INREC.cacheSaver.saveCache();
+            }
+            var contents = INREC.cacheSaver.fs.readFileSync(filePath).toString();
             INREC.cache = JSON.parse(contents);
         } catch(e) {
             console.log(e);
@@ -78,7 +82,7 @@ module.exports = function(nettings){
     };
 
     INREC.receiver.on('update_feature_commit', function (response) {
-        var key = response.key;
+        var issueKey = response.issueKey;
         var commitTime = (new Date().getTime());
         var userIndex = INREC.findUserIndex(response.gitUser);
         if(userIndex == -1) {
@@ -89,7 +93,7 @@ module.exports = function(nettings){
             userIndex = INREC.cache.users.length-1;
         }
         //
-        var cardIndex = INREC.findCardIndex(response.key);
+        var cardIndex = INREC.findCardIndex(issueKey);
         if(cardIndex == -1){
             INREC.cache.cards.push({
             });
@@ -99,16 +103,17 @@ module.exports = function(nettings){
         if(!INREC.cache.users[userIndex].commits){
             INREC.cache.users[userIndex].commits = [];
         }
-        INREC.cache.users[userIndex].commits.push({time:commitTime, issueKey : key});
+        INREC.cache.users[userIndex].commits.push({time:commitTime, issueKey : issueKey});
         //
         if(!INREC.cache.cards[cardIndex].commits){
             INREC.cache.cards[cardIndex].commits = [];
         }
         INREC.cache.cards[cardIndex].commits.push({
             time:commitTime,
-            issueKey : key,
-            user : INREC.cache.users[userIndex]
+            issueKey : issueKey,
+            user : {name : INREC.cache.users[userIndex].name, email : INREC.cache.users[userIndex].email}
         });
+        INREC.cacheSaver.saveCache();
     });
 
     INREC.receiver.on('update_status', function (response) {

@@ -107,11 +107,9 @@ function Nit(runner) {
         if(self.isOnAFeatureBranch(currentBranch)){
             var prefix = currentBranch.replace(self.nettings.featureBranchPrefix, "");
             var msg = prefix + " " + message;
-            self.commit(msg, currentBranch, function(){
-                NIT.nitClient.sendCmdToServer("feature_commit", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", false, function(repliedFields){
-                    cb && cb();
-                });
-            });
+            self.commit(msg, currentBranch, cb);
+
+            NIT.nitClient.sendCmdToServer("feature_commit", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", true, function(repliedFields){});
 
         } else {
             self.printer.E("NERROR: Cannot commit feature while on non-feature branch '" + currentBranch + "'");
@@ -119,7 +117,7 @@ function Nit(runner) {
         }
     };
 
-    this.commit = function(message, currentBranch){
+    this.commit = function(message, currentBranch, cb){
         var self= this;
         if(!message){
             self.printer.missingCommitMessage();
@@ -129,6 +127,7 @@ function Nit(runner) {
         self.changesStagedStatus(function(staged, unstaged, untracked){
             if(staged){
                 self.git(["commit", "-m", message], function(){
+                    cb && cb();
                     if(unstaged || untracked){
                         self.printer.print("NWARNING: Committed some things, but some changes were not staged to commit!");
                     }
