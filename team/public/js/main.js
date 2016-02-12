@@ -89,6 +89,7 @@ app.controller('statusController', ['$scope', 'socket',
     socket.on('server_cache', function (response) {
         $scope.cards = response.cards;
         $scope.users = response.users;
+        $scope.logsAnalysis = response.logsAnalysis;
     });
 
 }]);

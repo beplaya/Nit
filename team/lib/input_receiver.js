@@ -1,6 +1,7 @@
 module.exports = function(nettings){
     var INREC = {};
     INREC.cache = {};
+    INREC.cache.logsAnalysis = [];
     INREC.cache.users = [];
     INREC.cache.cards = [];
     INREC.receiver = {eventMap:{}};

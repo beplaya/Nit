@@ -92,10 +92,11 @@ module.exports = function(nerver){
         var glimr = require(__dirname + '/node_modules/glimr/glimr.js')();
         var runner = new Runner();
         runner.run("git", ["log"], function(logs){
-            var logsAnalysis = glimr.analyzeLogs(logs, nettings.projectKey, {startDate});
-            inputReceiver.cacheSaver.saveLogCache(logsAnalysis);
-            app.inputListener.onData(logsAnalysis, nettings.projectKey,
-                true, "glimr");
+            var endDate = new Date();
+            var startDate = new Date(endDate.getTime()-(7*24*60*60*1000));//7 days trailing
+            var logsAnalysis = glimr.analyzeLogs(logs, nettings.projectKey, {startDate:startDate, endDate:endDate});
+            inputReceiver.cache.logsAnalysis = logsAnalysis;
+            inputReceiver.cacheSaver.saveCache();
         });
 
     }
