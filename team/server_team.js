@@ -73,7 +73,7 @@ module.exports = function(nerver){
         getCurrentSprint();
     }, updatePeriodMin * 60 * 1000);
 
-    updateDevelop(updateGlimr);
+    updateDevelop();
     getCurrentSprint();
 
 
@@ -118,6 +118,7 @@ module.exports = function(nerver){
             console.log(msg);
             inputReceiver.cache.currentSprint = currentSprint;
             inputReceiver.clearOldCardsAndUsers();
+            updateGlimr();
             inputReceiver.cacheSaver.saveCache();
         });
     }
