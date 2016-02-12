@@ -46,8 +46,13 @@
         </div>
     </div>
     <div class="row swimlane">
-        <div class="" ng-repeat="LO in logsAnalysis.logObjects track by $index">
-            {{ LO.date }}||{{ LO.message }}|{{ LO.deltas.rollingAverageMs}}
+        <h4>GLIMR Commit Analysis {{logsAnalysis.startDate}} - {{logsAnalysis.endDate}}</h4>
+        <div class="" ng-repeat="LA in logsAnalysis.authors track by $index">
+            {{LA.name}} | {{LA.email}}
+            <span class="commit" ng-repeat="COM in LA.activity.commits track by $index"></span>
+        </div>
+        <div class="" ng-repeat="LC in logsAnalysis.cards track by $index">
+            {{LC.key}} | # of Pull Requests: {{LC.numberOfPullRequests}}
         </div>
     </div>
 </div>
