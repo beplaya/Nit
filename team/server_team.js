@@ -70,9 +70,15 @@ module.exports = function(nerver){
     var updatePeriodMin = 15;
     setInterval(function(){
         updateDevelop(updateGlimr);
+        getCurrentSprint();
     }, updatePeriodMin * 60 * 1000);
 
     updateDevelop(updateGlimr);
+    getCurrentSprint();
+
+
+
+
     function updateDevelop(cb){
         console.log("Updating current branch in team repo every", updatePeriodMin, " minutes.");
         var cmd = "nit pull";
@@ -94,6 +100,10 @@ module.exports = function(nerver){
         runner.run("git", ["log"], function(logs){
             var endDate = new Date();
             var startDate = new Date(endDate.getTime()-(7*24*60*60*1000));//7 days trailing
+            if(inputReceiver.cache.currentSprint){
+                startDate = new Date(inputReceiver.cache.currentSprint.startDate);
+                endDate = new Date(inputReceiver.cache.currentSprint.endDate);
+            }
             var logsAnalysis = glimr.analyzeLogs(logs, nettings.projectKey, {startDate:startDate, endDate:endDate});
             inputReceiver.cache.logsAnalysis = logsAnalysis;
             inputReceiver.cacheSaver.saveCache();
@@ -101,7 +111,16 @@ module.exports = function(nerver){
 
     }
 
-
+    function getCurrentSprint(){
+        console.log("Getting current sprint (can take a couple miunutes) ...");
+        app.nerver.nira.getCurrentSprintForCurrentProject(function(currentSprint){
+            var msg = currentSprint ? "Found current Sprint!" : "No current sprint found!";
+            console.log(msg);
+            inputReceiver.cache.currentSprint = currentSprint;
+            inputReceiver.clearOldCardsAndUsers();
+            inputReceiver.cacheSaver.saveCache();
+        });
+    }
 
     function Runner() {
         this.isWin = /^win/.test(process.platform);

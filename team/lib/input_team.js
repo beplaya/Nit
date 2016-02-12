@@ -21,6 +21,7 @@ module.exports = function(app){
             }
             if(tool==="jira"){
                 if(app.nerver.isLoggedIn){
+
                     app.nerver.nira.getIssue(issueKey, function(issueData){
                         if(issueData.errorMessages && issueData.errorMessages[0] == "Issue Does Not Exist") {
                         } else {
@@ -44,4 +45,6 @@ module.exports = function(app){
             res.status(503).send("503");
         }
     });
+
+
 };
