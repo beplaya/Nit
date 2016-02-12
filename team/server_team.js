@@ -69,11 +69,11 @@ module.exports = function(nerver){
     }, 45000);
     var updatePeriodMin = 15;
     setInterval(function(){
-        updateDevelop();
+        updateDevelop(updateGlimr);
     }, updatePeriodMin * 60 * 1000);
 
-    updateDevelop();
-    function updateDevelop(){
+    updateDevelop(updateGlimr);
+    function updateDevelop(cb){
         console.log("Updating current branch in team repo every", updatePeriodMin, " minutes.");
         var cmd = "nit pull";
         console.log("Updating team repo");
@@ -84,6 +84,13 @@ module.exports = function(nerver){
             if (err instanceof Error)
                 throw err;
             process.stdout.write(out);
+            cb && cb();
         });
+    }
+
+    function updateGlimr(){
+        var glimr = require(__dirname + '/node_modules/glimr/glimr.js');
+
+
     }
 }
