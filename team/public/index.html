@@ -25,30 +25,59 @@
 <div ng-controller="statusController">
     <!--<div class="row">-->
     <!--<div class="user_block" ng-repeat="U in users track by $index">-->
-        <!--{{U.name}}&nbsp;&nbsp;|&nbsp;&nbsp;{{U.email}}-->
-        <!--<hr>-->
-        <!--<span class="summary"> {{U.status.currentIssueKey}}:&nbsp;&nbsp;{{U.issue.summary}}</span>-->
-        <!--<span class="info" ng-repeat="X in U.allIssues track by $index">-->
-            <!--<span ng-class="{errorText: X.active}">[{{X.key}}]</span>-->
-        <!--</span>-->
+    <!--{{U.name}}&nbsp;&nbsp;|&nbsp;&nbsp;{{U.email}}-->
+    <!--<hr>-->
+    <!--<span class="summary"> {{U.status.currentIssueKey}}:&nbsp;&nbsp;{{U.issue.summary}}</span>-->
+    <!--<span class="info" ng-repeat="X in U.allIssues track by $index">-->
+    <!--<span ng-class="{errorText: X.active}">[{{X.key}}]</span>-->
+    <!--</span>-->
     <!--</div>-->
     <!--</div>-->
     <div class="row">
-        <div class="col-md-4 swimlane">
-            TODO
-        </div>
-        <div class="col-md-4 swimlane">
-            IN DEV
+        <div class="swimlane">
             <div class="summary" ng-repeat="C in cards track by $index">
                 {{C.key}}
                 <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
                 <div class="info author" ng-repeat="A in C.authors track by $index">
                     {{A.name}} | {{A.email}}
+                    <span class="commit" ng-repeat="COM in A.commits track by $index"></span>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 swimlane">
-            MERGED
+    </div>
+    <div class="row swimlane">
+        <h4>GLIMR Commit Analysis {{logsAnalysis.startDate}} - {{logsAnalysis.endDate}}</h4>
+        <div class="col-md-5">
+            <table class=" table table-striped glimr-table ">
+                <thead>
+                <th>Author</th>
+                <th>Commits</th>
+                </thead>
+                <tbody>
+                <tr class="" ng-repeat="LA in logsAnalysis.authors track by $index">
+                    <td style="width:40%;">{{LA.name}}<br>{{LA.email}}</td>
+                    <td>
+                        <span class="commit" ng-repeat="COM in LA.activity.commits track by $index"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-5">
+            <table class=" table table-striped glimr-table ">
+                <thead>
+                <th>Issue Key</th>
+                <th># of Pull Requests</th>
+                <th>Commits</th>
+                </thead>
+                <tbody>
+                <tr class="" ng-repeat="LC in logsAnalysis.cards track by $index">
+                    <td>{{LC.key}}</td>
+                    <td>{{LC.numberOfPullRequests}}</td>
+                    <td>{{LC.commits.length}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

@@ -89,20 +89,11 @@ app.controller('statusController', ['$scope', 'socket',
     socket.on('server_cache', function (response) {
         $scope.cards = response.cards;
         $scope.users = response.users;
+        $scope.logsAnalysis = response.logsAnalysis;
+        $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
+        $scope.logsAnalysis.endDate = formatDate(new Date(response.logsAnalysis.endDate));
     });
 
-    $scope.addAuthorToCard = function(cardIndex, gitUser) {
-        if(!$scope.cards[cardIndex].authors) {
-            $scope.cards[cardIndex].authors = [];
-        }
-        var authors = $scope.cards[cardIndex].authors;
-        for(var i=0; i<authors.length; i++) {
-            if(authors[i].email == gitUser.email){
-                return;
-            }
-        }
-        $scope.cards[cardIndex].authors.push(gitUser);
-    };
 }]);
 
 app.controller('pocController', ['$scope', 'socket',
