@@ -66,6 +66,90 @@ module.exports = function(nerver){
                 console.log(e);
             }
         }
-    }, 30000);
+    }, 45000);
+    var updatePeriodMin = 15;
+    setInterval(function(){
+        updateDevelop(updateGlimr);
+    }, updatePeriodMin * 60 * 1000);
 
+    updateDevelop(updateGlimr);
+    function updateDevelop(cb){
+        console.log("Updating current branch in team repo every", updatePeriodMin, " minutes.");
+        var cmd = "nit pull";
+        console.log("Updating team repo");
+        console.log("Running: "+cmd);
+        child_process = require('child_process');
+
+        child_process.exec(cmd, function(err, out, code) {
+            if (err instanceof Error)
+                throw err;
+            process.stdout.write(out);
+            cb && cb();
+        });
+    }
+
+    function updateGlimr(){
+        var glimr = require(__dirname + '/node_modules/glimr/glimr.js')();
+        var runner = new Runner();
+        runner.run("git", ["log"], function(logs){
+            var endDate = new Date();
+            var startDate = new Date(endDate.getTime()-(7*24*60*60*1000));//7 days trailing
+            var logsAnalysis = glimr.analyzeLogs(logs, nettings.projectKey, {startDate:startDate, endDate:endDate});
+            inputReceiver.cache.logsAnalysis = logsAnalysis;
+            inputReceiver.cacheSaver.saveCache();
+        });
+
+    }
+
+
+
+    function Runner() {
+        this.isWin = /^win/.test(process.platform);
+        this.child_process = require('child_process');
+        this.runInherit = function(cmd, cmdArgs, cb) {
+
+            if(this.isWin){
+                if(cmd === "open"){
+                    cmd = "start";
+                }
+            }
+            var msg = cmd;
+            if(cmdArgs){
+                for(var i=0; i<cmdArgs.length; i++) {
+                    msg += " "+cmdArgs[i];
+                }
+            }
+            var spawn = this.child_process.spawn;
+            spawn(cmd, cmdArgs, {stdio : 'inherit'});
+
+            cb && cb();
+        };
+
+        this.run = function(cmd, cmdArgs, cb) {
+            if(this.isWin){
+                if(cmd === "open"){
+                    cmd = "start";
+                }
+            }
+            var spawn = require('child_process').spawn,
+            ls = spawn(cmd, cmdArgs);
+            // console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
+            var out = "";
+            var error = false;
+            ls.stdout.on('data', function (data) {
+                out += "\n" + (data ? data.toString() : "");
+            });
+            ls.stderr.on('data', function (data) {
+                error = true;
+                out += "\n" + (data ? data.toString() : "");
+            });
+
+            ls.on('close', function (code) {
+                cb && cb(out, error);
+            });
+        };
+
+
+    }
 }
+
