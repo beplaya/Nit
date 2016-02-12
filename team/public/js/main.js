@@ -90,6 +90,8 @@ app.controller('statusController', ['$scope', 'socket',
         $scope.cards = response.cards;
         $scope.users = response.users;
         $scope.logsAnalysis = response.logsAnalysis;
+        $scope.currentSprint = response.currentSprint;
+        $scope.currentSprint.formatedStartDate = new Date(response.currentSprint.startDate);
         $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
         $scope.logsAnalysis.endDate = formatDate(new Date(response.logsAnalysis.endDate));
     });
