@@ -70,12 +70,14 @@
                 <th>Issue Key</th>
                 <th># of Pull Requests</th>
                 <th>Commits</th>
+                <th>Authors</th>
                 </thead>
                 <tbody>
                 <tr class="" ng-repeat="LC in logsAnalysis.cards track by $index">
                     <td>{{LC.key}}</td>
                     <td>{{LC.numberOfPullRequests}}</td>
                     <td>{{LC.commits.length}}</td>
+                    <td><div ng-repeat="C in LC.commits track by $index">{{C.commit.substring(0,7)}} | {{C.author.email}}</div></td>
                 </tr>
                 </tbody>
             </table>
