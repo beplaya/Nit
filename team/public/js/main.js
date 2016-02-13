@@ -93,6 +93,7 @@ app.controller('statusController', ['$scope', 'socket',
         $scope.users = response.users;
         $scope.logsAnalysis = response.logsAnalysis;
         $scope.currentSprint = response.currentSprint;
+        $scope.allSprints = response.allSprints;
         $scope.currentSprint.formatedStartDate = formatDate(new Date(response.currentSprint.startDate), true);
         $scope.currentSprint.formatedEndDate = formatDate(new Date(response.currentSprint.endDate), true);
         $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
@@ -119,3 +120,8 @@ app.controller('pocController', ['$scope', 'socket',
 
 
 
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});

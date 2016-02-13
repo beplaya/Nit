@@ -155,7 +155,14 @@ div {
     background: #a94442;
     color:#009;
     display: inline-block;
-    margin: 1px;
+    vertical-align: middle;
+}
+
+.commit_small {
+    width: 1px;
+    height: 19px;
+    background: #a944FF;
+    display: inline-block;
     vertical-align: middle;
 }
 
