@@ -5,7 +5,7 @@ module.exports = function(app, inputReceiver){
     U.init = function() {
         U.inputReceiver.cacheSaver.loadCache();
 
-        U.socketInterval = setInterval(U.broadcast, 15000);
+        U.socketInterval = setInterval(U.broadcast, 45000);
         U.updateInterval = setInterval(function(){
             U.updateDevelop(U.updateGlimr);
             U.getCurrentSprint();
@@ -17,7 +17,6 @@ module.exports = function(app, inputReceiver){
     }
 
     U.broadcast = function() {
-        U.inputReceiver.cacheSaver.saveCache();
         for(var i=0; i<U.app.sockets.length; i++) {
             try{
                 U.app.sockets[i].emit("server_cache", U.inputReceiver.cache);
