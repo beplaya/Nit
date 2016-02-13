@@ -15,9 +15,11 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-function formatDate(date){
-    var df = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear()
-       + "  "+pad(date.getHours(), 2) + ":" + pad(date.getMinutes(), 2);
+function formatDate(date, noMinutes){
+    var df = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+
+    if(!noMinutes)
+        df += "  "+pad(date.getHours(), 2) + ":" + pad(date.getMinutes(), 2);
     return df;
 }
 
@@ -90,6 +92,10 @@ app.controller('statusController', ['$scope', 'socket',
         $scope.cards = response.cards;
         $scope.users = response.users;
         $scope.logsAnalysis = response.logsAnalysis;
+        $scope.currentSprint = response.currentSprint;
+        $scope.allSprints = response.allSprints;
+        $scope.currentSprint.formatedStartDate = formatDate(new Date(response.currentSprint.startDate), true);
+        $scope.currentSprint.formatedEndDate = formatDate(new Date(response.currentSprint.endDate), true);
         $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
         $scope.logsAnalysis.endDate = formatDate(new Date(response.logsAnalysis.endDate));
     });
@@ -114,3 +120,8 @@ app.controller('pocController', ['$scope', 'socket',
 
 
 
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});

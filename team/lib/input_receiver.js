@@ -99,6 +99,7 @@ module.exports = function(nettings){
         var cardIndex = INREC.findCardIndex(issueKey);
         if(cardIndex == -1){
             INREC.cache.cards.push({
+                nerver : { createTime : new Date().getTime()}
             });
             cardIndex = INREC.cache.cards.length-1;
         }
@@ -149,6 +150,7 @@ module.exports = function(nettings){
         var userIndex = INREC.findUserIndex(response.gitUser);
         if(userIndex == -1) {
             INREC.cache.users.push({
+                nerver : { createTime : new Date().getTime()},
                 name : response.gitUser.name,
                 email : response.gitUser.email,
                 allIssues : []});
@@ -158,6 +160,7 @@ module.exports = function(nettings){
         var cardIndex = INREC.findCardIndex(response.key);
         if(cardIndex == -1){
             INREC.cache.cards.push({
+                nerver : { createTime : new Date().getTime()}
             });
             cardIndex = INREC.cache.cards.length-1;
         }
@@ -223,8 +226,47 @@ module.exports = function(nettings){
         //~
     });
 
+    INREC.clearOldCardsAndUsers = function(){
+        var endTime = new Date().getTime();
+        var startTime = endTime - (7*24*60*60*1000);
+        if(INREC.cache.currentSprint){
+            var startTime = new Date(INREC.cache.currentSprint.startDate).getTime();
+            var endTime = new Date(INREC.cache.currentSprint.endDate).getTime();
+        }
+
+        var newUserList = [];
+        for(var i=0; i<INREC.cache.users.length; i++) {
+            var user = INREC.cache.users[i];
+            var nerverCreateTime = (user.nerver && user.nerver.createTime) ? user.nerver.createTime : 0;
+            if(nerverCreateTime >=startTime && nerverCreateTime<=endTime) {
+                var newAllIssuesList = [];
+                for(var j=0; j<user.allIssues.length; j++) {
+                    var issue = user.allIssues[j];
+                    var nerverCreateTime = (issue.nerver && issue.nerver.createTime) ? issue.nerver.createTime : 0;
+                    if(nerverCreateTime >=startTime && nerverCreateTime<=endTime) {
+                        newAllIssuesList.push(issue);
+                    }
+                }
+                user.allIssues = newAllIssuesList;
+                newUserList.push(user);
+            }
+        }
+        INREC.cache.users = newUserList;
+
+        var newCardsList = [];
+        for(var i=0; i<INREC.cache.users.length; i++) {
+            var card = INREC.cache.cards[i];
+            var nerverCreateTime = (card.nerver && card.nerver.createTime) ? card.nerver.createTime : 0;
+            if(nerverCreateTime >=startTime && nerverCreateTime<=endTime) {
+                newCardsList.push(card);
+            }
+        }
+        INREC.cache.cards = newCardsList;
+    };
+
     INREC.createPartialIssue = function(fullIssue, authors) {
         var partialIssue = {};
+        partialIssue.nerver = { createTime : new Date().getTime()};
         partialIssue.summary = fullIssue.summary;
         partialIssue.assignee = fullIssue.assignee;
         partialIssue.description = fullIssue.description;
