@@ -10,12 +10,14 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         var numberOfCardsWorkedArray = [];
         var numberOfCommitsArray = [];
         var numberOfAuthorsArray = [];
+        var avgCommitFreqArray = [];
         var sprints = $scope.glimrData.allSprints.reverse();
         for(var i=0; (i<sprints.length && i<$scope.max); i++) {
             sprintNames.push(sprints[i].name);
             numberOfCardsWorkedArray.push(sprints[i].logsAnalysis.cards.length);
             numberOfCommitsArray.push(sprints[i].logsAnalysis.logObjects.length);
             numberOfAuthorsArray.push(sprints[i].logsAnalysis.authors.length);
+            avgCommitFreqArray.push(1*sprints[i].logsAnalysis.logObjects[0].deltas.rollingAverageMs/60/60/1000);
             var cardsWorked = sprints[i].logsAnalysis.cards;
             var numberOfCardsMerged = 0;
             for(var j=0; j<cardsWorked.length; j++) {
@@ -28,12 +30,14 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                 }
             }
             numberOfCardsMergedArray.push(numberOfCardsMerged);
+
         }
         sprintNames.reverse();
         numberOfCardsWorkedArray.reverse();
         numberOfCardsMergedArray.reverse();
         numberOfCommitsArray.reverse();
         numberOfAuthorsArray.reverse();
+        avgCommitFreqArray.reverse();
 
         //~
         //var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 2];
@@ -63,6 +67,13 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                     },
                     opposite : true
                 }
+                ,{
+                    gridLineWidth: 1,
+                    title: {
+                        text: 'Average Commit Freq. Hrs.'
+                    },
+                    opposite : true
+                }
 //                ,{
 //                    gridLineWidth: 1,
 //                    title: {
@@ -77,6 +88,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                 ,{ data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0}
                 ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1}
                 ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 2}
+                ,{ data: avgCommitFreqArray, name:"Average Commit Freq. Hrs.", yAxis: 3}
 //                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 3}
             ]
         };
