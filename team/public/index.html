@@ -33,6 +33,11 @@
             </div>
         </div>
     </div>
+
+    <div class="row swimlane" id="glimr_graphs" ng-controller="glimrGraphsController">
+        <div id="container">Placeholder for chart</div>
+    </div>
+
     <div class="row swimlane" ng-controller="glimrController">
         <h3 style="margin: 10px;">{{glimrData.currentSprint.name }}
             {{glimrData.currentSprint.formattedStartDate}} -
@@ -90,9 +95,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div id="glimr_graphs" ng-controller="glimrGraphsController">
-
     </div>
 </div>
 

@@ -44,7 +44,18 @@ app.controller('glimrController', ['$scope', 'glimrData',
 app.controller('glimrGraphsController', ['$scope', 'glimrData',
                                  function($scope, glimrData) {
     $scope.glimrData = glimrData;
+    $scope.glimrData.addListener(function(){
+        Highcharts.chart('container', {
 
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+
+        series: [{
+            data: [29.9, 71.5, Math.random(), 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+        }]});
+    });
 }]);
 
 app.controller('socketController', ['$scope', 'socket', 'glimrData', 'userData', 'cardData',
@@ -95,7 +106,16 @@ app.factory('cardData', function(){
 });
 
 app.factory('glimrData', function(){
-    var glimrData = {};
+    var glimrData = { listeners : [] };
+
+    glimrData.notifyListeners = function(){
+        for(var i=0; i<glimrData.listeners.length; i++)
+            glimrData.listeners[i]();
+    };
+
+    glimrData.addListener = function(listener){
+        glimrData.listeners.push(listener);
+    };
 
     glimrData.update = function(glimrResponse){
         glimrData.allSprints = glimrResponse.allSprints;
@@ -105,6 +125,7 @@ app.factory('glimrData', function(){
         glimrData.currentSprint.formattedEndDate = formatDate(new Date(glimrResponse.currentSprint.endDate), true);
         glimrData.logsAnalysis.startDate = formatDate(new Date(glimrResponse.logsAnalysis.startDate));
         glimrData.logsAnalysis.endDate = formatDate(new Date(glimrResponse.logsAnalysis.endDate));
+        glimrData.notifyListeners();
     };
 
     return glimrData;
