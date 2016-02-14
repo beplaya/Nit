@@ -5,7 +5,7 @@ module.exports = function(app, inputReceiver){
     U.init = function() {
         U.inputReceiver.cacheSaver.loadCache();
 
-        U.socketInterval = setInterval(function(){U.broadcastCardsAndUsers();}, 5000);
+        U.socketInterval = setInterval(function(){U.broadcastCardsAndUsers();}, 60000);
         setInterval(function(){
             U.inputReceiver.cacheSaver.saveCache();
             U.getSprintData(function(){

@@ -26,32 +26,32 @@ function formatDate(date, noMinutes){
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-var app = angular.module('myApp', ['ngSanitize']);
+var app = angular.module('nitForGitTeamApp', ['ngSanitize']);
 
 
-app.controller('statusController', ['$scope', 'socket', 'users', 'cards',
-                            function($scope, socket, users, cards) {
-    $scope.users = users;
-    $scope.cards = cards;
-
+app.controller('statusController', ['$scope', 'userData', 'cardData',
+                            function($scope, userData, cardData) {
+    $scope.userData = userData;
+    $scope.cardData = cardData;
 }]);
 
-app.controller('glimrController', ['$scope', 'socket', 'glimrData',
-                                                function($scope, socket, glimrData) {
+app.controller('glimrController', ['$scope', 'glimrData',
+                           function($scope, glimrData) {
     $scope.glimrData = glimrData;
 
 }]);
 
-app.controller('glimrGraphsController', ['$scope', 'socket', 'glimrData',
-                                                function($scope, socket, glimrData) {
+app.controller('glimrGraphsController', ['$scope', 'glimrData',
+                                 function($scope, glimrData) {
     $scope.glimrData = glimrData;
 
 }]);
-app.controller('socketController', ['$scope', '$http', 'socket', 'glimrData',
-                    'users', 'cards', function($scope, $http, socket, glimrData, users, cards) {
+
+app.controller('socketController', ['$scope', 'socket', 'glimrData', 'userData', 'cardData',
+                    function($scope, socket, glimrData, userData, cardData) {
     $scope.glimrData = glimrData;
-    $scope.users = users;
-    $scope.cards = cards;
+    $scope.userData = userData;
+    $scope.cardData = cardData;
     $scope.connected = false;
     $scope.isLoggedIn = false;
 
@@ -63,8 +63,8 @@ app.controller('socketController', ['$scope', '$http', 'socket', 'glimrData',
         console.log('connected!!', data);
         $scope.connected = true;
         $scope.isLoggedIn = data.isLoggedIn;
-        console.log($scope.loggedInStatus());
         socket.projectKey = data.projectKey;
+        console.log($scope.loggedInStatus());
     });
 
     socket.on('server_cache_glimr', function (response) {
@@ -72,20 +72,28 @@ app.controller('socketController', ['$scope', '$http', 'socket', 'glimrData',
     });
 
     socket.on('server_cache_cards_and_users', function (response) {
-        $scope.cards = response.cards;
-        $scope.users = response.users;
+        $scope.cardData.update(response);
+        $scope.userData.update(response);
     });
 
 }]);
 
-app.factory('users', function(){
-    var users = [];
-    return users;
+app.factory('userData', function(){
+    var userData = {};
+    userData.update = function(response){
+        userData.data = response.users;
+    };
+    return userData;
 });
-app.factory('cards', function(){
-    var cards = [];
-    return cards;
+
+app.factory('cardData', function(){
+    var cardData = {};
+    cardData.update = function(response){
+        cardData.data = response.cards;
+    };
+    return cardData;
 });
+
 app.factory('glimrData', function(){
     var glimrData = {};
 

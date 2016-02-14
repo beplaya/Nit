@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp" xmlns="http://www.w3.org/1999/html">
+<html lang="en" ng-app="nitForGitTeamApp" xmlns="http://www.w3.org/1999/html">
 
 <head>
 
@@ -23,22 +23,20 @@
     <span class="info tiny" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
 <div>
-    <h3 style="margin: 10px;">{{glimrData.currentSprint.name }}
-        {{glimrData.currentSprint.formattedStartDate}} -
-        {{glimrData.currentSprint.formattedEndDate}}</h3>
-    <div class="row" ng-controller="statusController">
-        <div class="swimlane">
-            <div class="summary" ng-repeat="C in cards track by $index">
-                {{C.key}}
-                <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
-                <div class="info author" ng-repeat="A in C.authors track by $index">
-                    {{A.name}} | {{A.email}}
-                    <span class="commit" ng-repeat="COM in A.commits track by $index"></span>
-                </div>
+    <div class="row swimlane" ng-controller="statusController">
+        <div class="summary" ng-repeat="C in cardData.data track by $index">
+            {{C.key}}
+            <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
+            <div class="info author" ng-repeat="A in C.authors track by $index">
+                {{A.name}} | {{A.email}}
+                <span class="commit" ng-repeat="COM in A.commits track by $index"></span>
             </div>
         </div>
     </div>
     <div class="row swimlane" ng-controller="glimrController">
+        <h3 style="margin: 10px;">{{glimrData.currentSprint.name }}
+            {{glimrData.currentSprint.formattedStartDate}} -
+            {{glimrData.currentSprint.formattedEndDate}}</h3>
         <h4>GLIMR Commit Analysis</h4>
         <div class="col-md-4">
             <table class=" table table-striped glimr-table ">
@@ -93,7 +91,7 @@
             </table>
         </div>
     </div>
-    <div id="glimr_graphs"  ng-controller="glimrGraphsController">
+    <div id="glimr_graphs" ng-controller="glimrGraphsController">
 
     </div>
 </div>
