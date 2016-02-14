@@ -27,6 +27,65 @@ function formatDate(date, noMinutes){
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 var app = angular.module('myApp', ['ngSanitize']);
+
+
+app.controller('statusController', ['$scope', 'socket', 'users', 'cards',
+                            function($scope, socket, users, cards) {
+    $scope.users = users;
+    $scope.cards = cards;
+
+}]);
+
+app.controller('glimrController', ['$scope', 'socket', 'glimrData',
+                                                function($scope, socket, glimrData) {
+    $scope.glimrData = glimrData;
+
+}]);
+
+app.controller('glimrGraphsController', ['$scope', 'socket', 'glimrData',
+                                                function($scope, socket, glimrData) {
+    $scope.glimrData = glimrData;
+
+}]);
+app.controller('socketController', ['$scope', '$http', 'socket', 'glimrData',
+                    'users', 'cards', function($scope, $http, socket, glimrData, users, cards) {
+    $scope.glimrData = glimrData;
+    $scope.users = users;
+    $scope.cards = cards;
+    $scope.connected = false;
+    $scope.isLoggedIn = false;
+
+    $scope.loggedInStatus = function(){
+        return $scope.isLoggedIn === true ? "Signed In" : "Signed Out";
+    };
+
+    socket.on('connected', function (data) {
+        console.log('connected!!', data);
+        $scope.connected = true;
+        $scope.isLoggedIn = data.isLoggedIn;
+        console.log($scope.loggedInStatus());
+        socket.projectKey = data.projectKey;
+    });
+
+    socket.on('server_cache_glimr', function (response) {
+        $scope.glimrData.update(response);
+    });
+
+    socket.on('server_cache_cards_and_users', function (response) {
+        $scope.cards = response.cards;
+        $scope.users = response.users;
+    });
+
+}]);
+
+app.factory('users', function(){
+    var users = [];
+    return users;
+});
+app.factory('cards', function(){
+    var cards = [];
+    return cards;
+});
 app.factory('glimrData', function(){
     var glimrData = {};
 
@@ -66,79 +125,6 @@ app.factory('socket', function ($rootScope) {
         }
     };
 });
-
-app.controller('socketController', ['$scope', '$http', 'socket',
-                function($scope, $http, socket) {
-    $scope.connected = false;
-    $scope.isLoggedIn = false;
-
-    $scope.loggedInStatus = function(){
-        return $scope.isLoggedIn === true ? "Signed In" : "Signed Out";
-    };
-
-    socket.on('connected', function (data) {
-        console.log('connected!!', data);
-        $scope.connected = true;
-        $scope.isLoggedIn = data.isLoggedIn;
-        console.log($scope.loggedInStatus());
-        socket.projectKey = data.projectKey;
-    });
-
-}]);
-
-app.controller('statusController', ['$scope', 'socket', 'glimrData',
-                                                function($scope, socket, glimrData) {
-    $scope.users = [];
-    $scope.cards = [];
-    $scope.glimrData = glimrData;
-    $scope.formatDate = formatDate;
-
-    $scope.findUserIndex = function(gitUser) {
-        for(var i=0; i<$scope.users.length; i++){
-            if($scope.users[i].email==gitUser.email){
-                return i;
-            }
-        }
-        return -1;
-    };
-
-    $scope.findCardIndex = function(issueKey) {
-        for(var i=0; i<$scope.cards.length; i++){
-            if($scope.cards[i].key==issueKey){
-                return i;
-            }
-        }
-        return -1;
-    };
-
-    socket.on('server_cache_cards_and_users', function (response) {
-        $scope.cards = response.cards;
-        $scope.users = response.users;
-    });
-
-    socket.on('server_cache_glimr', function (response) {
-        $scope.glimrData.update(response);
-    });
-
-}]);
-
-app.controller('pocController', ['$scope', 'socket',
-                                                function($scope, socket) {
-    socket.on('update_one_line_log_data', function (response) {
-        //console.log(response);
-    });
-
-    socket.on('update_diff', function (response) {
-        //console.log(response);
-    });
-
-    socket.on('update_pending', function (response) {
-        //console.log(response);
-    });
-
-}]);
-
-
 
 app.filter('reverse', function() {
   return function(items) {
