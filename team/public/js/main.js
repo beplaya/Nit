@@ -1,6 +1,4 @@
-var app = angular.module('myApp', ['ngSanitize']);
-
-var GLOBAL = {};
+"use strict";
 
 function pad(num, size) {
     var s = num+"";
@@ -22,6 +20,26 @@ function formatDate(date, noMinutes){
         df += "  "+pad(date.getHours(), 2) + ":" + pad(date.getMinutes(), 2);
     return df;
 }
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+var app = angular.module('myApp', ['ngSanitize']);
+
+
+app.factory('messages', function(){
+    var messages = {};
+
+    messages.list = [];
+
+    messages.add = function(message){
+        messages.list.push({id: messages.list.length, text: message});
+    };
+
+    return messages;
+});
 
 app.factory('socket', function ($rootScope) {
     var socket = io.connect();
@@ -47,7 +65,8 @@ app.factory('socket', function ($rootScope) {
     };
 });
 
-app.controller('socketController', ['$scope', '$http', 'socket', function($scope, $http, socket) {
+app.controller('socketController', ['$scope', '$http', 'socket',
+                function($scope, $http, socket) {
     $scope.connected = false;
     $scope.isLoggedIn = false;
 
@@ -65,10 +84,11 @@ app.controller('socketController', ['$scope', '$http', 'socket', function($scope
 
 }]);
 
-app.controller('statusController', ['$scope', 'socket',
-                                                function($scope, socket) {
+app.controller('statusController', ['$scope', 'socket', 'messages',
+                                                function($scope, socket, messages) {
     $scope.users = [];
     $scope.cards = [];
+    $scope.messages = messages;
 
     $scope.findUserIndex = function(gitUser) {
         for(var i=0; i<$scope.users.length; i++){
@@ -88,12 +108,17 @@ app.controller('statusController', ['$scope', 'socket',
         return -1;
     };
 
-    socket.on('server_cache', function (response) {
+    socket.on('server_cache_cards_and_users', function (response) {
+        $scope.messages.add("kdj23j"+Math.random());
         $scope.cards = response.cards;
         $scope.users = response.users;
+    });
+
+    socket.on('server_cache_glimr', function (response) {
+        $scope.allSprints = response.allSprints;
         $scope.logsAnalysis = response.logsAnalysis;
         $scope.currentSprint = response.currentSprint;
-        $scope.allSprints = response.allSprints;
+
         $scope.currentSprint.formatedStartDate = formatDate(new Date(response.currentSprint.startDate), true);
         $scope.currentSprint.formatedEndDate = formatDate(new Date(response.currentSprint.endDate), true);
         $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
@@ -122,6 +147,7 @@ app.controller('pocController', ['$scope', 'socket',
 
 app.filter('reverse', function() {
   return function(items) {
+    items = items || [];
     return items.slice().reverse();
   };
 });

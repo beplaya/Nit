@@ -7,7 +7,6 @@ module.exports = function(nerver){
     var inputReceiver = require(__dirname + '/lib/input_receiver.js')(app.nettings);
     var port = app.nettings.nerver.team.port;
     app.use(express.static(__dirname + '/public'));
-
     app.get('/test', function(req, res){
         res.send('team works');
     });
@@ -37,6 +36,7 @@ module.exports = function(nerver){
 
     app.inputListener = {
         onData : function(data, projectKey, fromUpdate, whichData){
+            console.log(Math.random(), projectKey, fromUpdate ? 'fromUpdate' : 'other', whichData);
             var eventKey = fromUpdate ? ("update_"+whichData) : 'update_pending';
             if(projectKey===app.nettings.projectKey){
                 inputReceiver.handleEvent(eventKey, data);

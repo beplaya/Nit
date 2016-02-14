@@ -74,7 +74,7 @@ function Nit(runner) {
                         cmd.action(self, cliArgs[1], currentBranch);
                     }
 
-                    if(cmd.arg != "updateNerver"){
+                    if(cmd.arg == "fci" || cmd.arg == "fb"){
                         NIT.runner.run("nit", ["updateNerver"]);
                     }
                 } else {
@@ -284,7 +284,6 @@ function Nit(runner) {
     };
 
     NIT.updateNerver = function(){
-
         NIT.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
             var issueKey = NIT.nira.ticketIDFromBranch(currentBranch);
@@ -366,8 +365,6 @@ function Nit(runner) {
          this.git(["status"], function(status){
             var currentBranch = NIT.discoverBranch(status);
             var isCleanStatus = NIT.determineIsCleanFromStatus(status);
-            NIT.nitClient.sendCmdToServer("status", {status: status, isCleanStatus: isCleanStatus}, currentBranch, NIT.nira.ticketIDFromBranch(currentBranch), "git", false, function(){
-            });
             cb && cb(status);
          });
     };
