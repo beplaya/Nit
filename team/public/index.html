@@ -23,8 +23,9 @@
     <span class="info tiny" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
 <div ng-controller="statusController">
-    <h3 style="margin: 10px;">{{currentSprint.name }} {{currentSprint.formatedStartDate}} -
-        {{currentSprint.formatedEndDate}}</h3>
+    <h3 style="margin: 10px;">{{glimrData.currentSprint.name }}
+        {{glimrData.currentSprint.formattedStartDate}} -
+        {{glimrData.currentSprint.formattedEndDate}}</h3>
     <div id="main">
         <div class="row">
             <div class="swimlane">
@@ -39,9 +40,8 @@
             </div>
         </div>
         <div class="row swimlane">
-            <h4>GLIMR Commit Analysis {{glimrData.currentSprint.logsAnalysis.startDate}} -
-                {{glimrData.currentSprint.logsAnalysis.endDate}}</h4>
-            <div class="col-md-6">
+            <h4>GLIMR Commit Analysis</h4>
+            <div class="col-md-4">
                 <table class=" table table-striped glimr-table ">
                     <thead>
                     <th>Author</th>
@@ -56,14 +56,22 @@
                     </tr>
                     </tbody>
                 </table>
-                <div ng-repeat="S in glimrdata.allSprints | reverse track by $index ">
-                    {{ S.name }}
-                    <br>
-                    <span class="commit_small" ng-repeat="LO in S.logsAnalysis.logObjects track by $index">
-                    </span>
+                <div ng-repeat="S in glimrData.allSprints | reverse track by $index ">
+                    <b>{{ S.name }}</b>
+                    <br>#Cards: {{S.logsAnalysis.cards.length}}
+                    <span class="commit_small" style="background:#FF6922;"
+                          ng-repeat="LO in S.logsAnalysis.cards track by $index"></span>
+                    <br>#Commits: {{ S.logsAnalysis.logObjects.length }}
+                    <span class="commit_small" style="background:#8888ff;"
+                          ng-repeat="LO in S.logsAnalysis.logObjects track by $index"></span>
+                    <br>#Authors: {{ S.logsAnalysis.authors.length }}
+                    <span class="commit_small" style="background:#0000ff;"
+                          ng-repeat="LO in S.logsAnalysis.authors track by $index"></span>
+                    <br>#Commits Per Card: {{ S.logsAnalysis.logObjects.length / S.logsAnalysis.cards.length }}
+                    <br>#Rolling Average Hours: {{ S.logsAnalysis.logObjects[0].deltas.rollingAverageMs/60000/60 }}
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <table class=" table table-striped glimr-table ">
                     <thead>
                     <th>Issue Key</th>

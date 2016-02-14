@@ -34,8 +34,8 @@ app.factory('glimrData', function(){
         glimrData.allSprints = glimrResponse.allSprints;
         glimrData.logsAnalysis = glimrResponse.logsAnalysis;
         glimrData.currentSprint = glimrResponse.currentSprint;
-        glimrData.currentSprint.formatedStartDate = formatDate(new Date(glimrResponse.currentSprint.startDate), true);
-        glimrData.currentSprint.formatedEndDate = formatDate(new Date(glimrResponse.currentSprint.endDate), true);
+        glimrData.currentSprint.formattedStartDate = formatDate(new Date(glimrResponse.currentSprint.startDate), true);
+        glimrData.currentSprint.formattedEndDate = formatDate(new Date(glimrResponse.currentSprint.endDate), true);
         glimrData.logsAnalysis.startDate = formatDate(new Date(glimrResponse.logsAnalysis.startDate));
         glimrData.logsAnalysis.endDate = formatDate(new Date(glimrResponse.logsAnalysis.endDate));
     };
@@ -91,6 +91,7 @@ app.controller('statusController', ['$scope', 'socket', 'glimrData',
     $scope.users = [];
     $scope.cards = [];
     $scope.glimrData = glimrData;
+    $scope.formatDate = formatDate;
 
     $scope.findUserIndex = function(gitUser) {
         for(var i=0; i<$scope.users.length; i++){
@@ -117,14 +118,6 @@ app.controller('statusController', ['$scope', 'socket', 'glimrData',
 
     socket.on('server_cache_glimr', function (response) {
         $scope.glimrData.update(response);
-//        $scope.allSprints = response.allSprints;
-//        $scope.logsAnalysis = response.logsAnalysis;
-//        $scope.currentSprint = response.currentSprint;
-//
-//        $scope.currentSprint.formatedStartDate = formatDate(new Date(response.currentSprint.startDate), true);
-//        $scope.currentSprint.formatedEndDate = formatDate(new Date(response.currentSprint.endDate), true);
-//        $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
-//        $scope.logsAnalysis.endDate = formatDate(new Date(response.logsAnalysis.endDate));
     });
 
 }]);
