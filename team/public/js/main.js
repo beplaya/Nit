@@ -27,18 +27,20 @@ function formatDate(date, noMinutes){
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 var app = angular.module('myApp', ['ngSanitize']);
+app.factory('glimrData', function(){
+    var glimrData = {};
 
-
-app.factory('messages', function(){
-    var messages = {};
-
-    messages.list = [];
-
-    messages.add = function(message){
-        messages.list.push({id: messages.list.length, text: message});
+    glimrData.update = function(glimrResponse){
+        glimrData.allSprints = glimrResponse.allSprints;
+        glimrData.logsAnalysis = glimrResponse.logsAnalysis;
+        glimrData.currentSprint = glimrResponse.currentSprint;
+        glimrData.currentSprint.formatedStartDate = formatDate(new Date(glimrResponse.currentSprint.startDate), true);
+        glimrData.currentSprint.formatedEndDate = formatDate(new Date(glimrResponse.currentSprint.endDate), true);
+        glimrData.logsAnalysis.startDate = formatDate(new Date(glimrResponse.logsAnalysis.startDate));
+        glimrData.logsAnalysis.endDate = formatDate(new Date(glimrResponse.logsAnalysis.endDate));
     };
 
-    return messages;
+    return glimrData;
 });
 
 app.factory('socket', function ($rootScope) {
@@ -84,11 +86,11 @@ app.controller('socketController', ['$scope', '$http', 'socket',
 
 }]);
 
-app.controller('statusController', ['$scope', 'socket', 'messages',
-                                                function($scope, socket, messages) {
+app.controller('statusController', ['$scope', 'socket', 'glimrData',
+                                                function($scope, socket, glimrData) {
     $scope.users = [];
     $scope.cards = [];
-    $scope.messages = messages;
+    $scope.glimrData = glimrData;
 
     $scope.findUserIndex = function(gitUser) {
         for(var i=0; i<$scope.users.length; i++){
@@ -109,20 +111,20 @@ app.controller('statusController', ['$scope', 'socket', 'messages',
     };
 
     socket.on('server_cache_cards_and_users', function (response) {
-        $scope.messages.add("kdj23j"+Math.random());
         $scope.cards = response.cards;
         $scope.users = response.users;
     });
 
     socket.on('server_cache_glimr', function (response) {
-        $scope.allSprints = response.allSprints;
-        $scope.logsAnalysis = response.logsAnalysis;
-        $scope.currentSprint = response.currentSprint;
-
-        $scope.currentSprint.formatedStartDate = formatDate(new Date(response.currentSprint.startDate), true);
-        $scope.currentSprint.formatedEndDate = formatDate(new Date(response.currentSprint.endDate), true);
-        $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
-        $scope.logsAnalysis.endDate = formatDate(new Date(response.logsAnalysis.endDate));
+        $scope.glimrData.update(response);
+//        $scope.allSprints = response.allSprints;
+//        $scope.logsAnalysis = response.logsAnalysis;
+//        $scope.currentSprint = response.currentSprint;
+//
+//        $scope.currentSprint.formatedStartDate = formatDate(new Date(response.currentSprint.startDate), true);
+//        $scope.currentSprint.formatedEndDate = formatDate(new Date(response.currentSprint.endDate), true);
+//        $scope.logsAnalysis.startDate = formatDate(new Date(response.logsAnalysis.startDate));
+//        $scope.logsAnalysis.endDate = formatDate(new Date(response.logsAnalysis.endDate));
     });
 
 }]);

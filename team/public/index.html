@@ -23,19 +23,8 @@
     <span class="info tiny" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
 <div ng-controller="statusController">
-    <!--<div class="row">-->
-    <!--<div class="user_block" ng-repeat="U in users track by $index">-->
-    <!--{{U.name}}&nbsp;&nbsp;|&nbsp;&nbsp;{{U.email}}-->
-    <!--<hr>-->
-    <!--<span class="summary"> {{U.status.currentIssueKey}}:&nbsp;&nbsp;{{U.issue.summary}}</span>-->
-    <!--<span class="info" ng-repeat="X in U.allIssues track by $index">-->
-    <!--<span ng-class="{errorText: X.active}">[{{X.key}}]</span>-->
-    <!--</span>-->
-    <!--</div>-->
-    <!--</div>-->
     <h3 style="margin: 10px;">{{currentSprint.name }} {{currentSprint.formatedStartDate}} -
         {{currentSprint.formatedEndDate}}</h3>
-    <h1>asddas{{messages.list.length}}</h1>
     <div id="main">
         <div class="row">
             <div class="swimlane">
@@ -50,8 +39,8 @@
             </div>
         </div>
         <div class="row swimlane">
-            <h4>GLIMR Commit Analysis {{currentSprint.logsAnalysis.startDate}} -
-                {{currentSprint.logsAnalysis.endDate}}</h4>
+            <h4>GLIMR Commit Analysis {{glimrData.currentSprint.logsAnalysis.startDate}} -
+                {{glimrData.currentSprint.logsAnalysis.endDate}}</h4>
             <div class="col-md-6">
                 <table class=" table table-striped glimr-table ">
                     <thead>
@@ -59,7 +48,7 @@
                     <th>Commits</th>
                     </thead>
                     <tbody>
-                    <tr class="" ng-repeat="LA in currentSprint.logsAnalysis.authors track by $index">
+                    <tr class="" ng-repeat="LA in glimrData.currentSprint.logsAnalysis.authors track by $index">
                         <td style="width:40%;">{{LA.name}}<br>{{LA.email}}</td>
                         <td>
                             <span class="commit" ng-repeat="COM in LA.activity.commits track by $index"></span>
@@ -67,7 +56,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <div ng-repeat="S in allSprints | reverse track by $index ">
+                <div ng-repeat="S in glimrdata.allSprints | reverse track by $index ">
                     {{ S.name }}
                     <br>
                     <span class="commit_small" ng-repeat="LO in S.logsAnalysis.logObjects track by $index">
@@ -83,7 +72,7 @@
                     <th>Authors</th>
                     </thead>
                     <tbody>
-                    <tr class="" ng-repeat="LC in currentSprint.logsAnalysis.cards track by $index">
+                    <tr class="" ng-repeat="LC in glimrData.currentSprint.logsAnalysis.cards track by $index">
                         <td>{{LC.key}}</td>
                         <td>{{LC.numberOfPullRequests}}</td>
                         <td>{{LC.commits.length}}</td>

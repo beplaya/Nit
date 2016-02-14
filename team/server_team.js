@@ -29,8 +29,12 @@ module.exports = function(nerver){
         }
 
         // sending a message back to the client
-        socket.emit('connected', { serverType: 'team', message: 'connected', isLoggedIn: nerver.isLoggedIn, projectKey: app.nettings.projectKey});
+        socket.emit('connected', { serverType: 'team', message: 'connected',
+            isLoggedIn: nerver.isLoggedIn, projectKey: app.nettings.projectKey});
 
+        if(app.update) {
+            app.update.onConnectedSocket(socket);
+        }
         socket.lastCheckSum = 0;
     });
 
@@ -55,6 +59,7 @@ module.exports = function(nerver){
     ///
     server.listen(port);
     console.log('listening on ' + port);
-    require(__dirname + "/lib/update.js")(app, inputReceiver).init();
+    app.update = require(__dirname + "/lib/update.js")(app, inputReceiver);
+    app.update.init();
 }
 

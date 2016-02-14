@@ -33,31 +33,47 @@ module.exports = function(app, inputReceiver){
         });
     }
 
-    U.broadcastCardsAndUsers = function() {
-        var dataToSend = {};
-        dataToSend.cards = U.inputReceiver.cache.cards;
-        dataToSend.users = U.inputReceiver.cache.users;
+    U.onConnectedSocket = function(socket) {
+        U.emit(socket, "server_cache_cards_and_users", U.getCardsAndUsersData());
+        U.emit(socket, "server_cache_glimr", U.getGlimrData());
+    };
 
+    U.getCardsAndUsersData = function() {
+        var dataToSend = {};
+        try {
+            dataToSend.cards = U.inputReceiver.cache.cards;
+            dataToSend.users = U.inputReceiver.cache.users;
+        } catch(e){ dataToSend = {}; }
+        return dataToSend;
+    };
+
+    U.getGlimrData = function() {
+        var dataToSend = {};
+        try {
+            dataToSend.logsAnalysis = U.inputReceiver.cache.logsAnalysis;
+            dataToSend.currentSprint = U.inputReceiver.cache.currentSprint;
+            dataToSend.allSprints = U.inputReceiver.cache.allSprints;
+        } catch(e){ dataToSend = {}; }
+        return dataToSend;
+    };
+
+    U.broadcastCardsAndUsers = function() {
         for(var i=0; i<U.app.sockets.length; i++) {
-            try{
-                U.app.sockets[i].emit("server_cache_cards_and_users", dataToSend);
-            } catch(e){
-                console.log(e);
-            }
+            U.emit(U.app.sockets[i], "server_cache_cards_and_users", U.getCardsAndUsersData());
         }
     };
 
     U.broadcastGlimr = function() {
-        var dataToSendGlimr = {};
-        dataToSendGlimr.logsAnalysis = U.inputReceiver.cache.logsAnalysis;
-        dataToSendGlimr.currentSprint = U.inputReceiver.cache.currentSprint;
-        dataToSendGlimr.allSprints = U.inputReceiver.cache.allSprints;
         for(var i=0; i<U.app.sockets.length; i++) {
-            try{
-                U.app.sockets[i].emit("server_cache_glimr", dataToSendGlimr);
-            } catch(e){
-                console.log(e);
-            }
+            U.emit(U.app.sockets[i], "server_cache_glimr", U.getGlimrData());
+        }
+    };
+
+    U.emit = function(socket, eventName, data) {
+        try{
+            socket.emit(eventName, data);
+        } catch(e){
+            console.log(e);
         }
     };
 
