@@ -35,6 +35,9 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         numberOfCommitsArray.reverse();
         numberOfAuthorsArray.reverse();
 
+        //~
+        //var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 2];
+        //~
         var graphData = {
             title: {text:"GLIMR Sprint Report"},
             xAxis: {
@@ -45,7 +48,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                     gridLineWidth: 1,
                     title: {
                         text: '# of Cards'
-                    }
+                    },
+                    opposite : false
                 },{
                     gridLineWidth: 1,
                     title: {
@@ -59,12 +63,21 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                     },
                     opposite : true
                 }
+//                ,{
+//                    gridLineWidth: 1,
+//                    title: {
+//                        text: '# of Story Points'
+//                    },
+//                    opposite : false
+//                }
+
             ],
             series: [
                 { data: numberOfCardsWorkedArray, name:"Cards With Commits", yAxis: 0}
                 ,{ data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0}
                 ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1}
                 ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 2}
+//                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 3}
             ]
         };
         Highcharts.chart('glimrGraphControllerContainer', graphData);
