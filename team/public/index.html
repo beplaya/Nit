@@ -34,8 +34,8 @@
         </div>
     </div>
 
-    <div class="row swimlane" id="glimr_graphs" ng-controller="glimrGraphsController">
-        <div id="container">Placeholder for chart</div>
+    <div class="row swimlane" ng-controller="glimrGraphController">
+        <div id="glimrGraphControllerContainer">Loading chart...</div>
     </div>
 
     <div class="row swimlane" ng-controller="glimrController">
@@ -105,6 +105,7 @@
 <script src="bower_components/socket.io-client/socket.io.js"></script>
 <script src="/bower_components/highcharts/highcharts.js"></script>
 <script src="js/main.js"></script>
+<script src="js/controllers/glimrGraphs.js"></script>
 </body>
 
 </html>
