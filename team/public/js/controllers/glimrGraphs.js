@@ -40,7 +40,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         avgCommitFreqArray.reverse();
 
         //~
-        //var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 2];
+//        var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 2];
         //~
         var graphData = {
             title: {text:"GLIMR Sprint Report"},
@@ -88,8 +88,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                 ,{ data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0}
                 ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1}
                 ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 2}
+//                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 4}
                 ,{ data: avgCommitFreqArray, name:"Average Commit Freq. Hrs.", yAxis: 3}
-//                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 3}
             ]
         };
         Highcharts.chart('glimrGraphControllerContainer', graphData);
