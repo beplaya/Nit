@@ -39,6 +39,18 @@ app.controller('glimrController', ['$scope', 'glimrData',
                            function($scope, glimrData) {
     $scope.glimrData = glimrData;
 
+    $scope.floor = Math.floor;
+    $scope.round = Math.round;
+    $scope.toCivilianHour = function(militaryHour) {
+        if(militaryHour==0) {
+            return "12:00AM";
+        } else if(militaryHour<12) {
+            return militaryHour+":00AM";
+        } else {
+            return (militaryHour-12)+":00PM";
+        }
+    }
+
 }]);
 
 app.controller('socketController', ['$scope', 'socket', 'glimrData', 'userData', 'cardData',
@@ -101,6 +113,8 @@ app.factory('glimrData', function(){
     };
 
     glimrData.update = function(glimrResponse){
+        console.log("", glimrResponse.currentSprint.logsAnalysis.punchCard);
+
         glimrData.allSprints = glimrResponse.allSprints;
         glimrData.logsAnalysis = glimrResponse.logsAnalysis;
         glimrData.currentSprint = glimrResponse.currentSprint;
