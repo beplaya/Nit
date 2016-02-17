@@ -18,12 +18,14 @@
 <body>
 
 <div ng-controller="socketController">
+    <title>{{projectKey}} - GLIMR Team Page</title>
+
     <span class="info tiny" ng-class="{errorText: !connected, goodText: connected}">Connected: {{connected}}</span>
     &nbsp;&nbsp;
     <span class="info tiny" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
 <div>
-    <div class="row swimlane" ng-controller="statusController">
+    <div class="row swimlane" style="display:none;" ng-controller="statusController">
         <div class="summary" ng-repeat="C in cardData.data track by $index">
             {{C.key}}
             <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
@@ -46,12 +48,13 @@
         <div class="row">
             <table class=" table table-striped glimr-table ">
                 <thead>
-                <th ng-repeat="D in glimrData.currentSprint.logsAnalysis.punchCard.days track by $index"
+                <th align="center"
+                    ng-repeat="D in glimrData.currentSprint.logsAnalysis.punchCard.days track by $index"
                     style="width: 14%;">
 
-                    <span style="background: white; height: {{round(100*D.fractionOfCommits)}}px; width: 15px; display: inline-block;"></span>
+                    <span style="background: {{rgbFraction(D.fractionOfCommits)}}; height: {{round(100*D.fractionOfCommits)}}px; width: 100%; display: inline-block;"></span>
                     <br>
-                    {{D.name}}
+                    {{D.name.capitalizeFirstLetter()}}
                 </th>
                 </thead>
                 <tbody>
@@ -60,7 +63,7 @@
                         style="width: 14%;">
                         <div ng-repeat="HR in D.hourly track by $index">
                             <span style="width: 60px; display: inline-block;">{{toCivilianHour(HR.hour)}}</span>
-                            <span style="background: black; width: {{round(100*HR.fractionOfCommits)}}px; height: 10px; display: inline-block;"></span>
+                            <span style="background: {{rgbFraction(HR.fractionOfCommits)}}; width: {{round(100*HR.fractionOfCommits)}}px; height: 10px; display: inline-block;"></span>
                         </div>
                     </td>
                 </tr>
@@ -84,7 +87,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <div ng-repeat="S in glimrData.allSprints | reverse track by $index ">
+                <div ng-repeat="S in glimrData.allSprints track by $index ">
                     <b>{{ S.name }}</b>
                     <br>#Cards: {{S.logsAnalysis.cards.length}}
                     <span class="commit_small" style="background:#FF6922;"

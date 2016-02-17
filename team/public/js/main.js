@@ -1,5 +1,9 @@
 "use strict";
 
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 function pad(num, size) {
     var s = num+"";
     while (s.length < size) s = "0" + s;
@@ -41,13 +45,22 @@ app.controller('glimrController', ['$scope', 'glimrData',
 
     $scope.floor = Math.floor;
     $scope.round = Math.round;
+    $scope.rgbFraction = function(fraction) {
+        var r = 205-$scope.round(255*fraction);
+        var g = 205-$scope.round(255*fraction);
+        var b = 205-$scope.round(255*fraction);
+        return "rgb("+r+","+g+","+b+")";
+    };
+
     $scope.toCivilianHour = function(militaryHour) {
         if(militaryHour==0) {
             return "12:00AM";
         } else if(militaryHour<12) {
             return militaryHour+":00AM";
         } else {
-            return (militaryHour-12)+":00PM";
+            var h = (militaryHour-12);
+            h = h==0 ? 12 : h;
+            return h+":00PM";
         }
     }
 
@@ -70,6 +83,7 @@ app.controller('socketController', ['$scope', 'socket', 'glimrData', 'userData',
         $scope.connected = true;
         $scope.isLoggedIn = data.isLoggedIn;
         socket.projectKey = data.projectKey;
+        $scope.projectKey = data.projectKey;
         console.log($scope.loggedInStatus());
     });
 
@@ -113,8 +127,6 @@ app.factory('glimrData', function(){
     };
 
     glimrData.update = function(glimrResponse){
-        console.log("", glimrResponse.currentSprint.logsAnalysis.punchCard);
-
         glimrData.allSprints = glimrResponse.allSprints;
         glimrData.logsAnalysis = glimrResponse.logsAnalysis;
         glimrData.currentSprint = glimrResponse.currentSprint;
