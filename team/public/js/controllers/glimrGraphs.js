@@ -25,7 +25,7 @@ Math.average = function(data){
 angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope', 'glimrData',
                                  function($scope, glimrData) {
     $scope.glimrData = glimrData;
-    $scope.max = 15;
+    $scope.max = 16;
     $scope.glimrData.addListener(function(){
         var sprintNames = [];
         var numberOfCardsMergedArray = [];
@@ -35,7 +35,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         var AVG_numberOfCommitsPerCardArray = [];
         var STD_ABOVE_numberOfCommitsPerCardArray = [];
         var STD_BELOW_numberOfCommitsPerCardArray = [];
-        var complexityIndexArray = [];
+        var misestimationIndexArray = [];
         var numberOfAuthorsArray = [];
         var avgCommitFreqArray = [];
         var sprints = $scope.glimrData.allSprints.reverse();
@@ -49,7 +49,9 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 
 
             numberOfAuthorsArray.push(sprints[i].logsAnalysis.authors.length);
-            avgCommitFreqArray.push(1*sprints[i].logsAnalysis.logObjects[0].deltas.rollingAverageMs/60/60/1000);
+            var rollingAvg = 1*sprints[i].logsAnalysis.logObjects[0].deltas.rollingAverageMs;
+            var commitFreqCPHr = rollingAvg ==0 ? 0 :1/(rollingAvg/60/60/1000);
+            avgCommitFreqArray.push(commitFreqCPHr);
             var cardsWorked = sprints[i].logsAnalysis.cards;
             var numberOfCardsMerged = 0;
             for(var j=0; j<cardsWorked.length; j++) {
@@ -80,11 +82,11 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             var std = Math.standardDeviation(numberOfCommitsPerCardArray);
             STD_ABOVE_numberOfCommitsPerCardArray.push(avg+std);
             STD_BELOW_numberOfCommitsPerCardArray.push(avg-std);
-            complexityIndexArray.push(std !=0 ? ((cPc-avg) / std) : 0);
+            misestimationIndexArray.push(std !=0 ? ((cPc-avg) / std) : 0);
         }
-//        console.log(complexityIndexArray);
+
         //~
-//        var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 47];
+        var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, 0];
         //~
         var graphData = {
             title: {text:"GLIMR Sprint Report"},
@@ -109,7 +111,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                 ,{
                     gridLineWidth: 1,
                     title: {
-                        text: 'Average Commit Freq. Hrs.'
+                        text: 'Commits/Hour'
                     },
                     opposite : true
                 }
@@ -123,7 +125,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                 ,{
                     gridLineWidth: 1,
                     title: {
-                        text: 'Complexity Index'
+                        text: 'Misestimation Index'
                     },
                     opposite : true
                 }
@@ -134,27 +136,27 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 //                    },
 //                    opposite : true
 //                }
-//                ,{
-//                    gridLineWidth: 1,
-//                    title: {
-//                        text: '# of Story Points'
-//                    },
-//                    opposite : false
-//                }
+                ,{
+                    gridLineWidth: 1,
+                    title: {
+                        text: '# of Story Points'
+                    },
+                    opposite : false
+                }
 
             ],
             series: [
                 { data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000'}
                 ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0'}
-                ,{ data: avgCommitFreqArray, name:"Average Commit Freq. Hrs.", yAxis: 2, color: '#00f'}
+                ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f'}
                 ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6'}
                 ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888'}
                 ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#f00'}
                 ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#faa'}
-                ,{ data: complexityIndexArray, name:"Complexity Index", yAxis: 4, color: '#f0f'}
+                ,{ data: misestimationIndexArray, name:"Misestimation Index", yAxis: 4, color: '#f0f'}
 //                ,{ data: numberOfCardsWorkedArray, name:"Cards With Commits", yAxis: 0}
 //                ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 2}
-//                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 5, color: '#870'}
+                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 5, color: '#870'}
             ]
         };
         Highcharts.chart('glimrGraphControllerContainer', graphData);
