@@ -42,13 +42,14 @@ app.controller('statusController', ['$scope', 'userData', 'cardData',
 app.controller('glimrController', ['$scope', 'glimrData',
                            function($scope, glimrData) {
     $scope.glimrData = glimrData;
+    $scope.curentlySelectedSprintIndex = 0;
 
     $scope.floor = Math.floor;
     $scope.round = Math.round;
     $scope.rgbFraction = function(fraction) {
         var r = 205-$scope.round(255*fraction);
         var g = 205-$scope.round(255*fraction);
-        var b = 205-$scope.round(255*fraction);
+        var b = 500-$scope.round(255*fraction);
         return "rgb("+r+","+g+","+b+")";
     };
 
@@ -62,7 +63,21 @@ app.controller('glimrController', ['$scope', 'glimrData',
             h = h==0 ? 12 : h;
             return h+":00PM";
         }
-    }
+    };
+
+    $scope.getCurrentSelectedSprint = function() {
+        var css;
+        if($scope.glimrData.allSprints){
+            css = $scope.glimrData.allSprints[$scope.curentlySelectedSprintIndex];
+        } else {
+            css = $scope.glimrData.currentSprint;
+        }
+        if(css) {
+            css.formattedStartDate = formatDate(new Date(css.startDate), true);
+            css.formattedEndDate = formatDate(new Date(css.endDate), true);
+        }
+        return css;
+    };
 
 }]);
 
@@ -130,8 +145,7 @@ app.factory('glimrData', function(){
         glimrData.allSprints = glimrResponse.allSprints;
         glimrData.logsAnalysis = glimrResponse.logsAnalysis;
         glimrData.currentSprint = glimrResponse.currentSprint;
-        glimrData.currentSprint.formattedStartDate = formatDate(new Date(glimrResponse.currentSprint.startDate), true);
-        glimrData.currentSprint.formattedEndDate = formatDate(new Date(glimrResponse.currentSprint.endDate), true);
+
         glimrData.logsAnalysis.startDate = formatDate(new Date(glimrResponse.logsAnalysis.startDate));
         glimrData.logsAnalysis.endDate = formatDate(new Date(glimrResponse.logsAnalysis.endDate));
         glimrData.notifyListeners();
