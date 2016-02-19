@@ -1,7 +1,7 @@
 module.exports = function(app, inputReceiver){
     U = {app:app, inputReceiver:inputReceiver};
     U.glimr = require(__dirname + '/../node_modules/glimr/glimr.js')();
-    U.updatePeriodMin = 15;
+    U.updatePeriodMin = 45;
     U.init = function() {
         U.inputReceiver.cacheSaver.loadCache();
 
