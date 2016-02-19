@@ -127,18 +127,37 @@ module.exports = function(app, inputReceiver){
                 U.inputReceiver.cache.allSprints = allSprints;
                 U.inputReceiver.clearOldCardsAndUsers();
 
-
-
-                U.app.nerver.nira.getSprintStoryPointVelocity(U.app.nettings.projectKey, currentSprint.name, function(projectKey, sprintName, sprintStoryPointVelocity){
-                    U.inputReceiver.cache.currentSprint.sprintStoryPointVelocity=sprintStoryPointVelocity;
-
+                U.getSprintStoryPointVelocityForAllSprints(0, allSprints, function(allSprints){
+                    U.inputReceiver.cache.allSprints = allSprints;
                     U.updateGlimr();
                     U.inputReceiver.cacheSaver.saveCache();
-                    cb && cb();
                 });
+
+                U.app.nerver.nira.getSprintStoryPointVelocity(U.app.nettings.projectKey, currentSprint.name,
+                    function(projectKey, sprintName, sprintStoryPointVelocity){
+                        U.inputReceiver.cache.currentSprint.sprintStoryPointVelocity=sprintStoryPointVelocity;
+                        U.updateGlimr();
+                        U.inputReceiver.cacheSaver.saveCache();
+                        cb && cb();
+                    }
+                );
             });
         }
-    }
+    };
+
+    U.getSprintStoryPointVelocityForAllSprints = function(index, allSprints, cb){
+        U.app.nerver.nira.getSprintStoryPointVelocity(U.app.nettings.projectKey, allSprints[index].name,
+            function(projectKey, sprintName, sprintStoryPointVelocity){
+                allSprints[index].sprintStoryPointVelocity = sprintStoryPointVelocity;
+                index++;
+                if(index < allSprints.length){
+                    U.getSprintStoryPointVelocityForAllSprints(index, allSprints, cb);
+                } else {
+                    cb && cb(allSprints);
+                }
+            }
+        );
+    };
 
     function Runner() {
         this.isWin = /^win/.test(process.platform);

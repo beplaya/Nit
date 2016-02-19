@@ -35,8 +35,10 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
     }, 30000);
 
     $scope.max = 16;
+
     $scope.glimrData.addListener(function(){
         var sprintNames = [];
+        var velocityArray = [];
         var numberOfCardsMergedArray = [];
         var numberOfCardsWorkedArray = [];
         var numberOfCommitsArray = [];
@@ -50,6 +52,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         var sprints = $scope.glimrData.allSprints.reverse();
         for(var i=0; (i<sprints.length && i<$scope.max); i++) {
             sprintNames.push(sprints[i].name);
+            velocityArray.push(sprints[i].sprintStoryPointVelocity);
+
             numberOfCardsWorkedArray.push(sprints[i].logsAnalysis.cards.length);
             numberOfCommitsArray.push(sprints[i].logsAnalysis.logObjects.length);
             var cPc = sprints[i].logsAnalysis.cards.length!=0 ? (sprints[i].logsAnalysis.logObjects.length/sprints[i].logsAnalysis.cards.length) : 0;
@@ -84,8 +88,6 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         numberOfAuthorsArray.reverse();
         avgCommitFreqArray.reverse();
 
-
-
         for(var i=0; i<numberOfCommitsPerCardArray.length; i++) {
             var cPc = numberOfCommitsPerCardArray[i];
             var avg = Math.average(numberOfCommitsPerCardArray);
@@ -97,8 +99,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         }
 
         //~
-        var velocityArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, $scope.glimrData.currentSprint.sprintStoryPointVelocity];
-
+        //var velocityArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, $scope.glimrData.currentSprint.sprintStoryPointVelocity];
 
         $scope.sprintNames = sprintNames;
         $scope.series = [
