@@ -88,77 +88,131 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         //~
         var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, 0];
         //~
-        var graphData = {
-            title: {text:"GLIMR Sprint Report"},
-            xAxis: {
-                categories: sprintNames
-            },
-            yAxis: [
-                {
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# of Cards'
-                    },
-                    opposite : false
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# of Commits'
-                    },
-                    opposite : false
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: 'Commits/Hour'
-                    },
-                    opposite : true
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# Commits Per Card'
-                    },
-                    opposite : true
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: 'Misestimation Index'
-                    },
-                    opposite : true
-                }
+
+        //################################################################
+        //################################################################
+        //################################################################
+        //################################################################
+        //################################################################
+		var data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
+
+
+        var graphId = "glimrGraphControllerContainer";
+        // define dimensions of graph
+        var margins = [80, 80, 80, 80]; // margins
+        var width = 1000 - margins[1] - margins[3]; // width
+        var height = 400 - margins[0] - margins[2]; // height
+
+
+        // X scale will fit all values from data[] within pixels 0-w
+        var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
+        // Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
+        var y = d3.scale.linear().domain([0, 10]).range([height, 0]);
+        var line = d3.svg.line()
+            .x(function(d,i) {
+                return x(i);
+            })
+            .y(function(d) {
+                return y(d);
+            })
+            var graph = d3.select("#" + graphId).append("svg:svg")
+                  .attr("width", width + margins[1] + margins[3])
+                  .attr("height", height + margins[0] + margins[2])
+                .append("svg:g")
+                  .attr("transform", "translate(" + margins[3] + "," + margins[0] + ")");
+
+            var xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true);
+            graph.append("svg:g")
+                  .attr("class", "x axis")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(xAxis);
+
+
+            var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+            graph.append("svg:g")
+                  .attr("class", "y axis")
+                  .attr("transform", "translate(-25,0)")
+                  .call(yAxisLeft);
+
+            graph.append("svg:path").attr("d", line(data));
+
+
+    }, $scope);
+}]);
+
+
+//
+//
+//
+//        var graphData = {
+//            title: {text:"GLIMR Sprint Report"},
+//            xAxis: {
+//                categories: sprintNames
+//            },
+//            yAxis: [
+//                {
+//                    gridLineWidth: 1,
+//                    title: {
+//                        text: '# of Cards'
+//                    },
+//                    opposite : false
+//                }
 //                ,{
 //                    gridLineWidth: 1,
 //                    title: {
-//                        text: '# of Unique Authors'
+//                        text: '# of Commits'
+//                    },
+//                    opposite : false
+//                }
+//                ,{
+//                    gridLineWidth: 1,
+//                    title: {
+//                        text: 'Commits/Hour'
 //                    },
 //                    opposite : true
 //                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# of Story Points'
-                    },
-                    opposite : false
-                }
-
-            ],
-            series: [
-                { data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000'}
-                ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0'}
-                ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f'}
-                ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6'}
-                ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888'}
-                ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#f00'}
-                ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#faa'}
-                ,{ data: misestimationIndexArray, name:"Misestimation Index", yAxis: 4, color: '#f0f'}
-//                ,{ data: numberOfCardsWorkedArray, name:"Cards With Commits", yAxis: 0}
-//                ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 2}
-                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 5, color: '#870'}
-            ]
-        };
-        Highcharts.chart('glimrGraphControllerContainer', graphData);
-    }, $scope);
-}]);
+//                ,{
+//                    gridLineWidth: 1,
+//                    title: {
+//                        text: '# Commits Per Card'
+//                    },
+//                    opposite : true
+//                }
+//                ,{
+//                    gridLineWidth: 1,
+//                    title: {
+//                        text: 'Misestimation Index'
+//                    },
+//                    opposite : true
+//                }
+////                ,{
+////                    gridLineWidth: 1,
+////                    title: {
+////                        text: '# of Unique Authors'
+////                    },
+////                    opposite : true
+////                }
+//                ,{
+//                    gridLineWidth: 1,
+//                    title: {
+//                        text: '# of Story Points'
+//                    },
+//                    opposite : false
+//                }
+//
+//            ],
+//            series: [
+//                { data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000'}
+//                ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0'}
+//                ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f'}
+//                ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6'}
+//                ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888'}
+//                ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#f00'}
+//                ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#faa'}
+//                ,{ data: misestimationIndexArray, name:"Misestimation Index", yAxis: 4, color: '#f0f'}
+////                ,{ data: numberOfCardsWorkedArray, name:"Cards With Commits", yAxis: 0}
+////                ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 2}
+//                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 5, color: '#870'}
+//            ]
+//        };
+//        Highcharts.chart('glimrGraphControllerContainer', graphData);

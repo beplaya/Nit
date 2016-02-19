@@ -13,6 +13,8 @@
           href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet"
           href="css/main.css">
+    <link rel="stylesheet"
+          href="css/graph.css">
 
 </head>
 <body>
@@ -37,7 +39,7 @@
     </div>
 
     <div class="row swimlane" ng-controller="glimrGraphController">
-        <div id="glimrGraphControllerContainer">Loading chart...</div>
+        <div id="glimrGraphControllerContainer"></div>
     </div>
 
     <div class="row swimlane" ng-controller="glimrController">
@@ -138,7 +140,7 @@
 <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/socket.io-client/socket.io.js"></script>
-<script src="/bower_components/highcharts/highcharts.js"></script>
+<script src="bower_components/d3/d3.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/controllers/glimrGraphs.js"></script>
 </body>
