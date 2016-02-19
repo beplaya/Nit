@@ -25,6 +25,15 @@ Math.average = function(data){
 angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope', 'glimrData',
                                  function($scope, glimrData) {
     $scope.glimrData = glimrData;
+    $scope.seriesViewProfileIndex = 0;
+    $scope.interval = setInterval(function(){
+        $scope.seriesViewProfileIndex++;
+        if($scope.seriesViewProfileIndex >= $scope.seriesViewProfiles.length){
+            $scope.seriesViewProfileIndex = 0;
+        }
+        $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
+    }, 30000);
+
     $scope.max = 16;
     $scope.glimrData.addListener(function(){
         var sprintNames = [];
@@ -75,6 +84,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         numberOfAuthorsArray.reverse();
         avgCommitFreqArray.reverse();
 
+
+
         for(var i=0; i<numberOfCommitsPerCardArray.length; i++) {
             var cPc = numberOfCommitsPerCardArray[i];
             var avg = Math.average(numberOfCommitsPerCardArray);
@@ -86,79 +97,116 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         }
 
         //~
-        var velociyArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, 0];
-        //~
-        var graphData = {
-            title: {text:"GLIMR Sprint Report"},
-            xAxis: {
-                categories: sprintNames
-            },
-            yAxis: [
-                {
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# of Cards'
-                    },
-                    opposite : false
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# of Commits'
-                    },
-                    opposite : false
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: 'Commits/Hour'
-                    },
-                    opposite : true
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# Commits Per Card'
-                    },
-                    opposite : true
-                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: 'Misestimation Index'
-                    },
-                    opposite : true
-                }
-//                ,{
-//                    gridLineWidth: 1,
-//                    title: {
-//                        text: '# of Unique Authors'
-//                    },
-//                    opposite : true
-//                }
-                ,{
-                    gridLineWidth: 1,
-                    title: {
-                        text: '# of Story Points'
-                    },
-                    opposite : false
-                }
+        var velocityArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, 0];
 
-            ],
-            series: [
-                { data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000'}
-                ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0'}
-                ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f'}
-                ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6'}
-                ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888'}
-                ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#f00'}
-                ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#faa'}
-                ,{ data: misestimationIndexArray, name:"Misestimation Index", yAxis: 4, color: '#f0f'}
-//                ,{ data: numberOfCardsWorkedArray, name:"Cards With Commits", yAxis: 0}
-//                ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 2}
-                ,{ data: velociyArray, name:"Story Point Velociy", yAxis: 5, color: '#870'}
-            ]
-        };
-        Highcharts.chart('glimrGraphControllerContainer', graphData);
+
+        $scope.sprintNames = sprintNames;
+        $scope.series = [
+                                    { data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000', visible:true}
+                                    ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0', visible:true}
+                                    ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f', visible:true}
+                                    ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6', visible:false}
+                                    ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888', visible:false}
+                                    ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#AAA', visible:false}
+                                    ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#DDD', visible:false}
+                                    ,{ data: misestimationIndexArray, name:"Misestimation Index", yAxis: 4, color: '#f0f', visible:true}
+                                    ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 5, color: '#f81', visible:false}
+                                    ,{ data: velocityArray, name:"Story Point Velocity", yAxis: 6, color: '#870', visible:true}
+                                ];
+        $scope.refreshChart();
     }, $scope);
+
+    $scope.seriesViewProfiles = [
+        ["Cards Merged", "Story Point Velocity", "Misestimation Index"],
+        ["Commits Per Card", "Story Point Velocity", "Commits"],
+        ["Commits Per Card", "Avg. Commits Per Card", "+1std Commits Per Card", "-1std Commits Per Card", "Misestimation Index"]
+        ["Cards Merged", "Average Commit Freq.", "Unique Authors"],
+        ["Cards Merged", "Commits", "Unique Authors"],
+
+        ];
+    $scope.applySeriesViewProfile = function(profileArray) {
+        for(var i=0; i<$scope.series.length; i++) {
+            $scope.series[i].visible = false;
+        }
+        for(var i=0; i<profileArray.length; i++) {
+            $scope.setSeriesVisibility(profileArray[i], true);
+        }
+        $scope.refreshChart();
+    };
+
+    $scope.setSeriesVisibility = function(seriesName, visible) {
+        for(var i=0; i<$scope.series.length; i++) {
+            if($scope.series[i].name == seriesName){
+                $scope.series[i].visible = visible;
+                break;
+            }
+        }
+    };
+
+    $scope.refreshChart = function(){
+
+
+            //~
+            var graphData = {
+                title: {text:"GLIMR Sprint Report"},
+                xAxis: {
+                    categories: $scope.sprintNames
+                },
+                yAxis: [
+                    {
+                        gridLineWidth: 1,
+                        title: {
+                            text: '# of Cards'
+                        },
+                        opposite : false
+                    }
+                    ,{
+                        gridLineWidth: 1,
+                        title: {
+                            text: '# of Commits'
+                        },
+                        opposite : false
+                    }
+                    ,{
+                        gridLineWidth: 1,
+                        title: {
+                            text: 'Commits/Hour'
+                        },
+                        opposite : true
+                    }
+                    ,{
+                        gridLineWidth: 1,
+                        title: {
+                            text: '# Commits Per Card'
+                        },
+                        opposite : true
+                    }
+                    ,{
+                        gridLineWidth: 1,
+                        title: {
+                            text: 'Misestimation Index'
+                        },
+                        opposite : true
+                    }
+                    ,{
+                        gridLineWidth: 1,
+                        title: {
+                            text: '# of Unique Authors'
+                        },
+                        opposite : true
+                    }
+                    ,{
+                        gridLineWidth: 1,
+                        title: {
+                            text: '# of Story Points'
+                        },
+                        opposite : false
+                    }
+
+                ],
+                series: $scope.series
+            };
+            Highcharts.chart('glimrGraphControllerContainer', graphData);
+    };
+
 }]);
