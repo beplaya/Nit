@@ -97,7 +97,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         }
 
         //~
-        var velocityArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, 0];
+        var velocityArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, $scope.glimrData.currentSprint.sprintStoryPointVelocity];
 
 
         $scope.sprintNames = sprintNames;

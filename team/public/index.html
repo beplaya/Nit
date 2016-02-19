@@ -41,14 +41,20 @@
     </div>
 
     <div class="row swimlane" ng-controller="glimrController">
-        <div>
-            <select name="sprintSelection" id="sprintSelection" ng-model="curentlySelectedSprintIndex">
-                <option ng-repeat="S in glimrData.allSprints track by $index" value="{{$index}}">{{S.name}}</option>
-            </select>
-        </div>
+        <h2>
+            Current Sprint:
+            <span style="color:#3333ff;">"{{glimrData.currentSprint.name}}"</span>
+            <span style="margin-left:50px;">Story Point Velocity:</span>
+            <span style="color:#FF4111;">{{glimrData.currentSprint.sprintStoryPointVelocity}}</span>
+        </h2>
+        <hr>
         <h3 style="margin: 10px;">{{getCurrentSelectedSprint().name }}
             {{getCurrentSelectedSprint().formattedStartDate}} -
-            {{getCurrentSelectedSprint().formattedEndDate}}</h3>
+            {{getCurrentSelectedSprint().formattedEndDate}} &nbsp;
+            <select name="sprintSelection" id="sprintSelection"
+                    ng-model="curentlySelectedSprintIndex">
+                <option ng-repeat="S in glimrData.allSprints track by $index" value="{{$index}}">{{S.name}}</option>
+            </select></h3>
         <h4>GLIMR Commit Analysis</h4>
         <div class="row">
             <table class=" table table-striped glimr-table ">

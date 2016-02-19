@@ -126,10 +126,16 @@ module.exports = function(app, inputReceiver){
                 U.inputReceiver.cache.currentSprint = currentSprint;
                 U.inputReceiver.cache.allSprints = allSprints;
                 U.inputReceiver.clearOldCardsAndUsers();
-                U.updateGlimr();
-                U.inputReceiver.cacheSaver.saveCache();
-                cb && cb();
 
+
+
+                U.app.nerver.nira.getSprintStoryPointVelocity(U.app.nettings.projectKey, currentSprint.name, function(projectKey, sprintName, sprintStoryPointVelocity){
+                    U.inputReceiver.cache.currentSprint.sprintStoryPointVelocity=sprintStoryPointVelocity;
+
+                    U.updateGlimr();
+                    U.inputReceiver.cacheSaver.saveCache();
+                    cb && cb();
+                });
             });
         }
     }
