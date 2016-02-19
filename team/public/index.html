@@ -37,7 +37,7 @@
     </div>
 
     <div class="row swimlane" ng-controller="glimrGraphController">
-        <div google-chart chart="chartObject" style="{{cssStyle}}"></div>
+        <div id="glimrGraphControllerContainer">Loading chart...</div>
     </div>
 
     <div class="row swimlane" ng-controller="glimrController">
@@ -138,7 +138,7 @@
 <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/socket.io-client/socket.io.js"></script>
-<script src="bower_components/angular-google-chart/ng-google-chart.min.js"></script>
+<script src="/bower_components/highcharts/highcharts.js"></script>
 <script src="js/main.js"></script>
 <script src="js/controllers/glimrGraphs.js"></script>
 </body>
