@@ -135,62 +135,48 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         //################################################################
         //################################################################
 
+        var chartData = {cols:[], rows: []};
+        chartData.cols = [
+             {
+               "id": "sprint",
+               "label": "Sprint",
+               "type": "string",
+               "p": {}
+             },
+             {
+               "id": "velocity",
+               "label": "Velocity",
+               "type": "number",
+               "p": {}
+             }
+        ];
 
+        for(var i=0; i<sprintNames.length; i++) {
+            var rowObj = {c:[]};
+            rowObj.c.push({v:sprintNames[i], f:sprintNames[i]});
+            rowObj.c.push({v:velocityArray[i], f:(velocityArray[i] + " Story Points")});
+            rowObj.c.push(null);
+            chartData.rows.push(rowObj);
+        }
 
         $scope.chartObject = {
           "type": "LineChart",
-          "displayed": false,
-          "data": {
-            "cols": [
-              {
-                "id": "sprint",
-                "label": "Sprint",
-                "type": "string",
-                "p": {}
-              },
-              {
-                "id": "velocity",
-                "label": "Velocity",
-                "type": "number",
-                "p": {}
-              }
-            ],
-            "rows": [
-              {
-                "c": [
-                  {
-                    "v": sprintNames[0]
-                  },
-                  {
-                    "v": velocityArray[0],
-                  }
-                ]
-              },
-              {
-                "c": [
-                  {
-                    "v": sprintNames[1]
-                  },
-                  {
-                    "v": velocityArray[1]
-                  }
-                ]
-              }
-            ]
-          },
+          "displayed": true,
+          "data": chartData,
           "options": {
-            "title": "Sales per month",
+            "title": "",
             "isStacked": "true",
             "fill": 20,
+            "height" : 500,
             "displayExactValues": true,
             "vAxis": {
-              "title": "Sales unit",
+              "title": "",
               "gridlines": {
-                "count": 10
+                "count": 5
               }
             },
             "hAxis": {
-              "title": "Date"
+              "title": ""
             }
           },
           "formatters": {}
