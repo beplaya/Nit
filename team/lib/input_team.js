@@ -1,4 +1,5 @@
 module.exports = function(app){
+    var express = require('express');
     var bodyParser = require('body-parser');
     app.use( bodyParser.json() );       // to support JSON-encoded bodies
     //
@@ -14,7 +15,7 @@ module.exports = function(app){
             var whichData = req.params.which_data.toLowerCase();
             var issueKey = req.params.issue_key;
             var tool = req.params.tool.toLowerCase();
-            //console.log("<",projectKey, issueKey, whichData, tool, fromUpdate, ">");
+            console.log("\n<",projectKey, issueKey, whichData, tool, fromUpdate, ">\n");
             if(!app.projectData[projectKey])
             {
                 app.projectData[projectKey] = {};
@@ -23,6 +24,7 @@ module.exports = function(app){
                 if(app.nerver.isLoggedIn){
 
                     app.nerver.nira.getIssue(issueKey, function(issueData){
+                        res.status(200).send(issueData);
                         if(issueData.errorMessages && issueData.errorMessages[0] == "Issue Does Not Exist") {
                         } else {
                             issueData.url = app.nerver.nira.baseURL + issueKey;
@@ -30,15 +32,14 @@ module.exports = function(app){
                             app.projectData[projectKey]["issue"] = issueData;
                             app.inputListener.onData(issueData, projectKey, fromUpdate, whichData);
                         }
-                        res.status(200).send(issueData);
                     });
                 } else {
                     res.status(200).send({});
                 }
             } else {
+               res.status(200).send("{}");
                app.projectData[projectKey][whichData] = data;
                app.inputListener.onData(data, projectKey, fromUpdate, whichData);
-               res.status(200).send("{}");
             }
         } catch(e) {
             console.log("503", e);

@@ -7,7 +7,6 @@ module.exports = function(nerver){
     var inputReceiver = require(__dirname + '/lib/input_receiver.js')(app.nettings);
     var port = app.nettings.nerver.team.port;
     app.use(express.static(__dirname + '/public'));
-
     app.get('/test', function(req, res){
         res.send('team works');
     });
@@ -30,13 +29,18 @@ module.exports = function(nerver){
         }
 
         // sending a message back to the client
-        socket.emit('connected', { serverType: 'team', message: 'connected', isLoggedIn: nerver.isLoggedIn, projectKey: app.nettings.projectKey});
+        socket.emit('connected', { serverType: 'team', message: 'connected',
+            isLoggedIn: nerver.isLoggedIn, projectKey: app.nettings.projectKey});
 
+        if(app.update) {
+            app.update.onConnectedSocket(socket);
+        }
         socket.lastCheckSum = 0;
     });
 
     app.inputListener = {
         onData : function(data, projectKey, fromUpdate, whichData){
+            console.log(Math.random(), projectKey, fromUpdate ? 'fromUpdate' : 'other', whichData);
             var eventKey = fromUpdate ? ("update_"+whichData) : 'update_pending';
             if(projectKey===app.nettings.projectKey){
                 inputReceiver.handleEvent(eventKey, data);
@@ -55,6 +59,7 @@ module.exports = function(nerver){
     ///
     server.listen(port);
     console.log('listening on ' + port);
-    require(__dirname + "/lib/update.js")(app, inputReceiver).init();
+    app.update = require(__dirname + "/lib/update.js")(app, inputReceiver);
+    app.update.init();
 }
 

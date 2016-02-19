@@ -2,7 +2,7 @@
   "dependencies": {
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
-    "glimr": "^1.0.23",
+    "glimr": "^1.0.24",
     "prompt": "^0.3.0",
     "socket.io": "^1.4.5",
     "socket.io-client": "^1.4.5"
