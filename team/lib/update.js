@@ -5,24 +5,75 @@ module.exports = function(app, inputReceiver){
     U.init = function() {
         U.inputReceiver.cacheSaver.loadCache();
 
-        U.socketInterval = setInterval(U.broadcast, 45000);
-        U.updateInterval = setInterval(function(){
-            U.updateDevelop(U.updateGlimr);
-            U.getCurrentSprint();
+        U.socketInterval = setInterval(function(){U.broadcastCardsAndUsers();}, 60000);
+        setInterval(function(){
+            U.inputReceiver.cacheSaver.saveCache();
+            U.getSprintData(function(){
+                U.broadcastCardsAndUsers();
+                U.updateDevelop(function(){
+                    U.updateGlimr(function(){
+                        U.broadcastGlimr();
+                        U.inputReceiver.cacheSaver.saveCache();
+                    });
+                });
+            });
         }, U.updatePeriodMin * 60 * 1000);
 
-        U.broadcast();
+        U.broadcastCardsAndUsers();
         U.updateDevelop();
-        U.getCurrentSprint(U.broadcast);
+        U.getSprintData(function(){
+            U.inputReceiver.cacheSaver.saveCache();
+            U.broadcastCardsAndUsers();
+            U.updateDevelop(function(){
+                U.updateGlimr(function(){
+                    U.inputReceiver.cacheSaver.saveCache();
+                    U.broadcastGlimr();
+                });
+            });
+        });
     }
 
-    U.broadcast = function() {
+    U.onConnectedSocket = function(socket) {
+        U.emit(socket, "server_cache_cards_and_users", U.getCardsAndUsersData());
+        U.emit(socket, "server_cache_glimr", U.getGlimrData());
+    };
+
+    U.getCardsAndUsersData = function() {
+        var dataToSend = {};
+        try {
+            dataToSend.cards = U.inputReceiver.cache.cards;
+            dataToSend.users = U.inputReceiver.cache.users;
+        } catch(e){ dataToSend = {}; }
+        return dataToSend;
+    };
+
+    U.getGlimrData = function() {
+        var dataToSend = {};
+        try {
+            dataToSend.logsAnalysis = U.inputReceiver.cache.logsAnalysis;
+            dataToSend.currentSprint = U.inputReceiver.cache.currentSprint;
+            dataToSend.allSprints = U.inputReceiver.cache.allSprints;
+        } catch(e){ dataToSend = {}; }
+        return dataToSend;
+    };
+
+    U.broadcastCardsAndUsers = function() {
         for(var i=0; i<U.app.sockets.length; i++) {
-            try{
-                U.app.sockets[i].emit("server_cache", U.inputReceiver.cache);
-            } catch(e){
-                console.log(e);
-            }
+            U.emit(U.app.sockets[i], "server_cache_cards_and_users", U.getCardsAndUsersData());
+        }
+    };
+
+    U.broadcastGlimr = function() {
+        for(var i=0; i<U.app.sockets.length; i++) {
+            U.emit(U.app.sockets[i], "server_cache_glimr", U.getGlimrData());
+        }
+    };
+
+    U.emit = function(socket, eventName, data) {
+        try{
+            socket.emit(eventName, data);
+        } catch(e){
+            console.log(e);
         }
     };
 
@@ -39,9 +90,9 @@ module.exports = function(app, inputReceiver){
             process.stdout.write(out);
             cb && cb();
         });
-    }
+    };
 
-    U.updateGlimr = function(){
+    U.updateGlimr = function(cb){
         new Runner().run("git", ["log"], function(logs){
             var endDate = new Date();
             var startDate = new Date(endDate.getTime()-(7*24*60*60*1000));//7 days trailing
@@ -49,13 +100,13 @@ module.exports = function(app, inputReceiver){
                 startDate = new Date(U.inputReceiver.cache.currentSprint.startDate);
                 endDate = new Date(U.inputReceiver.cache.currentSprint.endDate);
             }
-            var logsAnalysis =
             U.inputReceiver.cache.currentSprint.logsAnalysis = U.glimr.analyzeLogs(logs,
                 U.app.nettings.projectKey, { startDate : startDate, endDate : endDate});
             for(var i=0; i<U.inputReceiver.cache.allSprints.length; i++) {
                 U.inputReceiver.cache.allSprints[i].logsAnalysis = U.analyzeSprint(logs,
                         U.inputReceiver.cache.allSprints[i]);
             }
+            cb && cb();
             U.inputReceiver.cacheSaver.saveCache();
         });
     }
@@ -67,7 +118,7 @@ module.exports = function(app, inputReceiver){
             { startDate : startDate, endDate : endDate});
     };
 
-    U.getCurrentSprint = function(cb){
+    U.getSprintData = function(cb){
         if(U.app.nerver.isLoggedIn) {
             console.log("Getting current sprint (can take a couple miunutes) ...");
             U.app.nerver.nira.getCurrentSprintForCurrentProject(function(allSprints, currentSprint){

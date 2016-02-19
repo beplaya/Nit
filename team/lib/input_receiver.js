@@ -227,11 +227,11 @@ module.exports = function(nettings){
     });
 
     INREC.clearOldCardsAndUsers = function(){
-        var endTime = new Date().getTime();
-        var startTime = endTime - (7*24*60*60*1000);
+        var endTime = new Date().getTime() + (7*24*60*60*1000);
+        var startTime = endTime - (14*24*60*60*1000);
         if(INREC.cache.currentSprint){
-            var startTime = new Date(INREC.cache.currentSprint.startDate).getTime();
-            var endTime = new Date(INREC.cache.currentSprint.endDate).getTime();
+            startTime = new Date(INREC.cache.currentSprint.startDate).getTime();
+            endTime = new Date(INREC.cache.currentSprint.endDate).getTime();
         }
 
         var newUserList = [];
@@ -254,7 +254,7 @@ module.exports = function(nettings){
         INREC.cache.users = newUserList;
 
         var newCardsList = [];
-        for(var i=0; i<INREC.cache.users.length; i++) {
+        for(var i=0; i<INREC.cache.cards.length; i++) {
             var card = INREC.cache.cards[i];
             var nerverCreateTime = (card.nerver && card.nerver.createTime) ? card.nerver.createTime : 0;
             if(nerverCreateTime >=startTime && nerverCreateTime<=endTime) {
