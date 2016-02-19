@@ -13,6 +13,6 @@
     "socket.io": "~1.4.5",
     "socket.io-client": "~1.4.5",
     "angular-sanitize": "~1.4.9",
-    "d3": "^3.5.16"
+    "angular-google-chart": "0.1.0"
   }
 }

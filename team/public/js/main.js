@@ -30,7 +30,7 @@ function formatDate(date, noMinutes){
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-var app = angular.module('nitForGitTeamApp', ['ngSanitize']);
+var app = angular.module('nitForGitTeamApp', ['ngSanitize', 'googlechart']);
 
 
 app.controller('statusController', ['$scope', 'userData', 'cardData',
