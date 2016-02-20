@@ -103,17 +103,17 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 
         $scope.sprintNames = sprintNames;
         $scope.series = [
-                                    { data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000', visible:true}
-                                    ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0', visible:true}
-                                    ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f', visible:true}
-                                    ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6', visible:false}
-                                    ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888', visible:false}
-                                    ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#AAA', visible:false}
-                                    ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#DDD', visible:false}
-                                    ,{ data: misestimationIndexArray, name:"Misestimation Index", yAxis: 4, color: '#f0f', visible:true}
-                                    ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 5, color: '#f81', visible:false}
-                                    ,{ data: velocityArray, name:"Story Point Velocity", yAxis: 6, color: '#870', visible:true}
-                                ];
+            { data: misestimationIndexArray, name:"Misestimation Index", type: "column", yAxis: 4, color: '#CCC', visible:true}
+            ,{ data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000', visible:true}
+            ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0', visible:true}
+            ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f', visible:true}
+            ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6', visible:false}
+            ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888', visible:false}
+            ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#AAA', visible:false}
+            ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#DDD', visible:false}
+            ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 5, color: '#f81', visible:false}
+            ,{ data: velocityArray, name:"Story Point Velocity", yAxis: 6, color: '#870', visible:true}
+        ];
         $scope.refreshChart();
     }, $scope);
 
@@ -145,9 +145,6 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
     };
 
     $scope.refreshChart = function(){
-
-
-            //~
             var graphData = {
                 title: {text:"GLIMR Sprint Report"},
                 xAxis: {
@@ -184,6 +181,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                     }
                     ,{
                         gridLineWidth: 1,
+
                         title: {
                             text: 'Misestimation Index'
                         },
