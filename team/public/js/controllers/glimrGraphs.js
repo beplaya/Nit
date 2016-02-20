@@ -101,20 +101,24 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         //~
         //var velocityArray = [10, 50, 39, 56, 66, 42, 33, 15, 63, 32, 40, 26, 64, 24, 42, $scope.glimrData.currentSprint.sprintStoryPointVelocity];
 
+        var noMarker = {
+            enabled : false
+        };
         $scope.sprintNames = sprintNames;
         $scope.series = [
-            { data: misestimationIndexArray, name:"Misestimation Index", type: "column", yAxis: 4, color: '#CCC', visible:true}
-            ,{ data: numberOfCardsMergedArray, name:"Cards Merged", yAxis: 0, color: '#000', visible:true}
-            ,{ data: numberOfCommitsArray, name:"Commits", yAxis: 1, color: '#0f0', visible:true}
-            ,{ data: avgCommitFreqArray, name:"Average Commit Freq.", yAxis: 2, color: '#00f', visible:true}
-            ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card", yAxis: 3, color: '#00e6e6', visible:false}
-            ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card", yAxis: 3, color: '#008888', visible:false}
-            ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card", yAxis: 3, color: '#AAA', visible:false}
-            ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card", yAxis: 3, color: '#DDD', visible:false}
-            ,{ data: numberOfAuthorsArray, name:"Unique Authors", yAxis: 5, color: '#f81', visible:false}
-            ,{ data: velocityArray, name:"Story Point Velocity", yAxis: 6, color: '#870', visible:true}
+            { data: misestimationIndexArray, name:"Misestimation Index",                    type: "column", yAxis: 4, color: '#CCCCCC', marker : noMarker}
+            ,{ data: numberOfCardsMergedArray, name:"Cards Merged",                         type: "spline", yAxis: 0, color: '#000000', marker : noMarker}
+            ,{ data: numberOfCommitsArray, name:"Commits",                                  type: "spline", yAxis: 1, color: '#00ff00', marker : noMarker}
+            ,{ data: avgCommitFreqArray, name:"Average Commit Freq.",                       type: "spline", yAxis: 2, color: '#0000ff', marker : noMarker}
+            ,{ data: numberOfCommitsPerCardArray, name:"Commits Per Card",                  type: "spline", yAxis: 3, color: '#00e6e6', marker : noMarker}
+            ,{ data: AVG_numberOfCommitsPerCardArray, name:"Avg. Commits Per Card",         type: "spline", yAxis: 3, color: '#008888', marker : noMarker}
+            ,{ data: STD_ABOVE_numberOfCommitsPerCardArray, name:"+1std Commits Per Card",  type: "spline", yAxis: 3, color: '#AAAAAA', marker : noMarker}
+            ,{ data: STD_BELOW_numberOfCommitsPerCardArray, name:"-1std Commits Per Card",  type: "spline", yAxis: 3, color: '#DDDDDD', marker : noMarker}
+            ,{ data: numberOfAuthorsArray, name:"Unique Authors",                           type: "spline", yAxis: 5, color: '#ff8811', marker : noMarker}
+            ,{ data: velocityArray, name:"Story Point Velocity",                            type: "spline", yAxis: 6, color: '#FF4111', marker : noMarker}
         ];
-        $scope.refreshChart();
+        $scope.setVisibleAllSeries(false);
+        $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
     }, $scope);
 
     $scope.seriesViewProfiles = [
@@ -123,16 +127,20 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         ["Commits Per Card", "Avg. Commits Per Card", "+1std Commits Per Card", "-1std Commits Per Card", "Misestimation Index"]
         ["Cards Merged", "Average Commit Freq.", "Unique Authors"],
         ["Cards Merged", "Commits", "Unique Authors"],
-
         ];
+
     $scope.applySeriesViewProfile = function(profileArray) {
-        for(var i=0; i<$scope.series.length; i++) {
-            $scope.series[i].visible = false;
-        }
+        $scope.setVisibleAllSeries(false);
         for(var i=0; i<profileArray.length; i++) {
             $scope.setSeriesVisibility(profileArray[i], true);
         }
         $scope.refreshChart();
+    };
+
+    $scope.setVisibleAllSeries = function(visible) {
+        for(var i=0; i<$scope.series.length; i++) {
+            $scope.series[i].visible = visible;
+        }
     };
 
     $scope.setSeriesVisibility = function(seriesName, visible) {
