@@ -119,7 +119,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             overallAVG_StoryPointsPerCardArray.push(avg);
             overallSTD_above_StoryPointsPerCardArray.push(avg+std);
             overallSTD_below_StoryPointsPerCardArray.push(avg-std);
-            storyPoints_misestimation_PerCardArray.push(mesp);
+            storyPoints_misestimation_PerCardArray.push(-mesp);
         }
 
         var cpcStats = {
@@ -133,7 +133,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             AVG_numberOfCommitsPerCardArray.push(avg);
             STD_ABOVE_numberOfCommitsPerCardArray.push(avg+std);
             STD_BELOW_numberOfCommitsPerCardArray.push(avg-std);
-            misestimationIndexArray.push(std !=0 ? ((cPc-avg) / std) : 0);
+            misestimationIndexArray.push(-(std !=0 ? ((cPc-avg) / std) : 0));
         }
 
         for(var i=0; i<misestimationIndexArray.length; i++) {
@@ -169,7 +169,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 
     $scope.seriesViewProfiles = [
         ["Story Point Velocity", "Cards Merged",
-            "Combined Misestimation Index", "Commits"],
+            "Misestimation Index", "Commits"],
         ["Story Point Velocity", "Avg. Story Points Per Card",
                 "Overall Avg. Story Points Per Card", "Story Points Misestimation Index"],
         ["Story Point Velocity", "Cards Merged", "Story Points Misestimation", "Misestimation Index"],
