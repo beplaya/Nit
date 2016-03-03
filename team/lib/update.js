@@ -167,7 +167,7 @@ module.exports = function(app, inputReceiver){
             var startDate = new Date(new Date().getTime()-6*4*7*24*60*60*1000);//TODO use start of logs
             var endDate = new Date(new Date().getTime() + sprintLengthMs);
             var numberOfSprints = Math.floor((endDate.getTime()-startDate.getTime()) / sprintLengthMs);
-            for(var sprintNumber=0; sprintNumber < numberOfSprints; sprintNumber) {
+            for(var sprintNumber=0; sprintNumber < numberOfSprints; sprintNumber++) {
                 var startMs = startDate.getTime() + (sprintNumber * sprintLengthMs);
                 var endMs = startMs + ((1 + sprintNumber) * sprintLengthMs);
                 var isCurrent = (sprintNumber == (numberOfSprints-1));

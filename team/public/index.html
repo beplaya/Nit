@@ -44,7 +44,7 @@
         <h2>
             Current Sprint:
             <span style="color:#3333ff;">"{{glimrData.currentSprint.name}}"</span>
-            <span style="margin-left:50px;">Story Point Velocity:</span>
+            <span style="margin-left:50px;" ng-hide="!glimrData.jiraIntegrated" >Story Point Velocity:</span>
             <span style="color:#FF4111;">{{glimrData.currentSprint.sprintStoryPointVelocity}}</span>
         </h2>
         <hr>
