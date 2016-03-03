@@ -50,7 +50,7 @@ module.exports = function(app, inputReceiver){
     U.getGlimrData = function() {
         var dataToSend = {};
         try {
-            dataToSend.logsAnalysis = U.inputReceiver.cache.logsAnalysis;
+            dataToSend.jiraIntegrated = U.inputReceiver.cache.jiraIntegrated;
             dataToSend.currentSprint = U.inputReceiver.cache.currentSprint;
             dataToSend.allSprints = U.inputReceiver.cache.allSprints;
         } catch(e){ dataToSend = {}; }
@@ -121,6 +121,7 @@ module.exports = function(app, inputReceiver){
     U.getSprintData = function(cb){
         if(U.app.nerver.isLoggedIn) {
             console.log("Getting current sprint (can take a couple miunutes) ...");
+            U.inputReceiver.cache.jiraIntegrated = true;
             U.app.nerver.nira.getCurrentSprintForCurrentProject(function(allSprints, currentSprint){
                 console.log((currentSprint ? "Found current Sprint!" : "No current sprint found!"));
                 U.inputReceiver.cache.currentSprint = currentSprint;
@@ -159,14 +160,14 @@ module.exports = function(app, inputReceiver){
             //"daysRemaining": 0,
             //"isCurrent": false,
             //"sprintStoryPointVelocity" : 0
-
+            U.inputReceiver.cache.jiraIntegrated = false;
             var allSprints = [];
             var currentSprint;
             var sprintLengthMs = 2*7*24*60*60*1000;
             var startDate = new Date(new Date().getTime()-6*4*7*24*60*60*1000);//TODO use start of logs
             var endDate = new Date(new Date().getTime() + sprintLengthMs);
             var numberOfSprints = Math.floor((endDate.getTime()-startDate.getTime()) / sprintLengthMs);
-            for(var sprintNumber=(numberOfSprints-1); sprintNumber>=0; sprintNumber--) {
+            for(var sprintNumber=0; sprintNumber < numberOfSprints; sprintNumber) {
                 var startMs = startDate.getTime() + (sprintNumber * sprintLengthMs);
                 var endMs = startMs + ((1 + sprintNumber) * sprintLengthMs);
                 var isCurrent = (sprintNumber == (numberOfSprints-1));
@@ -177,7 +178,7 @@ module.exports = function(app, inputReceiver){
                     endDate: new Date(endMs),
                     completeDate: new Date(endMs),
                     isCurrent: isCurrent,
-                    sprintStoryPointVelocity : 0
+                    sprintStoryPointVelocity : undefined
                 };
                 allSprints.push(sprint);
                 if(isCurrent) {
