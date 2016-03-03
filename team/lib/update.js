@@ -1,5 +1,7 @@
 module.exports = function(app, inputReceiver){
     U = {app:app, inputReceiver:inputReceiver};
+    U.PSUEDO_SPRINT_LENGTH_DEFAULT = 2*7*24*60*60*1000;//2 weeks
+    U.PSUEDO_HISTORY_LENGTH_DEFAULT = 6*4*7*24*60*60*1000;//~ 6 months
     U.glimr = require(__dirname + '/../node_modules/glimr/glimr.js')();
     U.updatePeriodMin = 45;
     U.init = function() {
@@ -163,8 +165,8 @@ module.exports = function(app, inputReceiver){
             U.inputReceiver.cache.jiraIntegrated = false;
             var allSprints = [];
             var currentSprint;
-            var sprintLengthMs = 2*7*24*60*60*1000;
-            var startDate = new Date(new Date().getTime()-6*4*7*24*60*60*1000);//TODO use start of logs
+            var sprintLengthMs = U.PSUEDO_SPRINT_LENGTH_DEFAULT;
+            var startDate = new Date(new Date().getTime()-U.PSUEDO_HISTORY_LENGTH_DEFAULT);//TODO use start of logs
             var endDate = new Date(new Date().getTime() + sprintLengthMs);
             var numberOfSprints = Math.floor((endDate.getTime()-startDate.getTime()) / sprintLengthMs);
             for(var sprintNumber=0; sprintNumber < numberOfSprints; sprintNumber++) {
