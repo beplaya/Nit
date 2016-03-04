@@ -142,12 +142,9 @@ app.factory('glimrData', function(){
     };
 
     glimrData.update = function(glimrResponse){
+        glimrData.jiraIntegrated = glimrResponse.jiraIntegrated;
         glimrData.allSprints = glimrResponse.allSprints;
-        glimrData.logsAnalysis = glimrResponse.logsAnalysis;
         glimrData.currentSprint = glimrResponse.currentSprint;
-
-        glimrData.logsAnalysis.startDate = formatDate(new Date(glimrResponse.logsAnalysis.startDate));
-        glimrData.logsAnalysis.endDate = formatDate(new Date(glimrResponse.logsAnalysis.endDate));
         glimrData.notifyListeners();
     };
 
