@@ -37,6 +37,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
     $scope.max = 16;
 
     $scope.glimrData.addListener(function(){
+
         var sprints = $scope.glimrData.allSprints.reverse();
 
         var sprintNames = [];
@@ -165,31 +166,34 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             $scope.series.push({ data: overallSTD_above_StoryPointsPerCardArray, name:"Overall +1std Story Points Per Card",  type: "spline", yAxis: 6, color: '#333333', marker : noMarker});
             $scope.series.push({ data: overallSTD_below_StoryPointsPerCardArray, name:"Overall -1std Story Points Per Card",  type: "spline", yAxis: 6, color: '#999999', marker : noMarker});
         }
+        $scope.seriesViewProfiles = [];
+
+        if($scope.glimrData.jiraIntegrated) {
+            $scope.seriesViewProfiles.push(["Story Point Velocity", "Cards Merged",
+                "Misestimation Index", "Commits"]);
+            $scope.seriesViewProfiles.push(["Story Point Velocity", "Avg. Story Points Per Card",
+                    "Overall Avg. Story Points Per Card", "Story Points Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Story Point Velocity", "Cards Merged", "Story Points Misestimation", "Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Commits Per Card", "Avg. Story Points Per Card", "Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Cards Merged", "Story Point Velocity", "Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Commits Per Card", "Story Point Velocity", "Commits"]);
+            $scope.seriesViewProfiles.push(["Commits Per Card", "Avg. Commits Per Card", "+1std Commits Per Card", "-1std Commits Per Card", "Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Cards Merged", "Average Commit Freq.", "Unique Authors"]);
+            $scope.seriesViewProfiles.push(["Cards Merged", "Commits", "Unique Authors"]);
+        } else {
+            $scope.seriesViewProfiles.push(["Cards Merged", "Commits", "Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Commits Per Card", "Commits", "Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Commits Per Card", "Avg. Commits Per Card", "+1std Commits Per Card", "-1std Commits Per Card", "Misestimation Index"]);
+            $scope.seriesViewProfiles.push(["Cards Merged", "Average Commit Freq.", "Unique Authors"]);
+            $scope.seriesViewProfiles.push(["Cards Merged", "Commits", "Unique Authors"]);
+        }
+
         $scope.setVisibleAllSeries(false);
         $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
+
     }, $scope);
 
-    $scope.seriesViewProfiles = [];
 
-    if($scope.glimrData.jiraIntegrated) {
-        $scope.seriesViewProfiles.push(["Story Point Velocity", "Cards Merged",
-            "Misestimation Index", "Commits"]);
-        $scope.seriesViewProfiles.push(["Story Point Velocity", "Avg. Story Points Per Card",
-                "Overall Avg. Story Points Per Card", "Story Points Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Story Point Velocity", "Cards Merged", "Story Points Misestimation", "Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Commits Per Card", "Avg. Story Points Per Card", "Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Cards Merged", "Story Point Velocity", "Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Commits Per Card", "Story Point Velocity", "Commits"]);
-        $scope.seriesViewProfiles.push(["Commits Per Card", "Avg. Commits Per Card", "+1std Commits Per Card", "-1std Commits Per Card", "Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Cards Merged", "Average Commit Freq.", "Unique Authors"]);
-        $scope.seriesViewProfiles.push(["Cards Merged", "Commits", "Unique Authors"]);
-    } else {
-        $scope.seriesViewProfiles.push(["Cards Merged", "Commits", "Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Commits Per Card", "Commits", "Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Commits Per Card", "Avg. Commits Per Card", "+1std Commits Per Card", "-1std Commits Per Card", "Misestimation Index"]);
-        $scope.seriesViewProfiles.push(["Cards Merged", "Average Commit Freq.", "Unique Authors"]);
-        $scope.seriesViewProfiles.push(["Cards Merged", "Commits", "Unique Authors"]);
-    }
     $scope.applySeriesViewProfile = function(profileArray) {
         $scope.setVisibleAllSeries(false);
         for(var i=0; i<profileArray.length; i++) {
