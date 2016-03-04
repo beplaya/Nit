@@ -1,5 +1,7 @@
 module.exports = function(app, inputReceiver){
     U = {app:app, inputReceiver:inputReceiver};
+    U.PSUEDO_SPRINT_LENGTH_DEFAULT = 2*7*24*60*60*1000;//2 weeks
+    U.PSUEDO_HISTORY_LENGTH_DEFAULT = 6*4*7*24*60*60*1000;//~ 6 months
     U.glimr = require(__dirname + '/../node_modules/glimr/glimr.js')();
     U.updatePeriodMin = 45;
     U.init = function() {
@@ -50,7 +52,7 @@ module.exports = function(app, inputReceiver){
     U.getGlimrData = function() {
         var dataToSend = {};
         try {
-            dataToSend.logsAnalysis = U.inputReceiver.cache.logsAnalysis;
+            dataToSend.jiraIntegrated = U.inputReceiver.cache.jiraIntegrated;
             dataToSend.currentSprint = U.inputReceiver.cache.currentSprint;
             dataToSend.allSprints = U.inputReceiver.cache.allSprints;
         } catch(e){ dataToSend = {}; }
@@ -121,6 +123,7 @@ module.exports = function(app, inputReceiver){
     U.getSprintData = function(cb){
         if(U.app.nerver.isLoggedIn) {
             console.log("Getting current sprint (can take a couple miunutes) ...");
+            U.inputReceiver.cache.jiraIntegrated = true;
             U.app.nerver.nira.getCurrentSprintForCurrentProject(function(allSprints, currentSprint){
                 console.log((currentSprint ? "Found current Sprint!" : "No current sprint found!"));
                 U.inputReceiver.cache.currentSprint = currentSprint;
@@ -129,18 +132,68 @@ module.exports = function(app, inputReceiver){
 
                 U.getSprintStoryPointVelocityForAllSprints(0, allSprints, function(allSprints){
                     U.inputReceiver.cache.allSprints = allSprints;
-                    U.updateGlimr();
                     U.inputReceiver.cacheSaver.saveCache();
+                    U.updateGlimr(function(){
+                        U.inputReceiver.cacheSaver.saveCache();
+                    });
                 });
 
                 U.app.nerver.nira.getSprintStoryPointVelocity(U.app.nettings.projectKey, currentSprint.name,
                     function(projectKey, sprintName, sprintStoryPointVelocity){
                         U.inputReceiver.cache.currentSprint.sprintStoryPointVelocity=sprintStoryPointVelocity;
-                        U.updateGlimr();
-                        U.inputReceiver.cacheSaver.saveCache();
-                        cb && cb();
+                        U.updateGlimr(function(){
+                            U.inputReceiver.cacheSaver.saveCache();
+                            cb && cb();
+                        });
                     }
                 );
+            });
+        } else {
+            //"id": 147,
+            //"sequence": 147,
+            //"name": "Alfred Device Sprint 1",
+            //"state": "CLOSED",
+            //"linkedPagesCount": 0,
+            //"startDate": "26/May/15 5:13 PM",
+            //"endDate": "01/Jun/15 5:13 PM",
+            //"completeDate": "01/Jun/15 5:16 PM",
+            //"canUpdateSprint": true,
+            //"remoteLinks": [],
+            //"daysRemaining": 0,
+            //"isCurrent": false,
+            //"sprintStoryPointVelocity" : 0
+            U.inputReceiver.cache.jiraIntegrated = false;
+            var allSprints = [];
+            var currentSprint;
+            var sprintLengthMs = U.PSUEDO_SPRINT_LENGTH_DEFAULT;
+            var startDate = new Date(new Date().getTime()-U.PSUEDO_HISTORY_LENGTH_DEFAULT);//TODO use start of logs
+            var endDate = new Date(new Date().getTime() + sprintLengthMs);
+            var numberOfSprints = Math.floor((endDate.getTime()-startDate.getTime()) / sprintLengthMs);
+            for(var sprintNumber=0; sprintNumber < numberOfSprints; sprintNumber++) {
+                var startMs = startDate.getTime() + (sprintNumber * sprintLengthMs);
+                var endMs = startMs + ((1 + sprintNumber) * sprintLengthMs);
+                var isCurrent = (sprintNumber == (numberOfSprints-1));
+                var sprint = {
+                    id: sprintNumber,
+                    name: ("Psuedo Sprint " + sprintNumber),
+                    startDate: new Date(startMs),
+                    endDate: new Date(endMs),
+                    completeDate: new Date(endMs),
+                    isCurrent: isCurrent,
+                    sprintStoryPointVelocity : undefined
+                };
+                allSprints.push(sprint);
+                if(isCurrent) {
+                    currentSprint = sprint;
+                }
+            }
+
+            U.inputReceiver.cache.currentSprint = currentSprint;
+            U.inputReceiver.cache.allSprints = allSprints;
+            U.inputReceiver.clearOldCardsAndUsers();
+            U.inputReceiver.cacheSaver.saveCache();
+            U.updateGlimr(function(){
+                U.inputReceiver.cacheSaver.saveCache();
             });
         }
     };
