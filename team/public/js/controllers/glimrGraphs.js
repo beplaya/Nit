@@ -60,6 +60,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 
 
         var numberOfCardsMergedArray = [];
+
         var numberOfCardsWorkedArray = [];
 
         var numberOfCommitsArray = [];
@@ -175,7 +176,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             // +++++++++++++++
             var p = (numberOfCommitsArray[i] - AVG_numberOfCommitsArray[i]) / AVG_numberOfCommitsArray[i];
             var prediction = (1 + p) * AVG_velocityArray[i];
-            PREDICTED_velocityArray.push(prediction);
+            var prediction2 = numberOfCardsMergedArray[i] * overallAVG_StoryPointsPerCardArray[i];
+            PREDICTED_velocityArray.push(Math.average([prediction, prediction2]));
             // +++++++++++++++
             // +++++++++++++++
             // +++++++++++++++
