@@ -203,7 +203,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         if($scope.glimrData.jiraIntegrated) {
             $scope.series.push({ data: velocityArray, name:"Story Point Velocity",                                          type: "spline", yAxis: 6, color: '#FF4111', marker : noMarker});
             $scope.series.push({ data: AVG_velocityArray, name:"Avg. Story Point Velocity",                                 type: "spline", yAxis: 6, color: '#AA4155', marker : noMarker});
-            $scope.series.push({ data: PREDICTED_velocityArray, name:"Predicted Story Point Velocity",                            type: "spline", yAxis: 6, color: '#AAAA00', marker : { enabled : true }});
+            $scope.series.push({ data: PREDICTED_velocityArray, name:"Predicted Story Point Velocity",                            type: "spline", yAxis: 6, color: '#9A32CD', marker : { enabled : true }});
             $scope.series.push({ data: avgStoryPointsPerCardArray, name:"Avg. Story Points Per Card",                         type: "spline", yAxis: 6, color: '#FF6699', marker : noMarker});
             $scope.series.push({ data: overallAVG_StoryPointsPerCardArray, name:"Overall Avg. Story Points Per Card",         type: "spline", yAxis: 6, color: '#666666', marker : noMarker});
             $scope.series.push({ data: overallSTD_above_StoryPointsPerCardArray, name:"Overall +1std Story Points Per Card",  type: "spline", yAxis: 6, color: '#333333', marker : noMarker});
