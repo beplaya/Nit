@@ -26,13 +26,20 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                                  function($scope, glimrData) {
     $scope.glimrData = glimrData;
     $scope.seriesViewProfileIndex = 0;
+    $scope.shouldSeriesRotate = true;
     $scope.interval = setInterval(function(){
-        $scope.seriesViewProfileIndex++;
-        if($scope.seriesViewProfileIndex >= $scope.seriesViewProfiles.length){
-            $scope.seriesViewProfileIndex = 0;
+        if($scope.shouldSeriesRotate) {
+            $scope.seriesViewProfileIndex++;
+            if($scope.seriesViewProfileIndex >= $scope.seriesViewProfiles.length){
+                $scope.seriesViewProfileIndex = 0;
+            }
+            $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
         }
-        $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
     }, 30000);
+
+    $scope.toggleRotateSeries = function(){
+        $scope.shouldSeriesRotate = !$scope.shouldSeriesRotate;
+    };
 
     $scope.max = 16;
 

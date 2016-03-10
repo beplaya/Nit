@@ -38,6 +38,10 @@
 
     <div class="row swimlane" ng-controller="glimrGraphController">
         <div id="glimrGraphControllerContainer">Loading chart...</div>
+        <button ng-click="toggleRotateSeries()"
+             ng-class="{rotateToggleBtnOn: shouldSeriesRotate, rotateToggleBtnOff: !shouldSeriesRotate}">
+            {{shouldSeriesRotate ? "Rotate Series On" : "Rotate Series Off"}}
+        </button>
     </div>
 
     <div class="row swimlane" ng-controller="glimrController">
