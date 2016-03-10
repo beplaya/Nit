@@ -49,6 +49,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 
         var sprintNames = [];
         var velocityArray = [];
+        var AVG_velocityArray = [];
+        var STD_velocityArray = [];
         var avgStoryPointsPerCardArray = [];
         var overallAVG_StoryPointsPerCardArray = [];
         var overallSTD_StoryPointsPerCardArray = [];
@@ -74,6 +76,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         for(var i=0; (i<sprints.length && i<$scope.max); i++) {
             sprintNames.push(sprints[i].name);
             velocityArray.push(sprints[i].sprintStoryPointVelocity);
+            AVG_velocityArray.push(Math.average(velocityArray));
+            STD_velocityArray.push(Math.standardDeviation(velocityArray));
 
             numberOfCardsWorkedArray.push(sprints[i].logsAnalysis.cards.length);
             numberOfCommitsArray.push(sprints[i].logsAnalysis.logObjects.length);
@@ -109,6 +113,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         numberOfAuthorsArray.reverse();
         avgCommitFreqArray.reverse();
         velocityArray.reverse();
+        AVG_velocityArray.reverse();
 
 
         for(var i=0; i<numberOfCardsMergedArray.length; i++) {
@@ -168,6 +173,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         $scope.series.push({ data: numberOfAuthorsArray, name:"Unique Authors",                           type: "spline", yAxis: 5, color: '#ff8811', marker : noMarker});
         if($scope.glimrData.jiraIntegrated) {
             $scope.series.push({ data: velocityArray, name:"Story Point Velocity",                            type: "spline", yAxis: 6, color: '#FF4111', marker : noMarker});
+            $scope.series.push({ data: AVG_velocityArray, name:"Avg. Story Point Velocity",                            type: "spline", yAxis: 6, color: '#AA4155', marker : noMarker});
             $scope.series.push({ data: avgStoryPointsPerCardArray, name:"Avg. Story Points Per Card",                         type: "spline", yAxis: 6, color: '#FF6699', marker : noMarker});
             $scope.series.push({ data: overallAVG_StoryPointsPerCardArray, name:"Overall Avg. Story Points Per Card",         type: "spline", yAxis: 6, color: '#666666', marker : noMarker});
             $scope.series.push({ data: overallSTD_above_StoryPointsPerCardArray, name:"Overall +1std Story Points Per Card",  type: "spline", yAxis: 6, color: '#333333', marker : noMarker});
