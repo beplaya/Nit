@@ -149,6 +149,24 @@ div {
     overflow:auto;
 }
 
+.rotateToggleBtnOn {
+    background : rgb(0, 153, 0);
+    color:#fff;
+    width: 160px;
+    border-radius: 4px;
+    padding: 5px;
+    overflow:auto;
+}
+
+.rotateToggleBtnOff {
+    background : rgb(0,0,0);
+    color: #fff;
+    width: 160px;
+    border-radius: 4px;
+    padding: 5px;
+    overflow:auto;
+}
+
 .commit {
     width: 2px;
     height: 19px;
