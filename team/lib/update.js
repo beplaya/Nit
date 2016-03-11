@@ -8,13 +8,13 @@ module.exports = function(app, inputReceiver){
         U.inputReceiver.cacheSaver.loadCache();
 
         U.socketInterval = setInterval(function(){U.broadcastCardsAndUsers();}, 60000);
+
         setInterval(function(){
             U.inputReceiver.cacheSaver.saveCache();
             U.getSprintData(function(){
                 U.broadcastCardsAndUsers();
                 U.updateDevelop(function(){
                     U.updateGlimr(function(){
-                        U.broadcastGlimr();
                         U.inputReceiver.cacheSaver.saveCache();
                     });
                 });
@@ -29,7 +29,6 @@ module.exports = function(app, inputReceiver){
             U.updateDevelop(function(){
                 U.updateGlimr(function(){
                     U.inputReceiver.cacheSaver.saveCache();
-                    U.broadcastGlimr();
                 });
             });
         });
@@ -65,7 +64,8 @@ module.exports = function(app, inputReceiver){
         }
     };
 
-    U.broadcastGlimr = function() {
+    U.broadcastGlimr = function(cause) {
+        console.log("@!@ broadcastGlimr )))", cause);
         for(var i=0; i<U.app.sockets.length; i++) {
             U.emit(U.app.sockets[i], "server_cache_glimr", U.getGlimrData());
         }
@@ -135,6 +135,7 @@ module.exports = function(app, inputReceiver){
                     U.inputReceiver.cacheSaver.saveCache();
                     U.updateGlimr(function(){
                         U.inputReceiver.cacheSaver.saveCache();
+                        U.broadcastGlimr(1);
                     });
                 });
 
