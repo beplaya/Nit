@@ -21,12 +21,21 @@ Math.average = function(data){
   var avg = sum / data.length;
   return avg;
 }
+Math.averageByWeight = function(weightedData){
+    var data = [];
+    for(var i=0; i<weightedData.length; i++) {
+        for(var j=0; j<weightedData[i].multiplier; j++) {
+            data.push(weightedData[i].value);
+        }
+    }
+    return Math.average(data);
+}
 
 angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope', 'glimrData',
                                  function($scope, glimrData) {
     $scope.glimrData = glimrData;
     $scope.seriesViewProfileIndex = 0;
-    $scope.shouldSeriesRotate = true;
+    $scope.shouldSeriesRotate = false;
     $scope.interval = setInterval(function(){
         if($scope.shouldSeriesRotate) {
             $scope.seriesViewProfileIndex++;
@@ -52,6 +61,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         var AVG_velocityArray = [];
         var STD_velocityArray = [];
         var PREDICTED_velocityArray = [];
+        var PREDICTED_velocityArray_top = [];
+        var PREDICTED_velocityArray_bottom = [];
         var avgStoryPointsPerCardArray = [];
         var overallAVG_StoryPointsPerCardArray = [];
         var overallSTD_StoryPointsPerCardArray = [];
@@ -169,15 +180,51 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             combinedMisestimationIndexArray.push(misestimationIndexArray[i]+storyPoints_misestimation_PerCardArray[i]);
         }
 
-
-        for(var i=0; i<velocityArray.length; i++) {
+        PREDICTED_velocityArray.push(0);
+        PREDICTED_velocityArray_top.push(0);
+        PREDICTED_velocityArray_bottom.push(0);
+        var predictionVariance = [0];
+        for(var i=1; i<velocityArray.length; i++) {
             // +++++++++++++++
             //prediction +++++
             // +++++++++++++++
-            var p = (numberOfCommitsArray[i] - AVG_numberOfCommitsArray[i]) / AVG_numberOfCommitsArray[i];
-            var prediction = (1 + p) * AVG_velocityArray[i];
-            var prediction2 = numberOfCardsMergedArray[i] * overallAVG_StoryPointsPerCardArray[i];
-            PREDICTED_velocityArray.push(Math.average([prediction, prediction2]));
+            var INDEX = i;
+            var PREVIOUS_INDEX = i-1;
+            var p = (numberOfCommitsArray[PREVIOUS_INDEX] - AVG_numberOfCommitsArray[PREVIOUS_INDEX]) / AVG_numberOfCommitsArray[PREVIOUS_INDEX];
+            var prediction1 = (1 + p) * AVG_velocityArray[PREVIOUS_INDEX];
+            var prediction2 = numberOfCardsMergedArray[PREVIOUS_INDEX] * overallAVG_StoryPointsPerCardArray[PREVIOUS_INDEX];
+            var predictionV = velocityArray[PREVIOUS_INDEX];
+            predictionVariance.push(Math.abs(PREDICTED_velocityArray[PREVIOUS_INDEX] - velocityArray[PREVIOUS_INDEX]) / velocityArray[PREVIOUS_INDEX]);
+            var makeupPrediction = Math.average(AVG_velocityArray);
+            if(i>=2){
+                var PREPRE_INDEX = PREVIOUS_INDEX-1;
+                var m = -((velocityArray[PREVIOUS_INDEX] - velocityArray[PREPRE_INDEX]) / velocityArray[PREPRE_INDEX]);
+                makeupPrediction *= (1 + m);
+            }
+
+
+
+            var p1 = (numberOfCommitsArray[INDEX] - AVG_numberOfCommitsArray[INDEX]) / AVG_numberOfCommitsArray[INDEX];
+            var prediction3 = (1 + p1) * AVG_velocityArray[INDEX];
+            var prediction4 = numberOfCardsMergedArray[INDEX] * overallAVG_StoryPointsPerCardArray[INDEX];
+            var averageVelocitySTD = Math.average(STD_velocityArray);
+
+            var overallPrediction = Math.averageByWeight([
+                                                     { value: Math.average(AVG_velocityArray),  multiplier:2 },
+                                                     { value: makeupPrediction,  multiplier: 3 },
+                                                     { value: Math.average(AVG_velocityArray),  multiplier:1 },
+                                                     { value: prediction1, multiplier:1 },
+                                                     { value: prediction2, multiplier:1 },
+                                                     { value: predictionV, multiplier:1 }
+                                                 ]);
+            PREDICTED_velocityArray.push(overallPrediction);
+
+            var averagePredictionVariance = Math.average(predictionVariance);
+            var stdMultiplier = 1 + averagePredictionVariance;
+            PREDICTED_velocityArray_top.push(overallPrediction + (stdMultiplier * averageVelocitySTD));
+            PREDICTED_velocityArray_bottom.push(overallPrediction - (stdMultiplier * averageVelocitySTD));
+
+
             // +++++++++++++++
             // +++++++++++++++
             // +++++++++++++++
@@ -203,7 +250,11 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         if($scope.glimrData.jiraIntegrated) {
             $scope.series.push({ data: velocityArray, name:"Story Point Velocity",                                          type: "spline", yAxis: 6, color: '#FF4111', marker : noMarker});
             $scope.series.push({ data: AVG_velocityArray, name:"Avg. Story Point Velocity",                                 type: "spline", yAxis: 6, color: '#AA4155', marker : noMarker});
-            $scope.series.push({ data: PREDICTED_velocityArray, name:"Predicted Story Point Velocity",                            type: "spline", yAxis: 6, color: '#9A32CD', marker : { enabled : true }});
+
+            $scope.series.push({ data: PREDICTED_velocityArray_top, name:"Predicted Story Point Velocity Top",                       type: "spline", yAxis: 6, color: '#FFA2EF', marker : { enabled : false }});
+            $scope.series.push({ data: PREDICTED_velocityArray, name:"Predicted Story Point Velocity",                               type: "spline", yAxis: 6, color: '#AB42DE', marker : { enabled : true }});
+            $scope.series.push({ data: PREDICTED_velocityArray_bottom, name:"Predicted Story Point Velocity Bottom",                 type: "spline", yAxis: 6, color: '#FFA2EF', marker : { enabled : false }});
+
             $scope.series.push({ data: avgStoryPointsPerCardArray, name:"Avg. Story Points Per Card",                         type: "spline", yAxis: 6, color: '#FF6699', marker : noMarker});
             $scope.series.push({ data: overallAVG_StoryPointsPerCardArray, name:"Overall Avg. Story Points Per Card",         type: "spline", yAxis: 6, color: '#666666', marker : noMarker});
             $scope.series.push({ data: overallSTD_above_StoryPointsPerCardArray, name:"Overall +1std Story Points Per Card",  type: "spline", yAxis: 6, color: '#333333', marker : noMarker});
@@ -212,6 +263,9 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         $scope.seriesViewProfiles = [];
 
         if($scope.glimrData.jiraIntegrated) {
+
+            $scope.seriesViewProfiles.push(["Story Point Velocity",
+                                "Predicted Story Point Velocity", "Predicted Story Point Velocity Top", "Predicted Story Point Velocity Bottom"]);
             $scope.seriesViewProfiles.push(["Story Point Velocity",  "Predicted Story Point Velocity",
                                     "Cards Merged", "Misestimation Index", "Commits"]);
             $scope.seriesViewProfiles.push(["Story Point Velocity", "Avg. Story Point Velocity", "Avg. Story Points Per Card",
