@@ -3,7 +3,7 @@ module.exports = function(app, inputReceiver){
     U.PSUEDO_SPRINT_LENGTH_DEFAULT = 2*7*24*60*60*1000;//2 weeks
     U.PSUEDO_HISTORY_LENGTH_DEFAULT = 6*4*7*24*60*60*1000;//~ 6 months
     U.glimr = require(__dirname + '/../node_modules/glimr/glimr.js')();
-    U.updatePeriodMin = 3;
+    U.updatePeriodMin = 45;
     U.init = function() {
         U.inputReceiver.cacheSaver.loadCache();
 
