@@ -204,23 +204,25 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 
 
 
-            var p1 = (numberOfCommitsArray[INDEX] - AVG_numberOfCommitsArray[INDEX]) / AVG_numberOfCommitsArray[INDEX];
-            var prediction3 = (1 + p1) * AVG_velocityArray[INDEX];
-            var prediction4 = numberOfCardsMergedArray[INDEX] * overallAVG_StoryPointsPerCardArray[INDEX];
-            var averageVelocitySTD = Math.average(STD_velocityArray);
+            var Cp1 = (numberOfCommitsArray[INDEX] - AVG_numberOfCommitsArray[INDEX]) / AVG_numberOfCommitsArray[INDEX];
+            var Cprediction3 = (1 + Cp1) * AVG_velocityArray[INDEX];
+            var Cprediction4 = numberOfCardsMergedArray[INDEX] * overallAVG_StoryPointsPerCardArray[INDEX];
 
             var overallPrediction = Math.averageByWeight([
-                                                     { value: Math.average(AVG_velocityArray),  multiplier:2 },
-                                                     { value: makeupPrediction,  multiplier: 3 },
-                                                     { value: Math.average(AVG_velocityArray),  multiplier:1 },
-                                                     { value: prediction1, multiplier:1 },
-                                                     { value: prediction2, multiplier:1 },
-                                                     { value: predictionV, multiplier:1 }
+                                                     { value: Math.average(AVG_velocityArray),  multiplier:20 },
+                                                     { value: makeupPrediction,  multiplier: 30 },
+                                                     { value: Math.average(AVG_velocityArray),  multiplier:10 },
+                                                     { value: prediction1, multiplier:10 },
+                                                     { value: prediction2, multiplier:10 },
+                                                     { value: predictionV, multiplier:10 },
+                                                     { value: Cprediction3, multiplier:3 },
+                                                     { value: Cprediction4, multiplier:2 }
                                                  ]);
             PREDICTED_velocityArray.push(overallPrediction);
 
             var averagePredictionVariance = Math.average(predictionVariance);
             var stdMultiplier = 1 + averagePredictionVariance;
+            var averageVelocitySTD = Math.average(STD_velocityArray);
             PREDICTED_velocityArray_top.push(overallPrediction + (stdMultiplier * averageVelocitySTD));
             PREDICTED_velocityArray_bottom.push(overallPrediction - (stdMultiplier * averageVelocitySTD));
 
