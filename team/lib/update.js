@@ -101,9 +101,10 @@ module.exports = function(app, inputReceiver){
             if(U.inputReceiver.cache.currentSprint){
                 startDate = new Date(U.inputReceiver.cache.currentSprint.startDate);
                 endDate = new Date(U.inputReceiver.cache.currentSprint.endDate);
+                U.inputReceiver.cache.currentSprint.logsAnalysis =
+                        U.glimr.analyzeLogs(logs, U.app.nettings.projectKey,
+                            { startDate : startDate, endDate : endDate});
             }
-            U.inputReceiver.cache.currentSprint.logsAnalysis = U.glimr.analyzeLogs(logs,
-                U.app.nettings.projectKey, { startDate : startDate, endDate : endDate});
             for(var i=0; i<U.inputReceiver.cache.allSprints.length; i++) {
                 U.inputReceiver.cache.allSprints[i].logsAnalysis = U.analyzeSprint(logs,
                         U.inputReceiver.cache.allSprints[i]);
@@ -126,6 +127,9 @@ module.exports = function(app, inputReceiver){
             U.inputReceiver.cache.jiraIntegrated = true;
             U.app.nerver.nira.getCurrentSprintForCurrentProject(function(allSprints, currentSprint){
                 console.log((currentSprint ? "Found current Sprint!" : "No current sprint found!"));
+                if(!currentSprint && allSprints && allSprints.length > 0){
+                    currentSprint = allSprints[allSprints.length - 1];
+                }
                 U.inputReceiver.cache.currentSprint = currentSprint;
                 U.inputReceiver.cache.allSprints = allSprints;
                 U.inputReceiver.clearOldCardsAndUsers();
@@ -138,16 +142,23 @@ module.exports = function(app, inputReceiver){
                         U.broadcastGlimr(1);
                     });
                 });
-
-                U.app.nerver.nira.getSprintStoryPointVelocity(U.app.nettings.projectKey, currentSprint.name,
-                    function(projectKey, sprintName, sprintStoryPointVelocity){
-                        U.inputReceiver.cache.currentSprint.sprintStoryPointVelocity=sprintStoryPointVelocity;
-                        U.updateGlimr(function(){
-                            U.inputReceiver.cacheSaver.saveCache();
-                            cb && cb();
-                        });
-                    }
-                );
+                if(currentSprint) {
+                    U.app.nerver.nira.getSprintStoryPointVelocity(U.app.nettings.projectKey, currentSprint.name,
+                        function(projectKey, sprintName, sprintStoryPointVelocity){
+                            U.inputReceiver.cache.currentSprint.sprintStoryPointVelocity = sprintStoryPointVelocity;
+                            U.updateGlimr(function(){
+                                U.inputReceiver.cacheSaver.saveCache();
+                                cb && cb();
+                            });
+                        }
+                    );
+                } else {
+                    console.log("NERROR: no current sprint found!");
+                    U.updateGlimr(function(){
+                        U.inputReceiver.cacheSaver.saveCache();
+                        cb && cb();
+                    });
+                }
             });
         } else {
             //"id": 147,
