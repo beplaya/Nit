@@ -38,16 +38,38 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
     $scope.shouldSeriesRotate = false;
     $scope.interval = setInterval(function(){
         if($scope.shouldSeriesRotate) {
-            $scope.seriesViewProfileIndex++;
-            if($scope.seriesViewProfileIndex >= $scope.seriesViewProfiles.length){
-                $scope.seriesViewProfileIndex = 0;
-            }
-            $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
+            $scope.advanceSeriesForward();
         }
     }, 30000);
 
+    $scope.advanceSeriesForward = function(){
+        $scope.seriesViewProfileIndex++;
+        if($scope.seriesViewProfileIndex >= $scope.seriesViewProfiles.length){
+            $scope.seriesViewProfileIndex = 0;
+        }
+        $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
+    };
+
+    $scope.advanceSeriesBackward = function(){
+        $scope.seriesViewProfileIndex--;
+        if($scope.seriesViewProfileIndex < 0){
+            $scope.seriesViewProfileIndex =  $scope.seriesViewProfiles.length - 1;
+        }
+        $scope.applySeriesViewProfile($scope.seriesViewProfiles[$scope.seriesViewProfileIndex]);
+    };
+
     $scope.toggleRotateSeries = function(){
         $scope.shouldSeriesRotate = !$scope.shouldSeriesRotate;
+    };
+
+    $scope.nextSeries = function(){
+        $scope.shouldSeriesRotate = false;
+        $scope.advanceSeriesForward();
+    };
+
+    $scope.nextSeries = function(){
+        $scope.shouldSeriesRotate = false;
+        $scope.advanceSeriesBackward();
     };
 
     $scope.max = 16;
