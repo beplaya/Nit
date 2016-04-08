@@ -62,12 +62,12 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         $scope.shouldSeriesRotate = !$scope.shouldSeriesRotate;
     };
 
-    $scope.nextSeries = function(){
+    $scope.onNextSeries = function(){
         $scope.shouldSeriesRotate = false;
         $scope.advanceSeriesForward();
     };
 
-    $scope.nextSeries = function(){
+    $scope.onPreviousSeries = function(){
         $scope.shouldSeriesRotate = false;
         $scope.advanceSeriesBackward();
     };
