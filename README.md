@@ -151,8 +151,8 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
         - Windows
             - Add environment variable "NIT" set equal to "/path/to/repo/nit"
             - Append the $NIT environment variable to the path environment variable.
- - Run ```nit``` to ensure the PATH is setup correctly.  You should see the logo.  It's enormous; you can't miss it. 
  - Run ```nit setup``` 
+ - Run ```nit``` to ensure the PATH is setup correctly.  You should see the logo.  It's enormous; you can't miss it. 
  - ```nit help``` for help
 
 
