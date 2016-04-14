@@ -138,9 +138,11 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
 
 
 ## Setup
- - ```npm install -g nit_for_git```
- - Ensure nit folder is in your path.
- - ```nit setup``` 
- 
+
+
+ - Currently the npm install is broken. :cry:  Fortunately, you can simply clone the repo.  Open the nit file ("nit" not "nit.js") and setup your PATH appropriately.  
+ - Run ```nit``` to ensure the PATH is setup correctly.  You should see the logo.  It's enormous; you can't miss it. 
+ - Run ```nit setup``` 
+ - nit away!
 
 
