@@ -138,9 +138,21 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
 
 
 ## Setup
- - ```npm install -g nit_for_git```
- - Ensure nit folder is in your path.
- - ```nit setup``` 
- 
+ - [Install Node.js](http://nodejs.org/)
+ - (Optional) [Install Bower](http://bower.io/)
+ - Currently the npm install is broken. :cry:  Fortunately, you can simply clone the repo and use Nit.  
+     - Setup your PATH appropriately (examine the "nit" file to change the expected path variable name $NIT)
+        - Mac/Linux
+            - open ~/.bash_profile
+            - Add lines:
+             
+                ```export NIT="/path/to/repo/nit"```
+                ```export PATH="${PATH}:$NIT/"```
+        - Windows
+            - Add environment variable "NIT" set equal to "/path/to/repo/nit"
+            - Append the $NIT environment variable to the path environment variable.
+ - Run ```nit setup``` 
+ - Run ```nit``` to ensure the PATH is setup correctly.  You should see the logo.  It's enormous; you can't miss it. 
+ - ```nit help``` for help
 
 
