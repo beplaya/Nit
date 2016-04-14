@@ -140,7 +140,7 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
 ## Setup
  - [Install Node.js](http://nodejs.org/)
  - (Optional) [Install Bower](http://bower.io/)
- - Currently the npm install is broken. :cry:  Fortunately, you can simply clone the repo and use Nit.  In the repo root folder:
+ - Currently the npm install is broken. :cry:  Fortunately, you can simply clone the repo and use Nit.  
      - Setup your PATH appropriately (examine the "nit" file to change the expected path variable name $NIT
         - Mac/Linux
             - open ~/.bash_profile
