@@ -106,6 +106,10 @@ app.controller('socketController', ['$scope', 'socket', 'glimrData', 'userData',
         $scope.glimrData.update(response);
     });
 
+    socket.on('current_sprint_fine_details', function (response) {
+        $scope.glimrData.updateCurrentSprintFineDetails(response);
+    });
+
     socket.on('server_cache_cards_and_users', function (response) {
         $scope.cardData.update(response);
         $scope.userData.update(response);
@@ -148,8 +152,8 @@ app.factory('glimrData', function(){
         glimrData.notifyListeners();
     };
 
-    glimrData.updateCurrentSprint = function(currentSprintGraphData) {
-        glimrData.currentSprintGraphData = glimrResponse.currentSprintGraphData;
+    glimrData.updateCurrentSprintFineDetails = function(currentSprintFineDetails) {
+        glimrData.currentSprintFineDetails = glimrResponse.currentSprintFineDetails;
         glimrData.notifyListeners();
     };
 

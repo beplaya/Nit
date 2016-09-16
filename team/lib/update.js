@@ -45,7 +45,7 @@ module.exports = function(app, inputReceiver){
             console.log("==================== ====================<<<<<");
             console.log("==================== ====================<<<<<");
             for(var i=0; i<U.app.sockets.length; i++) {
-                U.emit(U.app.sockets[i], "sprint_fine_details", data);
+                U.emit(U.app.sockets[i], "current_sprint_fine_details", data);
             }
         });
     };
