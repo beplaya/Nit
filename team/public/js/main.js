@@ -73,8 +73,10 @@ app.controller('glimrController', ['$scope', 'glimrData',
             css = $scope.glimrData.currentSprint;
         }
         if(css) {
-            css.formattedStartDate = formatDate(new Date(css.startDate), true);
-            css.formattedEndDate = formatDate(new Date(css.endDate), true);
+            //css.formattedStartDate = formatDate(new Date(css.startDate), true);
+            //css.formattedEndDate = formatDate(new Date(css.startDate.replace(/\//g, "-")), true);
+            css.formattedStartDate = css.startDate;
+            css.formattedEndDate = css.endDate;
         }
         return css;
     };
