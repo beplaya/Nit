@@ -16,6 +16,8 @@ module.exports = function(app, inputReceiver){
                 U.updateDevelop(function(){
                     U.updateGlimr(function(){
                         U.inputReceiver.cacheSaver.saveCache();
+                        U.sendSprintFineDetails(U.app.nettings.projectKey,
+                                                U.inputReceiver.cache.currentSprint.name);
                     });
                 });
             });
@@ -29,14 +31,31 @@ module.exports = function(app, inputReceiver){
             U.updateDevelop(function(){
                 U.updateGlimr(function(){
                     U.inputReceiver.cacheSaver.saveCache();
+                    U.sendSprintFineDetails(U.app.nettings.projectKey,
+                                            U.inputReceiver.cache.currentSprint.name);
                 });
             });
         });
-    }
+    };
+
+    U.sendSprintFineDetails = function(projectKey, sprintName){
+        U.app.nerver.nira.getSprintFineDetails(projectKey, sprintName, function(data) {
+
+            console.log("|| sprintFineDetails  ====================>>>>");
+            console.log("sprintFineDetails data", data);
+            console.log("==================== ====================<<<<<");
+            console.log("==================== ====================<<<<<");
+            U.inputReceiver.cache.sprintFineDetails = data;
+            for(var i=0; i<U.app.sockets.length; i++) {
+                U.emit(U.app.sockets[i], "current_sprint_fine_details", U.inputReceiver.cache.sprintFineDetails);
+            }
+        });
+    };
 
     U.onConnectedSocket = function(socket) {
         U.emit(socket, "server_cache_cards_and_users", U.getCardsAndUsersData());
         U.emit(socket, "server_cache_glimr", U.getGlimrData());
+        U.emit(socket, "current_sprint_fine_details", U.inputReceiver.cache.sprintFineDetails);
     };
 
     U.getCardsAndUsersData = function() {
