@@ -40,9 +40,9 @@ module.exports = function(app, inputReceiver){
     };
 
     U.sendSprintFineDetails = function(projectKey, sprintName){
-        U.nira.getSprintFineDetails(projectKey, sprintName, function(sprintFineDetails) {
+        U.nira.getSprintFineDetails(projectKey, sprintName, function(statusObjects) {
             console.log("|| sprintFineDetails  ====================>>>>");
-            console.log("sprintFineDetails", sprintFineDetails);
+            console.log("sprintFineDetails statusObjects", statusObjects);
             console.log("==================== ====================<<<<<");
             console.log("==================== ====================<<<<<");
         });
