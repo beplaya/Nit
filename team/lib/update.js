@@ -40,6 +40,7 @@ module.exports = function(app, inputReceiver){
 
     U.sendSprintFineDetails = function(projectKey, sprintName){
         U.app.nerver.nira.getSprintFineDetails(projectKey, sprintName, function(data) {
+
             console.log("|| sprintFineDetails  ====================>>>>");
             console.log("sprintFineDetails data", data);
             console.log("==================== ====================<<<<<");

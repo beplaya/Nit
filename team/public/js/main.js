@@ -153,7 +153,7 @@ app.factory('glimrData', function(){
     };
 
     glimrData.updateCurrentSprintFineDetails = function(currentSprintFineDetails) {
-        glimrData.currentSprintFineDetails = glimrResponse.currentSprintFineDetails;
+        glimrData.currentSprintFineDetails = currentSprintFineDetails;
         glimrData.notifyListeners();
     };
 
