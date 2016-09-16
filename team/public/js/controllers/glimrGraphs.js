@@ -75,7 +75,39 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
     $scope.max = 16;
 
     $scope.glimrData.addListener(function(){
+        //Current sprint
 
+        var sprintDetails = $scope.glimrData.currentSprintFineDetails;
+        if(sprintDetails){
+            console.log(sprintDetails);
+            var statusObjects = sprintDetails.statusObjects;
+
+            var chartOptions = {
+                chart : {type : 'column'},
+                title : {text:sprintDetails.sprintName},
+                subtitle : {text:sprintDetails.projectKey},
+                yAxis : {min: 0},
+                plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        }
+            };
+            chartOptions.xAxis = { categories :[], crosshair:true};
+            chartOptions.series = [{name: "Story Points", data:[]},
+                                    {name: "# Issues", data:[]}];
+            for(var i=0;  i<statusObjects.length; i++) {
+                chartOptions.xAxis.categories.push(statusObjects[i].status);
+                chartOptions.series[0].data.push(statusObjects[i].storyPoints);
+                chartOptions.series[1].data.push(statusObjects[i].numberOfIssues);
+            }
+            console.log(chartOptions);
+            $('#glimrGraphControllerContainerSprintDetails').highcharts(chartOptions);
+        }
+    });
+    $scope.glimrData.addListener(function(){
+        //All sprints
         var sprints = $scope.glimrData.allSprints.reverse();
 
         var sprintNames = [];

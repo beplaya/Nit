@@ -73,8 +73,10 @@ app.controller('glimrController', ['$scope', 'glimrData',
             css = $scope.glimrData.currentSprint;
         }
         if(css) {
-            css.formattedStartDate = formatDate(new Date(css.startDate), true);
-            css.formattedEndDate = formatDate(new Date(css.endDate), true);
+            //css.formattedStartDate = formatDate(new Date(css.startDate), true);
+            //css.formattedEndDate = formatDate(new Date(css.startDate.replace(/\//g, "-")), true);
+            css.formattedStartDate = css.startDate;
+            css.formattedEndDate = css.endDate;
         }
         return css;
     };
@@ -104,6 +106,10 @@ app.controller('socketController', ['$scope', 'socket', 'glimrData', 'userData',
 
     socket.on('server_cache_glimr', function (response) {
         $scope.glimrData.update(response);
+    });
+
+    socket.on('current_sprint_fine_details', function (response) {
+        $scope.glimrData.updateCurrentSprintFineDetails(response);
     });
 
     socket.on('server_cache_cards_and_users', function (response) {
@@ -145,6 +151,11 @@ app.factory('glimrData', function(){
         glimrData.jiraIntegrated = glimrResponse.jiraIntegrated;
         glimrData.allSprints = glimrResponse.allSprints;
         glimrData.currentSprint = glimrResponse.currentSprint;
+        glimrData.notifyListeners();
+    };
+
+    glimrData.updateCurrentSprintFineDetails = function(currentSprintFineDetails) {
+        glimrData.currentSprintFineDetails = currentSprintFineDetails;
         glimrData.notifyListeners();
     };
 
