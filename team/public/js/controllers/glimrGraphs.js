@@ -33,6 +33,8 @@ Math.averageByWeight = function(weightedData){
 
 angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope', 'glimrData',
                                  function($scope, glimrData) {
+     $scope.max = 20;
+
     $scope.glimrData = glimrData;
     $scope.seriesViewProfileIndex = 0;
     $scope.shouldSeriesRotate = false;
@@ -72,7 +74,6 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         $scope.advanceSeriesBackward();
     };
 
-    $scope.max = 16;
 
     $scope.glimrData.addListener(function(){
         //Current sprint
@@ -106,9 +107,11 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             $('#glimrGraphControllerContainerSprintDetails').highcharts(chartOptions);
         }
     });
+
+
     $scope.glimrData.addListener(function(){
         //All sprints
-        var sprints = $scope.glimrData.allSprints.reverse();
+        var sprints = $scope.glimrData.allSprints;
 
         var sprintNames = [];
         var velocityArray = [];
@@ -144,7 +147,10 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
 
         var combinedMisestimationIndexArray = [];
 
-        for(var i=0; (i<sprints.length && i<$scope.max); i++) {
+        var minI = (sprints.length-1)-$scope.max;
+        minI = minI<0 ? 0 : minI;
+
+        for(var i=sprints.length-1; i>=minI; i--) {
             sprintNames.push(sprints[i].name);
             velocityArray.push(sprints[i].sprintStoryPointVelocity);
             AVG_velocityArray.push(Math.average(velocityArray));
@@ -319,6 +325,7 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         $scope.seriesViewProfiles = [];
 
         if($scope.glimrData.jiraIntegrated) {
+            $scope.seriesViewProfiles.push(["Story Point Velocity", "Predicted Story Point Velocity", "Commits", "Misestimation Index"]);
 
             $scope.seriesViewProfiles.push(["Story Point Velocity",
                                 "Predicted Story Point Velocity", "Predicted Story Point Velocity Top", "Predicted Story Point Velocity Bottom"]);
