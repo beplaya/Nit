@@ -36,15 +36,17 @@ module.exports = function(app, inputReceiver){
                 });
             });
         });
-
     };
 
     U.sendSprintFineDetails = function(projectKey, sprintName){
-        U.app.nerver.nira.getSprintFineDetails(projectKey, sprintName, function(statusObjects) {
+        U.app.nerver.nira.getSprintFineDetails(projectKey, sprintName, function(data) {
             console.log("|| sprintFineDetails  ====================>>>>");
-            console.log("sprintFineDetails statusObjects", statusObjects);
+            console.log("sprintFineDetails data", data);
             console.log("==================== ====================<<<<<");
             console.log("==================== ====================<<<<<");
+            for(var i=0; i<U.app.sockets.length; i++) {
+                U.emit(U.app.sockets[i], "sprint_fine_details", data);
+            }
         });
     };
 
