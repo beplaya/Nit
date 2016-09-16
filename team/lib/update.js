@@ -45,8 +45,9 @@ module.exports = function(app, inputReceiver){
             console.log("sprintFineDetails data", data);
             console.log("==================== ====================<<<<<");
             console.log("==================== ====================<<<<<");
+            U.inputReceiver.cache.sprintFineDetails = data;
             for(var i=0; i<U.app.sockets.length; i++) {
-                U.emit(U.app.sockets[i], "current_sprint_fine_details", data);
+                U.emit(U.app.sockets[i], "current_sprint_fine_details", U.inputReceiver.cache.sprintFineDetails);
             }
         });
     };
@@ -54,6 +55,7 @@ module.exports = function(app, inputReceiver){
     U.onConnectedSocket = function(socket) {
         U.emit(socket, "server_cache_cards_and_users", U.getCardsAndUsersData());
         U.emit(socket, "server_cache_glimr", U.getGlimrData());
+        U.emit(socket, "current_sprint_fine_details", U.inputReceiver.cache.sprintFineDetails);
     };
 
     U.getCardsAndUsersData = function() {
