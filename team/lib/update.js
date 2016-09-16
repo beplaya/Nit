@@ -16,6 +16,8 @@ module.exports = function(app, inputReceiver){
                 U.updateDevelop(function(){
                     U.updateGlimr(function(){
                         U.inputReceiver.cacheSaver.saveCache();
+                        U.sendSprintFineDetails(U.app.nettings.projectKey,
+                                                U.inputReceiver.cache.currentSprint.name);
                     });
                 });
             });
@@ -29,10 +31,22 @@ module.exports = function(app, inputReceiver){
             U.updateDevelop(function(){
                 U.updateGlimr(function(){
                     U.inputReceiver.cacheSaver.saveCache();
+                    U.sendSprintFineDetails(U.app.nettings.projectKey,
+                                            U.inputReceiver.cache.currentSprint.name);
                 });
             });
         });
-    }
+
+    };
+
+    U.sendSprintFineDetails = function(projectKey, sprintName){
+        U.nira.getSprintFineDetails(projectKey, sprintName, function(sprintFineDetails) {
+            console.log("|| sprintFineDetails  ====================>>>>");
+            console.log("sprintFineDetails", sprintFineDetails);
+            console.log("==================== ====================<<<<<");
+            console.log("==================== ====================<<<<<");
+        });
+    };
 
     U.onConnectedSocket = function(socket) {
         U.emit(socket, "server_cache_cards_and_users", U.getCardsAndUsersData());

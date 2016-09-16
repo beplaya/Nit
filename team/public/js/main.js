@@ -148,6 +148,11 @@ app.factory('glimrData', function(){
         glimrData.notifyListeners();
     };
 
+    glimrData.updateCurrentSprint = function(currentSprintGraphData) {
+        glimrData.currentSprintGraphData = glimrResponse.currentSprintGraphData;
+        glimrData.notifyListeners();
+    };
+
     return glimrData;
 });
 
