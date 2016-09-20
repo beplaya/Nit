@@ -40,7 +40,7 @@
             Previous Series
         </button>
         <button ng-click="toggleRotateSeries()"
-        ng-class="{rotateToggleBtnOn: shouldSeriesRotate, rotateToggleBtnOff: !shouldSeriesRotate}">
+                ng-class="{rotateToggleBtnOn: shouldSeriesRotate, rotateToggleBtnOff: !shouldSeriesRotate}">
             {{shouldSeriesRotate ? "Rotate Series On" : "Rotate Series Off"}}
         </button>
         <button ng-click="onNextSeries()" class="rotateToggleBtnOff">
@@ -59,33 +59,32 @@
             </select></h3>
         <h4>GLIMR Commit Analysis</h4>
         <div class="row">
-            <table class=" table table-striped glimr-table ">
-                <thead>
-                <th align="center"
-                    ng-repeat="D in getCurrentSelectedSprint().logsAnalysis.punchCard.days track by $index"
-                    style="width: 14%;">
-
-                    <span style="background: {{rgbFraction(D.fractionOfCommits)}}; height: {{round(100*D.fractionOfCommits)}}px; width: 100%; display: inline-block;"></span>
-                    <br>
-                    {{D.name.capitalizeFirstLetter()}}
-                </th>
-                </thead>
-                <tbody>
-                <tr>
-                    <td ng-repeat="D in getCurrentSelectedSprint().logsAnalysis.punchCard.days track by $index"
+            <div class="col-md-6">
+                <table class=" table table-striped glimr-table ">
+                    <thead>
+                    <th align="center"
+                        ng-repeat="D in getCurrentSelectedSprint().logsAnalysis.punchCard.days track by $index"
                         style="width: 14%;">
-                        <div ng-repeat="HR in D.hourly track by $index">
-                            <span style="width: 60px; display: inline-block;">{{toCivilianHour(HR.hour)}}</span>
-                            <span style="background: {{rgbFraction(HR.fractionOfCommits)}}; width: {{round(100*HR.fractionOfCommits)}}px; height: 10px; display: inline-block;"></span>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
 
-        </div>
-        <div class="row">
-            <div class="col-md-4">
+                        <span style="background: {{rgbFraction(D.fractionOfCommits)}}; height: {{round(100*D.fractionOfCommits)}}px; width: 100%; display: inline-block;"></span>
+                        <br>
+                        {{D.name.capitalizeFirstLetter()}}
+                    </th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td ng-repeat="D in getCurrentSelectedSprint().logsAnalysis.punchCard.days track by $index"
+                            style="width: 14%;">
+                            <div ng-repeat="HR in D.hourly track by $index">
+                                <span style="width: 60px; display: inline-block;">{{toCivilianHour(HR.hour)}}</span>
+                                <span style="background: {{rgbFraction(HR.fractionOfCommits)}}; width: {{round(100*HR.fractionOfCommits)}}px; height: 10px; display: inline-block;"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
                 <table class=" table table-striped glimr-table ">
                     <thead>
                     <th>Author</th>
@@ -100,43 +99,60 @@
                     </tr>
                     </tbody>
                 </table>
-                <div ng-repeat="S in glimrData.allSprints track by $index ">
-                    <b>{{ S.name }}</b>
-                    <br>#Cards: {{S.logsAnalysis.cards.length}}
-                    <span class="commit_small" style="background:#FF6922;"
-                          ng-repeat="LO in S.logsAnalysis.cards track by $index"></span>
-                    <br>#Commits: {{ S.logsAnalysis.logObjects.length }}
-                    <span class="commit_small" style="background:#8888ff;"
-                          ng-repeat="LO in S.logsAnalysis.logObjects track by $index"></span>
-                    <br>#Authors: {{ S.logsAnalysis.authors.length }}
-                    <span class="commit_small" style="background:#0000ff;"
-                          ng-repeat="LO in S.logsAnalysis.authors track by $index"></span>
-                    <br>#Commits Per Card: {{ S.logsAnalysis.logObjects.length / S.logsAnalysis.cards.length }}
-                    <br>#Rolling Average Hours: {{ S.logsAnalysis.logObjects[0].deltas.rollingAverageMs/60000/60 }}
-                </div>
             </div>
-            <div class="col-md-6">
-                <table class=" table table-striped glimr-table ">
-                    <thead>
-                    <th>Issue Key</th>
-                    <th># of Pull Requests</th>
-                    <th>Commits</th>
-                    <th>Authors</th>
-                    </thead>
-                    <tbody>
-                    <tr class="" ng-repeat="LC in getCurrentSelectedSprint().logsAnalysis.cards track by $index">
-                        <td>{{LC.key}}</td>
-                        <td>{{LC.numberOfPullRequests}}</td>
-                        <td>{{LC.commits.length}}</td>
-                        <td>
-                            <div ng-repeat="C in LC.commits track by $index">{{C.commit.substring(0,7)}} |
-                                {{C.author.email}}
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        </div>
+        <div class="row">
+            <!--<div class="col-md-4">-->
+
+            <!--<div ng-show="false" ng-repeat="S in glimrData.allSprints track by $index ">-->
+            <!--<b>{{ S.name }}</b>-->
+            <!--<br>#Cards: {{S.logsAnalysis.cards.length}}-->
+            <!--<span class="commit_small" style="background:#FF6922;"-->
+            <!--ng-repeat="LO in S.logsAnalysis.cards track by $index"></span>-->
+            <!--<br>#Commits: {{ S.logsAnalysis.logObjects.length }}-->
+            <!--<span class="commit_small" style="background:#8888ff;"-->
+            <!--ng-repeat="LO in S.logsAnalysis.logObjects track by $index"></span>-->
+            <!--<br>#Authors: {{ S.logsAnalysis.authors.length }}-->
+            <!--<span class="commit_small" style="background:#0000ff;"-->
+            <!--ng-repeat="LO in S.logsAnalysis.authors track by $index"></span>-->
+            <!--<br>#Commits Per Card: {{ S.logsAnalysis.logObjects.length / S.logsAnalysis.cards.length }}-->
+            <!--<br>#Rolling Average Hours: {{ S.logsAnalysis.logObjects[0].deltas.rollingAverageMs/60000/60 }}-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-6">-->
+            <table class=" table table-striped glimr-table ">
+                <thead>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Issue Key</td>
+                    <td ng-repeat="LC in getCurrentSelectedSprint().logsAnalysis.cards track by $index">
+                        {{LC.key}}
+                    </td>
+                </tr>
+                <tr>
+                    <td># of Pull Requests</td>
+                    <td ng-repeat="LC in getCurrentSelectedSprint().logsAnalysis.cards track by $index">
+                        {{LC.numberOfPullRequests}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Commits</td>
+                    <td ng-repeat="LC in getCurrentSelectedSprint().logsAnalysis.cards track by $index">
+                        {{LC.commits.length}}
+                    </td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td>Authors</td>-->
+                    <!--<td ng-repeat="LC in getCurrentSelectedSprint().logsAnalysis.cards track by $index">-->
+                        <!--<div ng-repeat="C in LC.commits track by $index">{{C.commit.substring(0,7)}} |-->
+                            <!--{{C.author.email}}-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                </tbody>
+            </table>
+            <!--</div>-->
         </div>
     </div>
 </div>
