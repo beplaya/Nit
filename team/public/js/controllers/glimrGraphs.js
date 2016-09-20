@@ -32,8 +32,15 @@ Math.averageByWeight = function(weightedData){
 }
 
 angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope', 'glimrData',
-                                 function($scope, glimrData) {
-     $scope.max = 20;
+                                    'slideShow',
+                                 function($scope, glimrData, slideShow) {
+
+    $scope.slideShow = slideShow;
+    $scope.display = true;
+    $scope.slideShow.addSlide(function(display){
+        $scope.display = display;
+    });
+    $scope.max = 20;
 
     $scope.glimrData = glimrData;
     $scope.seriesViewProfileIndex = 0;
