@@ -230,6 +230,6 @@ function SlideShow($rootScope){
             self.slideIndex = 0;
         }
         self.notifySlides();
-    }, 25000);
+    }, 1*60*1000);
 
 }
