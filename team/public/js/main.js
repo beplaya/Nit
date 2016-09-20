@@ -32,17 +32,23 @@ function formatDate(date, noMinutes){
 
 var app = angular.module('nitForGitTeamApp', ['ngSanitize']);
 
-
-app.controller('statusController', ['$scope', 'userData', 'cardData',
-                            function($scope, userData, cardData) {
-    $scope.userData = userData;
-    $scope.cardData = cardData;
+app.controller('titleController',  ['$scope', 'glimrData',
+                             function($scope, glimrData) {
+    $scope.glimrData = glimrData;
 }]);
 
-app.controller('glimrController', ['$scope', 'glimrData',
-                           function($scope, glimrData) {
+app.controller('glimrController', ['$scope', 'glimrData', 'slideShow',
+                           function($scope, glimrData, slideShow) {
+    $scope.slideShow = slideShow;
+    $scope.display = false;
+    $scope.slideShow.addSlide(function(display){
+        $scope.display = display;
+    });
     $scope.glimrData = glimrData;
     $scope.curentlySelectedSprintIndex = 0;
+    $scope.glimrData.addListener(function(){
+         $scope.curentlySelectedSprintIndex = $scope.glimrData.allSprints.length-1;
+    });
 
     $scope.floor = Math.floor;
     $scope.round = Math.round;
@@ -80,6 +86,8 @@ app.controller('glimrController', ['$scope', 'glimrData',
         }
         return css;
     };
+
+        $scope.show = false;
 
 }]);
 
@@ -192,3 +200,36 @@ app.filter('reverse', function() {
     return items.slice().reverse();
   };
 });
+
+app.factory('slideShow', function ($rootScope) {
+    return new SlideShow($rootScope);
+});
+
+function SlideShow($rootScope){
+    this.$rootScope = $rootScope;
+    this.slideIndex = 0;
+    this.slides = [];
+
+    this.addSlide = function(slide) {
+        this.slides.push(slide);
+    };
+
+    this.notifySlides = function() {
+        console.log(this.slideIndex, this.slides.length);
+        for(var i=0; i<this.slides.length; i++) {
+            this.slides[i](this.slideIndex == i);
+        }
+        this.$rootScope.$apply();
+    };
+
+    var self = this;
+    this.interval = setInterval(function() {
+        if(self.slideIndex < (self.slides.length - 1)){
+            self.slideIndex++;
+        } else {
+            self.slideIndex = 0;
+        }
+        self.notifySlides();
+    }, 15000);
+
+}

@@ -24,41 +24,32 @@
     &nbsp;&nbsp;
     <span class="info tiny" ng-class="{errorText: !isLoggedIn, goodText: isLoggedIn}">{{loggedInStatus()}}</span>
 </div>
-<div>
-    <div class="row swimlane" style="display:none;" ng-controller="statusController">
-        <div class="summary" ng-repeat="C in cardData.data track by $index">
-            {{C.key}}
-            <span> {{C.status.currentIssueKey}}:&nbsp;&nbsp;{{C.summary}}</span>
-            <div class="info author" ng-repeat="A in C.authors track by $index">
-                {{A.name}} | {{A.email}}
-                <span class="commit" ng-repeat="COM in A.commits track by $index"></span>
-            </div>
-        </div>
-    </div>
 
-    <div class="row swimlane" ng-controller="glimrGraphController">
+<div ng-controller="titleController" class="row swimlane">
+    <h2>
+        Current Sprint:
+        <span style="color:#3333ff;">"{{glimrData.currentSprint.name}}"</span>
+        <span style="margin-left:50px;" ng-hide="!glimrData.jiraIntegrated">Story Point Velocity:</span>
+        <span style="color:#FF4111;">{{glimrData.currentSprint.sprintStoryPointVelocity}}</span>
+    </h2>
+</div>
+<div>
+    <div class="row swimlane" ng-show="display" ng-controller="glimrGraphController">
+        <div id="glimrGraphControllerContainer">Loading chart...</div>
         <button ng-click="onPreviousSeries()" class="rotateToggleBtnOff">
             Previous Series
         </button>
         <button ng-click="toggleRotateSeries()"
-                ng-class="{rotateToggleBtnOn: shouldSeriesRotate, rotateToggleBtnOff: !shouldSeriesRotate}">
+        ng-class="{rotateToggleBtnOn: shouldSeriesRotate, rotateToggleBtnOff: !shouldSeriesRotate}">
             {{shouldSeriesRotate ? "Rotate Series On" : "Rotate Series Off"}}
         </button>
         <button ng-click="onNextSeries()" class="rotateToggleBtnOff">
             Next Series
         </button>
-        <div id="glimrGraphControllerContainer">Loading chart...</div>
+        <hr>
         <div id="glimrGraphControllerContainerSprintDetails">Loading chart...</div>
     </div>
-
-    <div class="row swimlane" ng-controller="glimrController">
-        <h2>
-            Current Sprint:
-            <span style="color:#3333ff;">"{{glimrData.currentSprint.name}}"</span>
-            <span style="margin-left:50px;" ng-hide="!glimrData.jiraIntegrated" >Story Point Velocity:</span>
-            <span style="color:#FF4111;">{{glimrData.currentSprint.sprintStoryPointVelocity}}</span>
-        </h2>
-        <hr>
+    <div class="row swimlane" ng-show="display" ng-controller="glimrController">
         <h3 style="margin: 10px;">{{getCurrentSelectedSprint().name }}
             {{getCurrentSelectedSprint().formattedStartDate}} -
             {{getCurrentSelectedSprint().formattedEndDate}} &nbsp;
