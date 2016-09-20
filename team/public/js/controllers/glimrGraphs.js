@@ -39,6 +39,11 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
     $scope.display = true;
     $scope.slideShow.addSlide(function(display){
         $scope.display = display;
+        setTimeout(function(){
+            if($scope.display) {
+                $scope.glimrData.notifyListeners();
+            }
+        }, 500);
     });
     $scope.max = 20;
 
@@ -81,10 +86,8 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         $scope.advanceSeriesBackward();
     };
 
-
     $scope.glimrData.addListener(function(){
         //Current sprint
-
         var sprintDetails = $scope.glimrData.currentSprintFineDetails;
         if(sprintDetails){
             console.log(sprintDetails);
@@ -114,7 +117,6 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
             $('#glimrGraphControllerContainerSprintDetails').highcharts(chartOptions);
         }
     });
-
 
     $scope.glimrData.addListener(function(){
         //All sprints
