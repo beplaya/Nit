@@ -223,10 +223,12 @@ function SlideShow($rootScope){
         this.$rootScope.$apply();
     };
 
-    this.clearIntervalAndIterate = function(){
+    this.resetIntervalAndIterate = function(){
         clearInterval(this.interval);
         this.iterate();
+        this.createInterval();
     };
+
     this.iterate = function(){
         if(self.slideIndex < (self.slides.length - 1)){
             self.slideIndex++;
@@ -236,10 +238,13 @@ function SlideShow($rootScope){
         self.notifySlides();
     };
 
-    var self = this;
-    this.interval = setInterval(function() {
-        self.iterate();
-    }, 3000);
+    this.createInterval = function(){
+        var self = this;
+        this.interval = setInterval(function() {
+            self.iterate();
+        }, 2*60*1000);
+    };
 
+    this.createInterval();
 
 }
