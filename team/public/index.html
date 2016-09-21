@@ -35,6 +35,9 @@
             <button ng-click="slideShow.resetIntervalAndIterate()">
                 <img width="25px" src="images/left_right_arrow.png"/>
             </button>
+            <button ng-click="slideShow.clearInterval()">
+                <img width="25px" src="images/hand.png"/>
+            </button>
         </span>
     </div>
 
@@ -55,7 +58,7 @@
         <hr>
         <div id="glimrGraphControllerContainerSprintDetails">Loading chart...</div>
     </div>
-    <div class="row swimlane" ng-show="true" ng-controller="glimrController">
+    <div class="row swimlane" ng-show="display" ng-controller="glimrController">
         <h3 style="margin: 10px;">{{getCurrentSelectedSprint().name }}
             {{getCurrentSelectedSprint().formattedStartDate}} -
             {{getCurrentSelectedSprint().formattedEndDate}} &nbsp;

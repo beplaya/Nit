@@ -208,6 +208,7 @@ app.factory('slideShow', function ($rootScope) {
 });
 
 function SlideShow($rootScope){
+    this.period = 2*60*1000;
     this.$rootScope = $rootScope;
     this.slideIndex = 0;
     this.slides = [];
@@ -223,26 +224,30 @@ function SlideShow($rootScope){
         this.$rootScope.$apply();
     };
 
-    this.resetIntervalAndIterate = function(){
+    this.clearInterval = function() {
         clearInterval(this.interval);
+    };
+
+    this.resetIntervalAndIterate = function(){
         this.iterate();
+        this.clearInterval();
         this.createInterval();
     };
 
     this.iterate = function(){
-        if(self.slideIndex < (self.slides.length - 1)){
-            self.slideIndex++;
+        if(this.slideIndex < (this.slides.length - 1)){
+            this.slideIndex++;
         } else {
-            self.slideIndex = 0;
+            this.slideIndex = 0;
         }
-        self.notifySlides();
+        this.notifySlides();
     };
 
     this.createInterval = function(){
         var self = this;
-        this.interval = setInterval(function() {
+        self.interval = setInterval(function() {
             self.iterate();
-        }, 2*60*1000);
+        }, self.period);
     };
 
     this.createInterval();
