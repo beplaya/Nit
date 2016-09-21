@@ -32,14 +32,16 @@ function formatDate(date, noMinutes){
 
 var app = angular.module('nitForGitTeamApp', ['ngSanitize']);
 
-app.controller('titleController',  ['$scope', 'glimrData',
-                             function($scope, glimrData) {
+app.controller('titleController',  ['$scope', 'glimrData', 'slideShow',
+                             function($scope, glimrData, slideShow) {
     $scope.glimrData = glimrData;
+    $scope.slideShow = slideShow;
 }]);
 
-app.controller('glimrController', ['$scope', 'glimrData', 'slideShow',
-                           function($scope, glimrData, slideShow) {
+app.controller('glimrController', ['$scope', 'glimrData', 'cardData', 'slideShow',
+                           function($scope, glimrData, cardData, slideShow) {
     $scope.slideShow = slideShow;
+    $scope.cardData = cardData;
     $scope.display = false;
     $scope.slideShow.addSlide(function(display){
         $scope.display = display;
@@ -71,6 +73,10 @@ app.controller('glimrController', ['$scope', 'glimrData', 'slideShow',
         }
     };
 
+    $scope.getStoryPointsByCardKey = function(cardKey) {
+        return $scope.cardData;
+    };
+
     $scope.getCurrentSelectedSprint = function() {
         var css;
         if($scope.glimrData.allSprints){
@@ -79,15 +85,11 @@ app.controller('glimrController', ['$scope', 'glimrData', 'slideShow',
             css = $scope.glimrData.currentSprint;
         }
         if(css) {
-            //css.formattedStartDate = formatDate(new Date(css.startDate), true);
-            //css.formattedEndDate = formatDate(new Date(css.startDate.replace(/\//g, "-")), true);
             css.formattedStartDate = css.startDate;
             css.formattedEndDate = css.endDate;
         }
         return css;
     };
-
-        $scope.show = false;
 
 }]);
 
@@ -215,21 +217,29 @@ function SlideShow($rootScope){
     };
 
     this.notifySlides = function() {
-        console.log(this.slideIndex, this.slides.length);
         for(var i=0; i<this.slides.length; i++) {
             this.slides[i](this.slideIndex == i);
         }
         this.$rootScope.$apply();
     };
 
-    var self = this;
-    this.interval = setInterval(function() {
+    this.clearIntervalAndIterate = function(){
+        clearInterval(this.interval);
+        this.iterate();
+    };
+    this.iterate = function(){
         if(self.slideIndex < (self.slides.length - 1)){
             self.slideIndex++;
         } else {
             self.slideIndex = 0;
         }
         self.notifySlides();
-    }, 2*60*1000);
+    };
+
+    var self = this;
+    this.interval = setInterval(function() {
+        self.iterate();
+    }, 3000);
+
 
 }

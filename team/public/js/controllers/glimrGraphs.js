@@ -90,7 +90,6 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
         //Current sprint
         var sprintDetails = $scope.glimrData.currentSprintFineDetails;
         if(sprintDetails){
-            console.log(sprintDetails);
             var statusObjects = sprintDetails.statusObjects;
 
             var chartOptions = {
@@ -113,7 +112,6 @@ angular.module('nitForGitTeamApp').controller('glimrGraphController', ['$scope',
                 chartOptions.series[0].data.push(statusObjects[i].storyPoints);
                 chartOptions.series[1].data.push(statusObjects[i].numberOfIssues);
             }
-            console.log(chartOptions);
             $('#glimrGraphControllerContainerSprintDetails').highcharts(chartOptions);
         }
     });

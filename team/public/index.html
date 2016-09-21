@@ -26,12 +26,18 @@
 </div>
 
 <div ng-controller="titleController" class="row swimlane">
-    <h2>
+    <div class="" style="font-size:30px;">
         Current Sprint:
         <span style="color:#3333ff;">"{{glimrData.currentSprint.name}}"</span>
         <span style="margin-left:50px;" ng-hide="!glimrData.jiraIntegrated">Story Point Velocity:</span>
         <span style="color:#FF4111;">{{glimrData.currentSprint.sprintStoryPointVelocity}}</span>
-    </h2>
+        <span style="float: right;">
+            <button ng-click="slideShow.clearIntervalAndIterate()">
+                <img width="25px" src="images/left_right_arrow.png"/>
+            </button>
+        </span>
+    </div>
+
 </div>
 <div>
     <div class="row swimlane" ng-show="display" ng-controller="glimrGraphController">
@@ -49,7 +55,7 @@
         <hr>
         <div id="glimrGraphControllerContainerSprintDetails">Loading chart...</div>
     </div>
-    <div class="row swimlane" ng-show="display" ng-controller="glimrController">
+    <div class="row swimlane" ng-show="true" ng-controller="glimrController">
         <h3 style="margin: 10px;">{{getCurrentSelectedSprint().name }}
             {{getCurrentSelectedSprint().formattedStartDate}} -
             {{getCurrentSelectedSprint().formattedEndDate}} &nbsp;
@@ -59,7 +65,7 @@
             </select></h3>
         <h4>GLIMR Commit Analysis</h4>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <table class=" table table-striped glimr-table ">
                     <thead>
                     <th align="center"
@@ -84,7 +90,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <table class=" table table-striped glimr-table ">
                     <thead>
                     <th>Author</th>
@@ -143,12 +149,12 @@
                     </td>
                 </tr>
                 <!--<tr>-->
-                    <!--<td>Authors</td>-->
-                    <!--<td ng-repeat="LC in getCurrentSelectedSprint().logsAnalysis.cards track by $index">-->
-                        <!--<div ng-repeat="C in LC.commits track by $index">{{C.commit.substring(0,7)}} |-->
-                            <!--{{C.author.email}}-->
-                        <!--</div>-->
-                    <!--</td>-->
+                <!--<td>Authors</td>-->
+                <!--<td ng-repeat="LC in getCurrentSelectedSprint().logsAnalysis.cards track by $index">-->
+                <!--<div ng-repeat="C in LC.commits track by $index">{{C.commit.substring(0,7)}} |-->
+                <!--{{C.author.email}}-->
+                <!--</div>-->
+                <!--</td>-->
                 <!--</tr>-->
                 </tbody>
             </table>
