@@ -202,13 +202,34 @@ function Nit(runner) {
          this.createAndCheckoutBranch("develop", currentBranch, cb);
     };
 
+    this.deleteFeatureBranch = function(branchName, currentBranch, cb) {
+        if(!branchName || branchName.trim().length == 0){
+            this.printer.E("NError! Cannot delete feature branch ''");
+        } else {
+            var branchToDelete = this.nettings.featurePrefix + branchName.trim();
+            if(branchToDelete == currentBranch){
+                this.printer.E("NError! Cannot delete branch you're currently on.");
+            } else {
+                this.deleteBranch(branchToDelete, cb);
+            }
+        }
+    };
+
     this.createAndCheckoutFeatureBranch = function(branchName, currentBranch, cb) {
-        if(!branchName || branchName.length == 0){
+        if(!branchName || branchName.trim().length == 0){
             this.printer.E("NError! Cannot create feature branch ''");
             cb && cb();
             return;
         }
         this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch, cb);
+    };
+
+    this.deleteBranch = function(branchToDelete, cb) {
+        var self = this;
+        self.git(["branch", "-D", branchToDelete], function(data){
+            console.log(data);
+            self.printer.print("Deleted branch " + branchToDelete);
+        });
     };
 
     this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
