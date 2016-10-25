@@ -227,8 +227,13 @@ function Nit(runner) {
     this.deleteBranch = function(branchToDelete, cb) {
         var self = this;
         self.git(["branch", "-D", branchToDelete], function(data){
-            console.log(data);
-            self.printer.print("Deleted branch " + branchToDelete);
+            var search = "error: ";
+            if(data.indexOf(search) === -1){
+                self.printer.print("Deleted branch " + branchToDelete);
+            } else {
+                self.printer.E("NERROR: Cannot delete. Branch does not exist locally!");
+            }
+            cb && cb();
         });
     };
 
