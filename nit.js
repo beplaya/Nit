@@ -202,13 +202,39 @@ function Nit(runner) {
          this.createAndCheckoutBranch("develop", currentBranch, cb);
     };
 
+    this.deleteFeatureBranch = function(branchName, currentBranch, cb) {
+        if(!branchName || branchName.trim().length == 0){
+            this.printer.E("NError! Cannot delete feature branch ''");
+        } else {
+            var branchToDelete = this.nettings.featurePrefix + branchName.trim();
+            if(branchToDelete == currentBranch){
+                this.printer.E("NError! Cannot delete branch you're currently on.");
+            } else {
+                this.deleteBranch(branchToDelete, cb);
+            }
+        }
+    };
+
     this.createAndCheckoutFeatureBranch = function(branchName, currentBranch, cb) {
-        if(!branchName || branchName.length == 0){
+        if(!branchName || branchName.trim().length == 0){
             this.printer.E("NError! Cannot create feature branch ''");
             cb && cb();
             return;
         }
         this.createAndCheckoutBranch(this.nettings.featurePrefix + branchName, currentBranch, cb);
+    };
+
+    this.deleteBranch = function(branchToDelete, cb) {
+        var self = this;
+        self.git(["branch", "-D", branchToDelete], function(data){
+            var search = "error: ";
+            if(data.indexOf(search) === -1){
+                self.printer.print("Deleted branch " + branchToDelete);
+            } else {
+                self.printer.E("NERROR: Cannot delete. Branch does not exist locally!");
+            }
+            cb && cb();
+        });
     };
 
     this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
