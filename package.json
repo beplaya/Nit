@@ -16,6 +16,7 @@
   "scripts": {
     "test": "mocha tests"
   },
-  "author": "",
+  "author": "beplaya",
+  "url":"https://github.com/beplaya/Nit",
   "license": "MIT"
 }
