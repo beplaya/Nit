@@ -75,7 +75,7 @@ function Nit(runner) {
                     }
 
                     if(cmd.arg == "fci" || cmd.arg == "fb"){
-                        NIT.runner.run("nit", ["updateNerver"]);
+                        NIT.runner.run("$NIT/nit", ["updateNerver"]);
                     }
                 } else {
                     self.nerrorUnclean();
