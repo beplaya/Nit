@@ -461,7 +461,8 @@ function Nit(runner) {
     };
 
     this.nit = function(cmdArgs, cb) {
-        this.runner.run(process.env.NIT.replace(/\\/g,"/") + "/node", cmdArgs.unshift('nit'), cb);
+        cmcmdArgs.unshift('nit');
+        this.runner.run(process.env.NIT.replace(/\\/g,"/") + "/node", cmdArgs, cb);
     };
 
     this.git = function(cmdArgs, cb) {
