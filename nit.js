@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 var cliArgs = process.argv.slice(2);
-var runner = new Runner();
+
+var debug = false;
+try {
+    var fs = require('fs');
+    debug = fs.existsSync(__dirname + "/debug");
+} catch(e) {
+    debug = false;
+}
+
+var runner = new Runner(debug);
 
 if(cliArgs[0] === "setup"){
 
@@ -462,7 +471,6 @@ function Nit(runner) {
 
     this.nit = function(cmdArgs, cb) {
         cmdArgs.unshift('nit');
-//        this.runner.run(process.env.NIT.replace(/\\/g,"/") + "/node", cmdArgs, cb);
         this.runner.run("node", cmdArgs, cb);
     };
 
@@ -485,11 +493,12 @@ function Nit(runner) {
     };
 }
 
-function Runner() {
+function Runner(debug) {
+    this.debug = debug;
 	this.isWin = /^win/.test(process.platform);
     this.child_process = require('child_process');
     this.runInherit = function(cmd, cmdArgs, cb) {
-        console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
+        if(this.debug) console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
 		if(this.isWin){
 			if(cmd === "open"){
 				cmd = "start";
@@ -508,7 +517,7 @@ function Runner() {
     };
 
     this.run = function(cmd, cmdArgs, cb) {
-        console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
+        if(this.debug) console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
 		if(this.isWin){
 			if(cmd === "open"){
 				cmd = "start";
