@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 var cliArgs = process.argv.slice(2);
-var runner = new Runner();
+
+var debug = false;
+try {
+    var fs = require('fs');
+    debug = fs.existsSync(__dirname + "/debug");
+} catch(e) {
+    debug = false;
+}
+
+var runner = new Runner(debug);
 
 if(cliArgs[0] === "setup"){
 
@@ -29,14 +38,14 @@ function Nit(runner) {
 
 	
 	
-    this.printer = require(__dirname + '/lib/printer.js')();
-    this.nettings = require(__dirname + '/lib/nit_settings.js')().load();
-    this.nira = require(__dirname + '/lib/nira/nira.js')(this.nettings);
-    this.nerver = require(__dirname + '/lib/nerver.js')(this.nira);
-    this.teamNerver = require(__dirname + '/lib/team_nerver.js')(this.nira);
-    this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver);
-    this.log = require(__dirname + '/lib/log.js')(this);
-    this.cmds = require(__dirname + '/lib/cmds.js')();
+    this.printer = new require(__dirname + '/lib/printer.js')();
+    this.nettings = new require(__dirname + '/lib/nit_settings.js')().load();
+    this.nira = new require(__dirname + '/lib/nira/nira.js')(this.nettings);
+    this.nerver = new require(__dirname + '/lib/nerver.js')(this.nira);
+    this.teamNerver = new require(__dirname + '/lib/team_nerver.js')(this.nira);
+    this.nitClient = new require(__dirname + '/lib/nit_client.js')(this.nerver);
+    this.log = new require(__dirname + '/lib/log.js')(this);
+    this.cmds = new require(__dirname + '/lib/cmds.js')();
 
     this.browse = function(currentBranch) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
@@ -75,7 +84,7 @@ function Nit(runner) {
                     }
 
                     if(cmd.arg == "fci" || cmd.arg == "fb"){
-                        NIT.runner.run("nit", ["updateNerver"]);
+                        NIT.nit(["updateNerver"]);
                     }
                 } else {
                     self.nerrorUnclean();
@@ -460,6 +469,11 @@ function Nit(runner) {
         return branch;
     };
 
+    this.nit = function(cmdArgs, cb) {
+        cmdArgs.unshift('nit');
+        this.runner.run("node", cmdArgs, cb);
+    };
+
     this.git = function(cmdArgs, cb) {
         this.runner.run("git", cmdArgs, cb);
     };
@@ -479,11 +493,12 @@ function Nit(runner) {
     };
 }
 
-function Runner() {
+function Runner(debug) {
+    this.debug = debug;
 	this.isWin = /^win/.test(process.platform);
     this.child_process = require('child_process');
     this.runInherit = function(cmd, cmdArgs, cb) {
-
+        if(this.debug) console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
 		if(this.isWin){
 			if(cmd === "open"){
 				cmd = "start";
@@ -502,6 +517,7 @@ function Runner() {
     };
 
     this.run = function(cmd, cmdArgs, cb) {
+        if(this.debug) console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
 		if(this.isWin){
 			if(cmd === "open"){
 				cmd = "start";
@@ -509,7 +525,6 @@ function Runner() {
 		}
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-        // console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
         var out = "";
         var error = false;
         ls.stdout.on('data', function (data) {

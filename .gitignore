@@ -12,3 +12,6 @@ stats/commit_frequency_chart.js
 npm-debug.log
 team/cache/*.json
 team/cache/*/*.json
+
+
+debug
