@@ -239,9 +239,10 @@ function Nit(runner) {
 
     this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
         var self = this;
-        console.log("gowpejugt0943wug94jf0rf3urf2u3");
         if(currentBranch.trim() != branchName.trim()){
            self.git(["checkout", branchName], function(data){
+                   console.log("YYYYYYYYYYYYYYYYgowpejugt0943wug94jf0rf3urf2u3");
+
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
                     cb && cb();
