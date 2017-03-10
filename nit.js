@@ -33,11 +33,7 @@ if(cliArgs[0] === "setup"){
 }
 
 function Nit(runner) {
-    var NIT = this;
     this.runner = runner;
-
-	
-	
     this.printer = new require(__dirname + '/lib/printer.js')();
     this.nettings = new require(__dirname + '/lib/nit_settings.js')().load();
     this.nira = new require(__dirname + '/lib/nira/nira.js')(this.nettings);
@@ -77,14 +73,11 @@ function Nit(runner) {
         if(cmd) {
             self.isCleanStatus(function(data, clean, currentBranch){
                 if(clean || !cmd.requiresClean){
-                    if(cmd.takesArray) {
-                        cmd.action(self, cliArgs, currentBranch);
-                    } else {
-                        cmd.action(self, cliArgs[1], currentBranch);
-                    }
+                    var argsToSend = cmd.takesArray ? cliArgs : cliArgs[1];
+                    cmd.action(self, argsToSend, currentBranch, data);
 
                     if(cmd.arg == "fci" || cmd.arg == "fb"){
-                        NIT.nit(["updateNerver"]);
+                        self.nit(["updateNerver"]);
                     }
                 } else {
                     self.nerrorUnclean();
@@ -123,7 +116,7 @@ function Nit(runner) {
             var msg = prefix + " " + message;
             self.commit(msg, currentBranch, cb);
 
-            NIT.nitClient.sendCmdToServer("feature_commit", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", true, function(repliedFields){});
+            self.nitClient.sendCmdToServer("feature_commit", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "git", true, function(repliedFields){});
 
         } else {
             self.printer.E("NERROR: Cannot commit feature while on non-feature branch '" + currentBranch + "'");
@@ -299,37 +292,45 @@ function Nit(runner) {
     };
 
     this.statusPrint = function(cb) {
-        NIT.git(["status"], function(statusData){
-            currentBranch = NIT.discoverBranch(statusData);
-            NIT.printer.printStatus(statusData, currentBranch, NIT.isDetached);
-            cb && cb(statusData, currentBranch, NIT.isDetached);
+        var self = this;
+        self.git(["status"], function(statusData){
+            cb && cb(statusData, currentBranch, self.isDetached);
         });
     };
 
+    this.printStatusData = function(statusData) {
+        var self = this;
+        currentBranch = self.discoverBranch(statusData);
+        self.printer.printStatus(statusData, currentBranch, self.isDetached);
+    };
+
     this.getBranchAndDescribe = function(cb) {
-        NIT.git(["status"], function(statusData){
-            NIT.describe(NIT.discoverBranch(statusData), cb);
+        var self = this;
+        self.git(["status"], function(statusData){
+            self.describe(self.discoverBranch(statusData), cb);
         });
     };
 
     this.getBranchComments = function(cb) {
-        NIT.git(["status"], function(statusData){
-            NIT.comments(NIT.discoverBranch(statusData), cb);
+        var self = this;
+        self.git(["status"], function(statusData){
+            self.comments(self.discoverBranch(statusData), cb);
         });
     };
 
-    NIT.updateNerver = function(){
-        NIT.git(["status"], function(status){
-            var currentBranch = NIT.discoverBranch(status);
-            var issueKey = NIT.nira.ticketIDFromBranch(currentBranch);
-            var isCleanStatus = NIT.determineIsCleanFromStatus(status);
-            NIT.git(["log", "--pretty=oneline"], function(logs){
-                var lineMessages = NIT.getLineMessages(logs);
-                NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, issueKey, "jira", true, function(repliedFields){
-                    NIT.nitClient.sendCmdToServer("status", {status: status, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
-                        NIT.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, issueKey, "git", true, function(){
-                            NIT.git(["diff"], function(diff){
-                                NIT.nitClient.sendCmdToServer("diff", {diff: diff, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
+    this.updateNerver = function(){
+        var self = this;
+        self.git(["status"], function(status){
+            var currentBranch = self.discoverBranch(status);
+            var issueKey = self.nira.ticketIDFromBranch(currentBranch);
+            var isCleanStatus = self.determineIsCleanFromStatus(status);
+            self.git(["log", "--pretty=oneline"], function(logs){
+                var lineMessages = self.getLineMessages(logs);
+                self.nitClient.sendCmdToServer("issue", {}, currentBranch, issueKey, "jira", true, function(repliedFields){
+                    self.nitClient.sendCmdToServer("status", {status: status, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
+                        self.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, issueKey, "git", true, function(){
+                            self.git(["diff"], function(diff){
+                                self.nitClient.sendCmdToServer("diff", {diff: diff, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
                                 });
                             });
                         });
@@ -341,7 +342,7 @@ function Nit(runner) {
 
     this.describe = function(currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdToServer("issue", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", false, function(repliedFields){
+        self.nitClient.sendCmdToServer("issue", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", false, function(repliedFields){
             self.printer.description(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
             cb && cb(self.nira.ticketIDFromBranch(currentBranch), repliedFields);
         });
@@ -349,7 +350,7 @@ function Nit(runner) {
 
     this.comments = function(currentBranch, cb) {
         var self = this;
-        NIT.nitClient.sendCmdToServer("comments", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", false, function(repliedComments){
+        self.nitClient.sendCmdToServer("comments", {}, currentBranch, self.nira.ticketIDFromBranch(currentBranch), "jira", false, function(repliedComments){
             self.printer.comments(repliedComments);
             cb && cb(repliedComments);
         });
@@ -363,13 +364,13 @@ function Nit(runner) {
     this.logOneLiners = function(currentBranch, cb) {
         var self = this;
         self.git(["log", "--pretty=oneline"], function(logs){
-            var lineMessages = NIT.getLineMessages(logs);
+            var lineMessages = self.getLineMessages(logs);
             self.printer.logOneLiners(logs);
             cb && cb(logs);
         });
     };
 
-    NIT.getLineMessages = function(logs, max) {
+    this.getLineMessages = function(logs, max) {
         var max = max || 20;
         var lines = logs.split('\n');
         var lineMessages = [];
@@ -397,11 +398,12 @@ function Nit(runner) {
     };
 
     this.status = function(cb) {
-         this.git(["status"], function(status){
-            var currentBranch = NIT.discoverBranch(status);
-            var isCleanStatus = NIT.determineIsCleanFromStatus(status);
+        var self = this;
+        this.git(["status"], function(status){
+            var currentBranch = self.discoverBranch(status);
+            var isCleanStatus = self.determineIsCleanFromStatus(status);
             cb && cb(status);
-         });
+        });
     };
 
     this.stageFeatureCommitAndStatus = function(message, currentBranch) {
@@ -484,12 +486,12 @@ function Nit(runner) {
     //
     this.nerver.init(this);
 
-    NIT.startNerver = function(arg) {
-        NIT.nerver.start(arg);
+    this.startNerver = function(arg) {
+        this.nerver.start(arg);
     };
 
-    NIT.startTeamNerver = function(arg) {
-        NIT.teamNerver.start(arg);
+    this.startTeamNerver = function(arg) {
+        this.teamNerver.start(arg);
     };
 }
 
