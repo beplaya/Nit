@@ -483,7 +483,7 @@ function Runner() {
 	this.isWin = /^win/.test(process.platform);
     this.child_process = require('child_process');
     this.runInherit = function(cmd, cmdArgs, cb) {
-
+        console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
 		if(this.isWin){
 			if(cmd === "open"){
 				cmd = "start";
@@ -502,12 +502,12 @@ function Runner() {
     };
 
     this.run = function(cmd, cmdArgs, cb) {
+        console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
 		if(this.isWin){
 			if(cmd === "open"){
 				cmd = "start";
 			}
 		}
-        console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
         var out = "";
