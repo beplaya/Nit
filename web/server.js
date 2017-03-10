@@ -4,7 +4,7 @@ module.exports = function(nerver){
     var app = express();
     app.nerver = nerver;
     var fs = require('fs');
-    var nettings = require(__dirname + '/../lib/nit_settings.js')().load();
+    var nettings = new require(__dirname + '/../lib/nit_settings.js')().load();
     var port = nettings.nerver.port;
     app.use(express.static(__dirname + '/public'));
 

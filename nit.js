@@ -38,14 +38,14 @@ function Nit(runner) {
 
 	
 	
-    this.printer = require(__dirname + '/lib/printer.js')();
-    this.nettings = require(__dirname + '/lib/nit_settings.js')().load();
-    this.nira = require(__dirname + '/lib/nira/nira.js')(this.nettings);
-    this.nerver = require(__dirname + '/lib/nerver.js')(this.nira);
-    this.teamNerver = require(__dirname + '/lib/team_nerver.js')(this.nira);
-    this.nitClient = require(__dirname + '/lib/nit_client.js')(this.nerver);
-    this.log = require(__dirname + '/lib/log.js')(this);
-    this.cmds = require(__dirname + '/lib/cmds.js')();
+    this.printer = new require(__dirname + '/lib/printer.js')();
+    this.nettings = new require(__dirname + '/lib/nit_settings.js')().load();
+    this.nira = new require(__dirname + '/lib/nira/nira.js')(this.nettings);
+    this.nerver = new require(__dirname + '/lib/nerver.js')(this.nira);
+    this.teamNerver = new require(__dirname + '/lib/team_nerver.js')(this.nira);
+    this.nitClient = new require(__dirname + '/lib/nit_client.js')(this.nerver);
+    this.log = new require(__dirname + '/lib/log.js')(this);
+    this.cmds = new require(__dirname + '/lib/cmds.js')();
 
     this.browse = function(currentBranch) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
