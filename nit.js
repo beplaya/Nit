@@ -507,9 +507,9 @@ function Runner() {
 				cmd = "start";
 			}
 		}
+        console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
         var spawn = require('child_process').spawn,
         ls = spawn(cmd, cmdArgs);
-        // console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
         var out = "";
         var error = false;
         ls.stdout.on('data', function (data) {
