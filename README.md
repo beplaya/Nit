@@ -29,6 +29,7 @@
  - Nit avoids doing things that aliases can do
 
 ## Commands
+###### Enable debug by placing a file in the nit directory names 'debug'
 ```
         help            > Help
         updateNerver    > Update Nerver
@@ -52,8 +53,9 @@
         browse          > Browse jira
         describe        > Get JIRA description
         comments        > Get JIRA comments
-
 ```
+
+
 
 If you work with JIRA, you may work in the following manner:
 
