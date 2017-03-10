@@ -241,8 +241,6 @@ function Nit(runner) {
         var self = this;
         if(currentBranch.trim() != branchName.trim()){
            self.git(["checkout", branchName], function(data){
-                   console.log("YYYYYYYYYYYYYYYYgowpejugt0943wug94jf0rf3urf2u3");
-
                 var search = "error: ";
                 if(data.indexOf(search) === -1){
                     cb && cb();
