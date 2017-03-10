@@ -75,7 +75,7 @@ function Nit(runner) {
                     }
 
                     if(cmd.arg == "fci" || cmd.arg == "fb"){
-                        NIT.runner.run(process.env.NIT + "/nit", ["updateNerver"]);
+                        NIT.runner.nit(["updateNerver"]);
                     }
                 } else {
                     self.nerrorUnclean();
@@ -458,6 +458,10 @@ function Nit(runner) {
             }
         }
         return branch;
+    };
+
+    this.nit = function(cmdArgs, cb) {
+        this.runner.run(process.env.NIT.replace(/\\/g,"/") + "/nit", cmdArgs, cb);
     };
 
     this.git = function(cmdArgs, cb) {
