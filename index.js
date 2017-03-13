@@ -10,9 +10,9 @@ try {
 }
 
 var Nit = require(__dirname + "/nit.js");
-var Runner = require(__dirname + "/runner.js");
+var SpawnRunner = require("spawn_runner");
 
-var runner = new Runner(debug);
+var runner = new SpawnRunner(debug);
 
 if(cliArgs[0] === "setup"){
 
