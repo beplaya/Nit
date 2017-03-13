@@ -11,7 +11,6 @@ try {
 
 var Nit = require(__dirname + "/nit.js");
 var SpawnRunner = require("spawn_runner");
-
 var runner = new SpawnRunner(debug);
 
 if(cliArgs[0] === "setup"){
@@ -31,7 +30,7 @@ if(cliArgs[0] === "setup"){
 	
 
 } else {
-	var nit = new Nit(runner);
+	var nit = new Nit();
 	nit.start(cliArgs);
 }
 
