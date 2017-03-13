@@ -1,38 +1,7 @@
-#!/usr/bin/env node
-var cliArgs = process.argv.slice(2);
-
-var debug = false;
-try {
-    var fs = require('fs');
-    debug = fs.existsSync(__dirname + "/debug");
-} catch(e) {
-    debug = false;
-}
-
-var runner = new Runner(debug);
-
-if(cliArgs[0] === "setup"){
-
-	var cmd = "cd "+__dirname+" && npm install && sudo npm install -g bower "
-	    +" && cd web/ && npm install && cd public && bower install && cd "+__dirname
-	    +" && cd team/ && npm install && cd public && bower install && cd "+__dirname;
-
-	console.log("Running: "+cmd);
-	child_process = require('child_process');
- 
-	child_process.exec(cmd, function(err, out, code) {
-		if (err instanceof Error)
-			throw err;
-		process.stdout.write("."+out);
-	});	
-	
-
-} else {
-	var nit = new Nit(runner);
-	nit.start(cliArgs);
-}
-
-function Nit(runner) {
+module.exports = function Nit(runner, cmds) {
+    if(!this instanceof Nit) {
+        return new Nit(runner);
+    }
     this.runner = runner;
     this.printer = new require(__dirname + '/lib/printer.js')();
     this.nettings = new require(__dirname + '/lib/nit_settings.js')().load();
@@ -41,7 +10,7 @@ function Nit(runner) {
     this.teamNerver = new require(__dirname + '/lib/team_nerver.js')(this.nira);
     this.nitClient = new require(__dirname + '/lib/nit_client.js')(this.nerver);
     this.log = new require(__dirname + '/lib/log.js')(this);
-    this.cmds = new require(__dirname + '/lib/cmds.js')();
+    this.cmds = cmds || new require(__dirname + '/lib/cmds.js')();
 
     this.browse = function(currentBranch) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
@@ -493,54 +462,5 @@ function Nit(runner) {
     this.startTeamNerver = function(arg) {
         this.teamNerver.start(arg);
     };
-}
+};
 
-function Runner(debug) {
-    this.debug = debug;
-	this.isWin = /^win/.test(process.platform);
-    this.child_process = require('child_process');
-    this.runInherit = function(cmd, cmdArgs, cb) {
-        if(this.debug) console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
-		if(this.isWin){
-			if(cmd === "open"){
-				cmd = "start";
-			}
-		}
-        var msg = cmd;
-        if(cmdArgs){
-            for(var i=0; i<cmdArgs.length; i++) {
-                msg += " "+cmdArgs[i];
-            }
-        }
-        var spawn = this.child_process.spawn;
-        spawn(cmd, cmdArgs, {stdio : 'inherit'});
-
-        cb && cb();
-    };
-
-    this.run = function(cmd, cmdArgs, cb) {
-        if(this.debug) console.log("RUNNING ", "[", cmd,  cmdArgs.join(" "), "]");
-		if(this.isWin){
-			if(cmd === "open"){
-				cmd = "start";
-			}
-		}
-        var spawn = require('child_process').spawn,
-        ls = spawn(cmd, cmdArgs);
-        var out = "";
-        var error = false;
-        ls.stdout.on('data', function (data) {
-            out += "\n" + (data ? data.toString() : "");
-        });
-        ls.stderr.on('data', function (data) {
-            error = true;
-            out += "\n" + (data ? data.toString() : "");
-        });
-
-        ls.on('close', function (code) {
-            cb && cb(out, error);
-        });
-    };
-
-
-}

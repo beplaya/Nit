@@ -2,7 +2,7 @@
   "name": "nit_for_git",
   "version": "1.0.24",
   "description": "Nit wraps Git and Integrates tools like Jira and GLIMR https://github.com/beplaya/Nit",
-  "main": "nit.js",
+  "main": "index.js",
   "dependencies": {
     "colors": "^1.1.2",
     "prompt": "^0.2.14",
