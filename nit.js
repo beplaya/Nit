@@ -1,10 +1,10 @@
-module.exports = function Nit(runner, cmds) {
+module.exports = function Nit(runner, cmds, nettings) {
     if(!this instanceof Nit) {
         return new Nit(runner);
     }
     this.runner = runner;
     this.printer = new require(__dirname + '/lib/printer.js')();
-    this.nettings = new require(__dirname + '/lib/nit_settings.js')().load();
+    this.nettings = nettings || new require(__dirname + '/lib/nit_settings.js')().load();
     this.nira = new require(__dirname + '/lib/nira/nira.js')(this.nettings);
     this.nerver = new require(__dirname + '/lib/nerver.js')(this.nira);
     this.teamNerver = new require(__dirname + '/lib/team_nerver.js')(this.nira);
