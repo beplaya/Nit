@@ -1,4 +1,11 @@
 #Nit For Git
+
+https://www.npmjs.com/package/nit_for_git
+
+```npm
+npm install nit_for_git
+```
+
 #### https://github.com/beplaya/Nit
 <div>
 <pre>
