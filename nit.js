@@ -45,10 +45,6 @@ module.exports = function Nit(runner, cmds, nettings) {
                 if(clean || !cmd.requiresClean){
                     var argsToSend = cmd.takesArray ? cliArgs : cliArgs[1];
                     cmd.action(self, argsToSend, currentBranch, data);
-
-                    if(cmd.arg == "fci" || cmd.arg == "fb"){
-                        self.nit(["updateNerver"]);
-                    }
                 } else {
                     self.nerrorUnclean();
                 }
@@ -285,28 +281,6 @@ module.exports = function Nit(runner, cmds, nettings) {
         var self = this;
         self.git(["status"], function(statusData){
             self.comments(self.discoverBranch(statusData), cb);
-        });
-    };
-
-    this.updateNerver = function(){
-        var self = this;
-        self.git(["status"], function(status){
-            var currentBranch = self.discoverBranch(status);
-            var issueKey = self.nira.ticketIDFromBranch(currentBranch);
-            var isCleanStatus = self.determineIsCleanFromStatus(status);
-            self.git(["log", "--pretty=oneline"], function(logs){
-                var lineMessages = self.getLineMessages(logs);
-                self.nitClient.sendCmdToServer("issue", {}, currentBranch, issueKey, "jira", true, function(repliedFields){
-                    self.nitClient.sendCmdToServer("status", {status: status, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
-                        self.nitClient.sendCmdToServer("one_line_log_data", lineMessages, currentBranch, issueKey, "git", true, function(){
-                            self.git(["diff"], function(diff){
-                                self.nitClient.sendCmdToServer("diff", {diff: diff, isCleanStatus: isCleanStatus}, currentBranch, issueKey, "git", true, function(){
-                                });
-                            });
-                        });
-                    });
-                });
-            });
         });
     };
 
