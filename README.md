@@ -50,12 +50,7 @@
         qrci            > Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
         nerver          > Start nerver
         team            > Start team nerver
-        browse          > Browse jira
-        describe        > Get JIRA description
-        comments        > Get JIRA comments
 ```
-
-
 
 If you work with JIRA, you may work in the following manner:
 
@@ -97,21 +92,9 @@ nit push
 If Nit does not recognize a command it will simply pass the command and args to Git, and give the same output as traditional Git.
 Therefore, you do not need to switch from "nit" to "git" for any command.  You can always use "nit"!
 
-
-##Nerver
-Nerver is a background process that connects to JIRA enabling commands like  ```nit describe```, ```nit mkc ...```,  and ```nit comments```.
-Currently, it needs it's own terminal tab.  In the future, Nit will handle this for you.
-For now, to start Nerver:
- - Open a separate terminal window
- - cd to your project directory
- - Ensure your .nitconfig jira.host is set to your JIRA host.
- - Run ```nit nerver```
- - Enter your JIRA credentials
- - Leave the window running
- - Open your favorite browser and go to http://localhost:yourNerverPortIn (set port in .nitconfig) to see live git status and Jira info as you nit along
-
 ##Team Nerver
-Team Nerver is a central point where team commits are visualized: http://TeamNerverHost:yourTeamNerverPortIn  (set port in .nitconfig) 
+Team Nerver is a central point where team commits are visualized (prompts for Jira credentials): 
+http://TeamNerverHost:yourTeamNerverPortIn  (set port in .nitconfig) 
 
 ##### Note:
  - Nerver does not write your JIRA credentials to disk.  However, they are stored in RAM.  It's recommended to use a functional user for Nerver.
@@ -129,7 +112,6 @@ Team Nerver is a central point where team commits are visualized: http://TeamNer
         "host": "???"
     },
     "nerver" : { 
-        "port" : 9000, 
         "team" : { 
             "url": "localhost", 
             "port":9100

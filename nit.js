@@ -13,9 +13,9 @@ module.exports = function Nit(runner, cmds, nettings) {
     this.log = new require(__dirname + '/lib/log.js')(this);
     this.cmds = cmds || new require(__dirname + '/lib/cmds.js')();
 
-    this.browse = function(currentBranch) {
+    this.browse = function(currentBranch, cb) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
-        this.runner.run("open", [this.nira.baseURL + ticket]);
+        this.runner.run("open", [this.nira.baseURL + ticket], cb);
     };
 
     this.getCommand = function(arg) {
@@ -27,24 +27,25 @@ module.exports = function Nit(runner, cmds, nettings) {
         return undefined;
     };
 
-    this.help = function() {
+    this.help = function(cb) {
         var self = this;
         self.printer.logo(__dirname + '/logo');
         for(var i=0; i<this.cmds.length; i++){
             var c = this.cmds[i];
             self.printer.printCmd(c);
+            cb && cb();
         }
     };
 
-    this.start = function(cliArgs){
+    this.start = function(cliArgs, cbAll){
         var self = this;
 
         var cmd = cliArgs[0] ? self.getCommand(cliArgs[0]) : self.getCommand("help");
         if(cmd) {
-            self.isCleanStatus(function(data, clean, currentBranch){
+            self.isCleanStatus(function(statusData, clean, currentBranch){
                 if(clean || !cmd.requiresClean){
                     var argsToSend = cmd.takesArray ? cliArgs : cliArgs[1];
-                    cmd.action(self, argsToSend, currentBranch, data);
+                    cmd.action(self, argsToSend, currentBranch, statusData, cbAll);
                 } else {
                     self.nerrorUnclean();
                 }
@@ -67,8 +68,8 @@ module.exports = function Nit(runner, cmds, nettings) {
     };
     //
 
-    this.sts = function() {
-        this.gitInherit(["status", "-s"]);
+    this.sts = function(cb) {
+        this.gitInherit(["status", "-s"], cb);
     };
 
     this.featureCommit = function(message, currentBranch, cb){
@@ -126,7 +127,7 @@ module.exports = function Nit(runner, cmds, nettings) {
         return currentBranch.indexOf(self.nettings.featurePrefix)!=-1;
     };
 
-    this.updateDevThenMerge = function(currentBranch){
+    this.updateDevThenMerge = function(currentBranch, cb){
         var self = this;
         if(currentBranch==="develop"){
             self.printer.E("Already on develop.  Did no work.");
@@ -146,13 +147,14 @@ module.exports = function Nit(runner, cmds, nettings) {
                         if(isAlreadyStr) {
                             alreadyUpStrFound = true;
                         }
+                        cb && cb();
                     });
                 });
             });
         });
     };
 
-    this.devMerge = function(currentBranch){
+    this.devMerge = function(currentBranch, cb){
         var self = this;
          if(currentBranch==="develop"){
             self.printer.E("Already on develop.  Did no work.");
@@ -163,6 +165,7 @@ module.exports = function Nit(runner, cmds, nettings) {
         var gitArgs = ["merge", "develop"];
         self.git(gitArgs, function(data){
             console.log(data);
+            cb && cb();
         });
     };
 
@@ -177,6 +180,7 @@ module.exports = function Nit(runner, cmds, nettings) {
             var branchToDelete = this.nettings.featurePrefix + branchName.trim();
             if(branchToDelete == currentBranch){
                 this.printer.E("NError! Cannot delete branch you're currently on.");
+                cb && cb();
             } else {
                 this.deleteBranch(branchToDelete, cb);
             }
@@ -225,10 +229,11 @@ module.exports = function Nit(runner, cmds, nettings) {
         }
     };
 
-    this.onBranch = function(currentBranch){
+    this.onBranch = function(currentBranch, cb){
         var self = this;
         this.status(function(data){
             self.printer.printBranch(self.discoverBranch(data));
+            cb && cb();
         });
     };
 
@@ -240,16 +245,17 @@ module.exports = function Nit(runner, cmds, nettings) {
         this.git(["push", "--set-upstream-to origin/" + branch], cb);
     };
 
-    this.push = function(branch) {
+    this.push = function(branch, cb) {
         var self = this;
         this.git(["push", "origin", branch], function(data){
             self.printer.printPushResult(data);
+            cb && cb();
         });
     };
 
-    this.pull = function(branch) {
+    this.pull = function(branch, cb) {
         var self = this;
-        this.gitInherit(["pull", "origin", branch]);
+        this.gitInherit(["pull", "origin", branch], cb);
     };
 
     this.nerrorUnclean = function() {
@@ -264,10 +270,11 @@ module.exports = function Nit(runner, cmds, nettings) {
         });
     };
 
-    this.printStatusData = function(statusData) {
+    this.printStatusData = function(statusData, cb) {
         var self = this;
         currentBranch = self.discoverBranch(statusData);
         self.printer.printStatus(statusData, currentBranch, self.isDetached);
+        cb && cb();
     };
 
     this.getBranchAndDescribe = function(cb) {
@@ -368,6 +375,7 @@ module.exports = function Nit(runner, cmds, nettings) {
 
     this.stage = function(cb) {
         var self = this;
+
         this.git(["add", "."], function(){
             self.git(["add", "-u"], cb);
         });
@@ -434,8 +442,9 @@ module.exports = function Nit(runner, cmds, nettings) {
         this.nerver.start(arg);
     };
 
-    this.startTeamNerver = function(arg) {
+    this.startTeamNerver = function(arg, cb) {
         this.teamNerver.start(arg);
+        cb && cb();
     };
 };
 

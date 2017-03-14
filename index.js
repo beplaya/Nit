@@ -31,7 +31,9 @@ if(cliArgs[0] === "setup"){
 
 } else {
 	var nit = new Nit();
-	nit.start(cliArgs);
+	nit.start(cliArgs, function(){
+	    debug && console.log("All done.");
+	});
 }
 
 module.exports = nit;
