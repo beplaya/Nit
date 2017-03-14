@@ -242,7 +242,7 @@ module.exports = function Nit(runner, cmds, nettings) {
         this.git(["push", "--set-upstream-to origin/" + branch], cb);
     };
 
-    this.push = function(branch) {
+    this.push = function(branch, cb) {
         var self = this;
         this.git(["push", "origin", branch], function(data){
             self.printer.printPushResult(data);
