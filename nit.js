@@ -13,9 +13,9 @@ module.exports = function Nit(runner, cmds, nettings) {
     this.log = new require(__dirname + '/lib/log.js')(this);
     this.cmds = cmds || new require(__dirname + '/lib/cmds.js')();
 
-    this.browse = function(currentBranch) {
+    this.browse = function(currentBranch, cb) {
         var ticket = this.nira.ticketIDFromBranch(currentBranch);
-        this.runner.run("open", [this.nira.baseURL + ticket]);
+        this.runner.run("open", [this.nira.baseURL + ticket], cb);
     };
 
     this.getCommand = function(arg) {
@@ -442,8 +442,9 @@ module.exports = function Nit(runner, cmds, nettings) {
         this.nerver.start(arg);
     };
 
-    this.startTeamNerver = function(arg) {
+    this.startTeamNerver = function(arg, cb) {
         this.teamNerver.start(arg);
+        cb && cb();
     };
 };
 
