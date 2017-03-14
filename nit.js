@@ -27,24 +27,25 @@ module.exports = function Nit(runner, cmds, nettings) {
         return undefined;
     };
 
-    this.help = function() {
+    this.help = function(cb) {
         var self = this;
         self.printer.logo(__dirname + '/logo');
         for(var i=0; i<this.cmds.length; i++){
             var c = this.cmds[i];
             self.printer.printCmd(c);
+            cb && cb();
         }
     };
 
-    this.start = function(cliArgs){
+    this.start = function(cliArgs, cbAll){
         var self = this;
 
         var cmd = cliArgs[0] ? self.getCommand(cliArgs[0]) : self.getCommand("help");
         if(cmd) {
-            self.isCleanStatus(function(data, clean, currentBranch){
+            self.isCleanStatus(function(statusData, clean, currentBranch){
                 if(clean || !cmd.requiresClean){
                     var argsToSend = cmd.takesArray ? cliArgs : cliArgs[1];
-                    cmd.action(self, argsToSend, currentBranch, data);
+                    cmd.action(self, argsToSend, currentBranch, statusData, cbAll);
                 } else {
                     self.nerrorUnclean();
                 }
@@ -67,8 +68,8 @@ module.exports = function Nit(runner, cmds, nettings) {
     };
     //
 
-    this.sts = function() {
-        this.gitInherit(["status", "-s"]);
+    this.sts = function(cb) {
+        this.gitInherit(["status", "-s"], function(){cb && cb()});
     };
 
     this.featureCommit = function(message, currentBranch, cb){
@@ -264,10 +265,11 @@ module.exports = function Nit(runner, cmds, nettings) {
         });
     };
 
-    this.printStatusData = function(statusData) {
+    this.printStatusData = function(statusData, cb) {
         var self = this;
         currentBranch = self.discoverBranch(statusData);
         self.printer.printStatus(statusData, currentBranch, self.isDetached);
+        cb && cb();
     };
 
     this.getBranchAndDescribe = function(cb) {
