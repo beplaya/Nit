@@ -55,8 +55,6 @@
         comments        > Get JIRA comments
 ```
 
-
-
 If you work with JIRA, you may work in the following manner:
 
 ### Traditional Git (11 lines. 282 chars.):
