@@ -127,7 +127,7 @@ module.exports = function Nit(runner, cmds, nettings) {
         return currentBranch.indexOf(self.nettings.featurePrefix)!=-1;
     };
 
-    this.updateDevThenMerge = function(currentBranch){
+    this.updateDevThenMerge = function(currentBranch, cb){
         var self = this;
         if(currentBranch==="develop"){
             self.printer.E("Already on develop.  Did no work.");
@@ -147,6 +147,7 @@ module.exports = function Nit(runner, cmds, nettings) {
                         if(isAlreadyStr) {
                             alreadyUpStrFound = true;
                         }
+                        cb && cb();
                     });
                 });
             });
