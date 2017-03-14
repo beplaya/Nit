@@ -69,7 +69,7 @@ module.exports = function Nit(runner, cmds, nettings) {
     //
 
     this.sts = function(cb) {
-        this.gitInherit(["status", "-s"], function(){cb && cb()});
+        this.gitInherit(["status", "-s"], cb);
     };
 
     this.featureCommit = function(message, currentBranch, cb){
@@ -226,10 +226,11 @@ module.exports = function Nit(runner, cmds, nettings) {
         }
     };
 
-    this.onBranch = function(currentBranch){
+    this.onBranch = function(currentBranch, cb){
         var self = this;
         this.status(function(data){
             self.printer.printBranch(self.discoverBranch(data));
+            cb && cb();
         });
     };
 
@@ -245,12 +246,13 @@ module.exports = function Nit(runner, cmds, nettings) {
         var self = this;
         this.git(["push", "origin", branch], function(data){
             self.printer.printPushResult(data);
+            cb && cb();
         });
     };
 
-    this.pull = function(branch) {
+    this.pull = function(branch, cb) {
         var self = this;
-        this.gitInherit(["pull", "origin", branch]);
+        this.gitInherit(["pull", "origin", branch], cb);
     };
 
     this.nerrorUnclean = function() {
