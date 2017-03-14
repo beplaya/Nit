@@ -153,7 +153,7 @@ module.exports = function Nit(runner, cmds, nettings) {
         });
     };
 
-    this.devMerge = function(currentBranch){
+    this.devMerge = function(currentBranch, cb){
         var self = this;
          if(currentBranch==="develop"){
             self.printer.E("Already on develop.  Did no work.");
@@ -164,6 +164,7 @@ module.exports = function Nit(runner, cmds, nettings) {
         var gitArgs = ["merge", "develop"];
         self.git(gitArgs, function(data){
             console.log(data);
+            cb && cb();
         });
     };
 
