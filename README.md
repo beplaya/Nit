@@ -32,7 +32,6 @@
 ###### Enable debug by placing a file in the nit directory names 'debug'
 ```
         help            > Help
-        updateNerver    > Update Nerver
         st              > Status
         sts             > Status -s
         b               > Discover branch
@@ -48,7 +47,6 @@
         ci              > Commit
         fci             > Make a commit on feature
         qrci            > Quick stage and commit only README.md with a generated message "['currentBranch'] README update."
-        nerver          > Start nerver
         team            > Start team nerver
 ```
 
