@@ -178,6 +178,7 @@ module.exports = function Nit(runner, cmds, nettings) {
             var branchToDelete = this.nettings.featurePrefix + branchName.trim();
             if(branchToDelete == currentBranch){
                 this.printer.E("NError! Cannot delete branch you're currently on.");
+                cb && cb();
             } else {
                 this.deleteBranch(branchToDelete, cb);
             }
