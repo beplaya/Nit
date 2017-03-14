@@ -375,6 +375,7 @@ module.exports = function Nit(runner, cmds, nettings) {
 
     this.stage = function(cb) {
         var self = this;
+
         this.git(["add", "."], function(){
             self.git(["add", "-u"], cb);
         });
