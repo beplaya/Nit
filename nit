@@ -1,1 +1,1 @@
-node $NIT/index.js "$@"
+node "$NIT"/index.js "$@"
