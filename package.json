@@ -1,13 +1,13 @@
 {
   "name": "nit_for_git",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "Nit wraps Git and Integrates tools like Jira and GLIMR https://github.com/beplaya/Nit",
   "main": "nit.js",
   "dependencies": {
     "colors": "^1.1.2",
     "prompt": "^0.2.14",
     "querystring": "^0.2.0",
-    "spawn_runner": "^1.0.2"
+    "spawn_runner": "^1.0.4"
   },
   "devDependencies": {
     "mocha": "1.16.2",

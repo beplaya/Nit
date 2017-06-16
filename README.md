@@ -135,8 +135,9 @@ http://TeamNerverHost:yourTeamNerverPortIn  (set port in .nitconfig)
             - open ~/.bash_profile
             - Add lines:
              
-                ```export NIT="/path/to/repo/nit"```
-                ```export PATH="${PATH}:$NIT/"```
+                ```export NIT="/path/to/repo/nit/"```
+
+                ```export PATH=${PATH}:"$NIT```
         - Windows
             - Add environment variable "NIT" set equal to "/path/to/repo/nit"
             - Append the $NIT environment variable to the path environment variable.
