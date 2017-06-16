@@ -212,9 +212,9 @@ module.exports = function Nit(runner, cmds, nettings) {
     this.createAndCheckoutBranch = function(branchName, currentBranch, cb){
         var self = this;
         if(currentBranch.trim() != branchName.trim()){
-           self.git(["checkout", branchName], function(data){
+           self.git(["checkout", branchName], function(data, error){
                 var search = "error: ";
-                if(data.indexOf(search) === -1){
+                if(data.indexOf(search) === -1 && !error){
                     cb && cb();
                 } else {
                     self.git(["checkout", "-b", branchName], function(){

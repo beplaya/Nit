@@ -7,7 +7,7 @@
     "colors": "^1.1.2",
     "prompt": "^0.2.14",
     "querystring": "^0.2.0",
-    "spawn_runner": "^1.0.4"
+    "spawn_runner": "^1.0.5"
   },
   "devDependencies": {
     "mocha": "1.16.2",
